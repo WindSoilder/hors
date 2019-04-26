@@ -1,8 +1,10 @@
 extern crate clap;
 use clap::{App, Arg, ArgMatches};
+use std::error::Error;
+mod engine;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
-    let parser = App::new("howrs")
+    let parser = App::new("hors")
         .author("WindSoilder, WindSoilder@outlook.com")
         .version("0.1.0")
         .arg(
@@ -36,12 +38,15 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .short("v")
                 .help("displays the current version of howdoi"),
         )
-        .arg(
-            Arg::with_name("QUERY")
-        );
+        .arg(Arg::with_name("QUERY"));
     return parser.get_matches();
 }
 
-fn main() {
-    let matches = parser_matches();
+fn main() -> Result<(), Box<Error>>{
+    let matches: ArgMatches = parser_matches();
+    let results = engine::bing::search(&String::from("how to write unit tests"))?;
+    for r in results {
+        println!("{}", r);
+    }
+    return Ok(());
 }

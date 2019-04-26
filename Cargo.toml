@@ -1,5 +1,5 @@
 [package]
-name = "howrs"
+name = "hors"
 version = "0.1.0"
 authors = ["WindSoilder <WindSoilder@outlook.com>"]
 edition = "2018"
@@ -8,4 +8,4 @@ edition = "2018"
 clap = "*"
 syntect = "*"
 reqwest = "*"
-html5ever = "*"
+select = "*"
