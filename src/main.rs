@@ -2,6 +2,7 @@ extern crate clap;
 use clap::{App, Arg, ArgMatches};
 use std::error::Error;
 mod engine;
+mod error;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -42,7 +43,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
     return parser.get_matches();
 }
 
-fn main() -> Result<(), Box<Error>>{
+fn main() -> Result<(), Box<Error>> {
     let matches: ArgMatches = parser_matches();
     let results = engine::bing::search(&String::from("how to write unit tests"))?;
     for r in results {
