@@ -1,7 +1,11 @@
 extern crate reqwest;
 
+use std::convert::From;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::result::Result as StdResult;
+
+pub type Result<T> = StdResult<T, HorError>;
 
 #[derive(Debug)]
 pub struct HorError {
@@ -42,3 +46,10 @@ impl HorError {
 }
 
 // TODO: Maybe implement an converter to convert from reqwest::Error to HorError?
+impl From<reqwest::Error> for HorError {
+    fn from(error: reqwest::Error) -> Self {
+        return HorError {
+            repr: Repr::Network(error),
+        };
+    }
+}

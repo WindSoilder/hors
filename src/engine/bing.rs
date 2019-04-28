@@ -1,10 +1,10 @@
 extern crate reqwest;
 extern crate select;
 
-use crate::error::HorError;
+use crate::error::{HorError, Result};
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
-use std::error::Error;
+
 
 /// Search under the `bing` search engine.
 ///
@@ -18,15 +18,13 @@ use std::error::Error;
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search(query: &String) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn search(query: &String) -> Result<Vec<String>> {
     let page: String = fetch(query)?;
     let extract_results = extract_links(&page);
     match extract_results {
         Some(links) => return Ok(links),
         None => {
-            return Result::Err(Box::new(HorError::from_parse(
-                "Can't find search result...",
-            )));
+            return Err(HorError::from_parse("Can't find search result..."));
         }
     }
 }
@@ -41,7 +39,7 @@ pub fn search(query: &String) -> Result<Vec<String>, Box<dyn Error>> {
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
-fn fetch(query: &String) -> Result<String, Box<dyn Error>> {
+fn fetch(query: &String) -> Result<String> {
     let url: String = format!(
         "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
         query
