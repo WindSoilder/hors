@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 use std::convert::From;
 use std::error::Error;
 use std::fmt::{Display, Formatter};

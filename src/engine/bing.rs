@@ -1,6 +1,3 @@
-extern crate reqwest;
-extern crate select;
-
 use crate::error::{HorError, Result};
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
@@ -44,7 +41,9 @@ fn fetch(query: &String) -> Result<String> {
         "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
         query
     );
-    let client = reqwest::Client::new();
+    let client = reqwest::ClientBuilder::new()
+        .cookie_store(true)
+        .build()?;
     let mut res = client
         .get(url.as_str())
         .header(
