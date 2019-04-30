@@ -1,7 +1,7 @@
 use crate::error::{HorError, Result};
+use crate::utils::random_agent;
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
-
 
 /// Search under the `bing` search engine.
 ///
@@ -41,15 +41,10 @@ fn fetch(query: &String) -> Result<String> {
         "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
         query
     );
-    let client = reqwest::ClientBuilder::new()
-        .cookie_store(true)
-        .build()?;
+    let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
     let mut res = client
         .get(url.as_str())
-        .header(
-            reqwest::header::USER_AGENT,
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:66.0) Gecko/20100101 Firefox/66.0",
-        )
+        .header(reqwest::header::USER_AGENT, random_agent())
         .send()?;
     let page: String = res.text()?;
     return Ok(page);

@@ -1,8 +1,10 @@
 extern crate clap;
 use clap::{App, Arg, ArgMatches};
 use std::error::Error;
+
 mod engine;
 mod error;
+mod utils;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
