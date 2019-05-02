@@ -4,8 +4,8 @@ use std::error::Error;
 
 mod engine;
 mod error;
-mod utils;
 mod outputer;
+mod utils;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -49,9 +49,8 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
 fn main() -> Result<(), Box<Error>> {
     let matches: ArgMatches = parser_matches();
 
-    let target_links: Vec<String> = engine::bing::search(
-        &String::from(matches.value_of("QUERY").unwrap())
-    )?;
+    let target_links: Vec<String> =
+        engine::bing::search(&String::from(matches.value_of("QUERY").unwrap()))?;
     if matches.is_present("link") {
         let parsed_links: String = outputer::get_results_with_links_only(&target_links);
         println!("{}", parsed_links);
