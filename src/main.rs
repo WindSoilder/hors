@@ -5,6 +5,7 @@ use std::error::Error;
 mod engine;
 mod error;
 mod utils;
+mod outputer;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -41,15 +42,22 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .short("v")
                 .help("displays the current version of howdoi"),
         )
-        .arg(Arg::with_name("QUERY"));
+        .arg(Arg::with_name("QUERY").required(true));
     return parser.get_matches();
 }
 
 fn main() -> Result<(), Box<Error>> {
     let matches: ArgMatches = parser_matches();
-    let results = engine::bing::search(&String::from("how to write unit tests"))?;
-    for r in results {
-        println!("{}", r);
+
+    let target_links: Vec<String> = engine::bing::search(
+        &String::from(matches.value_of("QUERY").unwrap())
+    )?;
+    if matches.is_present("link") {
+        let parsed_links: String = outputer::get_results_with_links_only(&target_links);
+        println!("{}", parsed_links);
+    } else if matches.is_present("all") {
+
     }
+
     return Ok(());
 }
