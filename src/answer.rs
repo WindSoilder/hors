@@ -1,4 +1,13 @@
+//! This module contains api to get results from stack overflow page
 use reqwest::Url;
+use crate::config::Config;
+
+pub fn get_answers(links: &Vec<String>, conf: Config) -> String {
+    match conf.option() {
+        _ => return get_results_with_links_only(links)
+    }
+}
+
 
 // TODO: Give it more reasonable name.
 /// output links from the given stackoverflow links.
@@ -10,7 +19,7 @@ use reqwest::Url;
 ///
 /// # Returns
 /// A list of links with splitter.  Which can directly output by the caller.
-pub fn get_results_with_links_only(links: &Vec<String>) -> String {
+fn get_results_with_links_only(links: &Vec<String>) -> String {
     let mut results: Vec<String> = Vec::new();
     for link in links.iter() {
         if !link.contains("question") {

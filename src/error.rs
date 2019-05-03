@@ -43,7 +43,6 @@ impl HorError {
     }
 }
 
-// TODO: Maybe implement an converter to convert from reqwest::Error to HorError?
 impl From<reqwest::Error> for HorError {
     fn from(error: reqwest::Error) -> Self {
         return HorError {

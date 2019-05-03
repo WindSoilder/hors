@@ -1,11 +1,14 @@
 extern crate clap;
-use clap::{App, Arg, ArgMatches};
-use std::error::Error;
 
 mod engine;
 mod error;
-mod outputer;
 mod utils;
+mod config;
+mod answer;
+
+use clap::{App, Arg, ArgMatches};
+use std::error::Error;
+use config::{Config, OutputOption};
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -34,6 +37,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .long("number_answers")
                 .short("n")
                 .takes_value(true)
+                .default_value("1")
                 .help("number of answers to return"),
         )
         .arg(
@@ -51,12 +55,23 @@ fn main() -> Result<(), Box<Error>> {
 
     let target_links: Vec<String> =
         engine::bing::search(&String::from(matches.value_of("QUERY").unwrap()))?;
-    if matches.is_present("link") {
-        let parsed_links: String = outputer::get_results_with_links_only(&target_links);
-        println!("{}", parsed_links);
-    } else if matches.is_present("all") {
 
+    let output_option: OutputOption;
+    if matches.is_present("link") {
+        output_option = OutputOption::Links;
+    } else if matches.is_present("all") {
+        output_option = OutputOption::All;
+    } else {
+        output_option = OutputOption::OnlyCode;
     }
+
+    let conf: Config = Config::new(
+        output_option,
+        matches.value_of("number_answers").unwrap_or_default().parse::<u8>().unwrap(),
+        matches.is_present("color")
+    );
+    let answers: String = answer::get_answers(&target_links, conf);
+    println!("{}", answers);
 
     return Ok(());
 }
