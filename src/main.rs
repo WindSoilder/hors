@@ -70,8 +70,9 @@ fn main() -> Result<(), Box<Error>> {
         matches.value_of("number_answers").unwrap_or_default().parse::<u8>().unwrap(),
         matches.is_present("color")
     );
-    let answers: String = answer::get_answers(&target_links, conf);
-    println!("{}", answers);
+    if let Ok(answers) = answer::get_answers(&target_links, conf) {
+        println!("{}", answers);
+    }
 
     return Ok(());
 }
