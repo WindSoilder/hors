@@ -4,13 +4,13 @@ use crate::error::Result;
 use crate::utils::random_agent;
 use reqwest::Url;
 use select::document::Document;
-use select::predicate::{Class, Name, Predicate};
+use select::predicate::{Class, Name};
 
 // TODO: Add docstring
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     match conf.option() {
-        OutputOption::All => return get_detailed_answer(links, conf),
-        _ => return Ok(get_results_with_links_only(links, conf)),
+        OutputOption::Links => return Ok(get_results_with_links_only(links, conf)),
+        _ => return get_detailed_answer(links, conf),
     }
 }
 
@@ -52,9 +52,27 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
 
     if let Some(answer) = first_answer.next() {
         // TODO: Add links to the answer.  And format the code.
-        if let Some(instruction) = answer.find(Class("post-text")).next() {
-            return Some(instruction.text());
+        match *config.option() {
+            OutputOption::OnlyCode => {return parse_answer_instruction(answer);},
+            OutputOption::All => {return parse_answer_detailed(answer);},
+            _ => {panic!("parse_answer shoudn't get config with OutputOption::Link")}
         }
+    }
+    return None;
+}
+
+
+fn parse_answer_instruction(answer_node: select::node::Node) -> Option<String> {
+    // TODO: Add find(Name("pre"))
+    if let Some(instruction) = answer_node.find(Name("code")).next() {
+        return Some(instruction.text());
+    }
+    return None;
+}
+
+fn parse_answer_detailed(answer_node: select::node::Node) -> Option<String> {
+    if let Some(instruction) = answer_node.find(Class("post-text")).next() {
+        return Some(instruction.text());
     }
     return None;
 }
