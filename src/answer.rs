@@ -37,9 +37,9 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
                 let answer = parse_answer(page, &conf);
                 match answer {
                     Some(content) => results.push(content),
-                    None => results.push(format!("Can't get answer from {}", link))
+                    None => results.push(format!("Can't get answer from {}", link)),
                 }
-            },
+            }
             None => break,
         }
     }
@@ -53,14 +53,17 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     if let Some(answer) = first_answer.next() {
         // TODO: Add links to the answer.  And format the code.
         match *config.option() {
-            OutputOption::OnlyCode => {return parse_answer_instruction(answer);},
-            OutputOption::All => {return parse_answer_detailed(answer);},
-            _ => {panic!("parse_answer shoudn't get config with OutputOption::Link")}
+            OutputOption::OnlyCode => {
+                return parse_answer_instruction(answer);
+            }
+            OutputOption::All => {
+                return parse_answer_detailed(answer);
+            }
+            _ => panic!("parse_answer shoudn't get config with OutputOption::Link"),
         }
     }
     return None;
 }
-
 
 fn parse_answer_instruction(answer_node: select::node::Node) -> Option<String> {
     // TODO: Add find(Name("pre"))

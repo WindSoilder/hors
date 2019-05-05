@@ -1,14 +1,14 @@
 extern crate clap;
 
+mod answer;
+mod config;
 mod engine;
 mod error;
 mod utils;
-mod config;
-mod answer;
 
 use clap::{App, Arg, ArgMatches};
-use std::error::Error;
 use config::{Config, OutputOption};
+use std::error::Error;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -67,8 +67,12 @@ fn main() -> Result<(), Box<Error>> {
 
     let conf: Config = Config::new(
         output_option,
-        matches.value_of("number_answers").unwrap_or_default().parse::<u8>().unwrap(),
-        matches.is_present("color")
+        matches
+            .value_of("number_answers")
+            .unwrap_or_default()
+            .parse::<u8>()
+            .unwrap(),
+        matches.is_present("color"),
     );
     if let Ok(answers) = answer::get_answers(&target_links, conf) {
         println!("{}", answers);

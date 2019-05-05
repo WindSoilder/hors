@@ -17,8 +17,8 @@ impl Config {
         return Config {
             option: output_option,
             numbers,
-            colorize
-        }
+            colorize,
+        };
     }
 
     pub fn option(&self) -> &OutputOption {
