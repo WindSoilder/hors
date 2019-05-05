@@ -19,21 +19,28 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
     let mut results: Vec<String> = Vec::new();
     let user_agent: &str = random_agent();
     let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
+    let mut links_iter = links.iter();
 
-    for link in links.iter() {
-        if !link.contains("question") {
-            continue;
-        }
-        let page: String = client
-            .get(link)
-            .header(reqwest::header::USER_AGENT, user_agent)
-            .send()?
-            .text()?;
+    for _ in 0..conf.numbers() {
+        let next_link = links_iter.next();
+        match next_link {
+            Some(link) => {
+                if !link.contains("question") {
+                    continue;
+                }
+                let page: String = client
+                    .get(link)
+                    .header(reqwest::header::USER_AGENT, user_agent)
+                    .send()?
+                    .text()?;
 
-        let answer = parse_answer(page, &conf);
-        match answer {
-            Some(content) => results.push(content),
-            None => results.push(format!("Can't get answer from {}", link))
+                let answer = parse_answer(page, &conf);
+                match answer {
+                    Some(content) => results.push(content),
+                    None => results.push(format!("Can't get answer from {}", link))
+                }
+            },
+            None => break,
         }
     }
     return Ok(results.join("\n==========\n"));
