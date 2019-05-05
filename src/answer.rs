@@ -9,7 +9,7 @@ use select::predicate::{Class, Name};
 // TODO: Add docstring
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     match conf.option() {
-        OutputOption::Links => return Ok(get_results_with_links_only(links, conf)),
+        OutputOption::Links => return Ok(get_results_with_links_only(links)),
         _ => return get_detailed_answer(links, conf),
     }
 }
@@ -87,7 +87,7 @@ fn parse_answer_detailed(answer_node: select::node::Node) -> Option<String> {
 ///
 /// # Returns
 /// A list of links with splitter.  Which can directly output by the caller.
-fn get_results_with_links_only(links: &Vec<String>, conf: Config) -> String {
+fn get_results_with_links_only(links: &Vec<String>) -> String {
     let mut results: Vec<String> = Vec::new();
     for link in links.iter() {
         if !link.contains("question") {
