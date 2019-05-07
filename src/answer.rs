@@ -70,7 +70,10 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
             OutputOption::All => {
                 return parse_answer_detailed(answer, question_tags, config.colorize());
             }
-            _ => panic!("parse_answer shoudn't get config with OutputOption::Link"),
+            _ => panic!(
+                "parse_answer shoudn't get config with OutputOption::Link.\n
+                If you get this message, please fire an issue"
+            ),
         }
     }
     return None;
