@@ -5,6 +5,10 @@ use crate::utils::random_agent;
 use reqwest::Url;
 use select::document::Document;
 use select::predicate::{Class, Name};
+use syntect::easy::HighlightLines;
+use syntect::highlighting::{Style, ThemeSet};
+use syntect::parsing::{SyntaxReference, SyntaxSet};
+use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
 // TODO: Add docstring
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
@@ -48,16 +52,23 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
 
 fn parse_answer(page: String, config: &Config) -> Option<String> {
     let doc: Document = Document::from(page.as_str());
+    // The question tags may contains useful information about the language topic.
+    let mut question_tags: Vec<String> = vec![];
+    let tags = doc.find(Class("post-tag"));
+    for tag in tags {
+        question_tags.push(tag.text());
+    }
+
     let mut first_answer = doc.find(Class("answer"));
 
     if let Some(answer) = first_answer.next() {
         // TODO: Add links to the answer.  And format the code.
         match *config.option() {
             OutputOption::OnlyCode => {
-                return parse_answer_instruction(answer);
+                return parse_answer_instruction(answer, question_tags, config.colorize());
             }
             OutputOption::All => {
-                return parse_answer_detailed(answer);
+                return parse_answer_detailed(answer, question_tags, config.colorize());
             }
             _ => panic!("parse_answer shoudn't get config with OutputOption::Link"),
         }
@@ -65,20 +76,92 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     return None;
 }
 
-fn parse_answer_instruction(answer_node: select::node::Node) -> Option<String> {
-    // TODO: Add find(Name("pre"))
-    if let Some(instruction) = answer_node.find(Name("code")).next() {
-        return Some(instruction.text());
+fn parse_answer_instruction(
+    answer_node: select::node::Node,
+    question_tags: Vec<String>,
+    should_colorize: bool,
+) -> Option<String> {
+    if let Some(code_instruction) = answer_node.find(Name("code")).next() {
+        if should_colorize {
+            return Some(colorized_code(code_instruction.text(), question_tags));
+        } else {
+            return Some(code_instruction.text());
+        }
+    }
+    if let Some(title) = answer_node.find(Name("pre")).next() {
+        if should_colorize {
+            return Some(colorized_code(title.text(), question_tags));
+        } else {
+            return Some(title.text());
+        }
     }
     return None;
 }
 
-fn parse_answer_detailed(answer_node: select::node::Node) -> Option<String> {
+fn parse_answer_detailed(
+    answer_node: select::node::Node,
+    question_tags: Vec<String>,
+    should_colorize: bool,
+) -> Option<String> {
     if let Some(instruction) = answer_node.find(Class("post-text")).next() {
         return Some(instruction.text());
     }
     return None;
 }
+
+/// make code block colorized.
+///
+/// Note that this function should only accept code block.
+fn colorized_code(code: String, possible_tags: Vec<String>) -> String {
+    let ss = SyntaxSet::load_defaults_newlines();
+    let ts: ThemeSet = ThemeSet::load_defaults();
+    let syntax: &SyntaxReference = guess_syntax(possible_tags, &ss);
+    let mut h = HighlightLines::new(&syntax, &ts.themes["base16-ocean.dark"]);
+    let mut colorized: String = String::new();
+
+    for line in LinesWithEndings::from(code.as_str()) {
+        let escaped = as_24_bit_terminal_escaped(&h.highlight(line, &ss), true);
+        colorized = colorized + escaped.as_str();
+    }
+    return colorized;
+}
+
+/// &SyntaxReference
+fn guess_syntax(possible_tags: Vec<String>, ss: &SyntaxSet) -> &SyntaxReference {
+    for tag in possible_tags {
+        let syntax = ss.find_syntax_by_token(tag.as_str());
+        if let Some(result) = syntax {
+            return result;
+        }
+    }
+    return ss.find_syntax_plain_text();
+}
+
+//??? Why the following code doesn't work
+// fn guess_syntax2(possible_tags: Vec<String>) -> &SyntaxReference {
+//     let ss = SyntaxSet::load_defaults_newlines();
+//     for tag in possible_tags {
+//         let syntax = ss.find_syntax_by_token(tag.as_str());
+//         if let Some(result) = syntax {
+//             // ??? Why I can't return a SyntaxReference
+//             return result;
+//         }
+//     }
+//     return ss.find_syntax_plain_text();
+// }
+
+//??? Why the following code doesn't work either
+// fn guess_syntax3(possible_tags: Vec<String>) -> SyntaxReference {
+//     let ss = SyntaxSet::load_defaults_newlines();
+//     for tag in possible_tags {
+//         let syntax = ss.find_syntax_by_token(tag.as_str());
+//         if let Some(result) = syntax {
+//             // ??? Why I can't return a SyntaxReference
+//             return *result;
+//         }
+//     }
+//     return *ss.find_syntax_plain_text();
+// }
 
 // TODO: Give it more reasonable name.
 /// output links from the given stackoverflow links.
