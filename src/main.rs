@@ -1,5 +1,3 @@
-extern crate clap;
-
 mod answer;
 mod config;
 mod engine;
