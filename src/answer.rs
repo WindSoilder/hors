@@ -6,7 +6,7 @@ use reqwest::Url;
 use select::document::Document;
 use select::predicate::{Class, Name};
 use syntect::easy::HighlightLines;
-use syntect::highlighting::{Style, ThemeSet};
+use syntect::highlighting::{ThemeSet};
 use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
@@ -62,7 +62,6 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     let mut first_answer = doc.find(Class("answer"));
 
     if let Some(answer) = first_answer.next() {
-        // TODO: Add links to the answer.  And format the code.
         match *config.option() {
             OutputOption::OnlyCode => {
                 return parse_answer_instruction(answer, question_tags, config.colorize());
@@ -86,14 +85,14 @@ fn parse_answer_instruction(
 ) -> Option<String> {
     if let Some(code_instruction) = answer_node.find(Name("code")).next() {
         if should_colorize {
-            return Some(colorized_code(code_instruction.text(), question_tags));
+            return Some(colorized_code(code_instruction.text(), &question_tags));
         } else {
             return Some(code_instruction.text());
         }
     }
     if let Some(title) = answer_node.find(Name("pre")).next() {
         if should_colorize {
-            return Some(colorized_code(title.text(), question_tags));
+            return Some(colorized_code(title.text(), &question_tags));
         } else {
             return Some(title.text());
         }
@@ -107,7 +106,19 @@ fn parse_answer_detailed(
     should_colorize: bool,
 ) -> Option<String> {
     if let Some(instruction) = answer_node.find(Class("post-text")).next() {
-        return Some(instruction.text());
+        if should_colorize == false {
+            return Some(instruction.text());
+        } else {
+            let mut formatted_answer: String = String::new();
+            for sub_node in instruction.children() {
+                match sub_node.name() {
+                    Some("pre") | Some("code") => { formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags)) },
+                    Some(_) => { formatted_answer.push_str(&sub_node.text()) },
+                    None => continue
+                }
+            }
+            return Some(formatted_answer);
+        }
     }
     return None;
 }
@@ -115,10 +126,10 @@ fn parse_answer_detailed(
 /// make code block colorized.
 ///
 /// Note that this function should only accept code block.
-fn colorized_code(code: String, possible_tags: Vec<String>) -> String {
+fn colorized_code(code: String, possible_tags: &Vec<String>) -> String {
     let ss = SyntaxSet::load_defaults_newlines();
     let ts: ThemeSet = ThemeSet::load_defaults();
-    let syntax: &SyntaxReference = guess_syntax(possible_tags, &ss);
+    let syntax: &SyntaxReference = guess_syntax(&possible_tags, &ss);
     let mut h = HighlightLines::new(&syntax, &ts.themes["base16-ocean.dark"]);
     let mut colorized: String = String::new();
 
@@ -130,7 +141,7 @@ fn colorized_code(code: String, possible_tags: Vec<String>) -> String {
 }
 
 /// &SyntaxReference
-fn guess_syntax(possible_tags: Vec<String>, ss: &SyntaxSet) -> &SyntaxReference {
+fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a SyntaxReference {
     for tag in possible_tags {
         let syntax = ss.find_syntax_by_token(tag.as_str());
         if let Some(result) = syntax {
