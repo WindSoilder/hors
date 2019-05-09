@@ -72,9 +72,8 @@ fn main() -> Result<(), Box<Error>> {
             .unwrap(),
         matches.is_present("color"),
     );
-    if let Ok(answers) = answer::get_answers(&target_links, conf) {
-        println!("{}", answers);
-    }
+    let answers: String = answer::get_answers(&target_links, conf)?;
+    println!("{}", answers);
 
     return Ok(());
 }

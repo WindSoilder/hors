@@ -6,14 +6,17 @@ use reqwest::Url;
 use select::document::Document;
 use select::predicate::{Class, Name};
 use syntect::easy::HighlightLines;
-use syntect::highlighting::{ThemeSet};
+use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
+const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 // TODO: Add docstring
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     match conf.option() {
-        OutputOption::Links => return Ok(get_results_with_links_only(links)),
+        OutputOption::Links => {
+            return Ok(get_results_with_links_only(links, conf.numbers() as usize))
+        }
         _ => return get_detailed_answer(links, conf),
     }
 }
@@ -37,17 +40,17 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
                     .header(reqwest::header::USER_AGENT, user_agent)
                     .send()?
                     .text()?;
-
-                let answer = parse_answer(page, &conf);
+                let title: String = format!("- Answer from {}", link);
+                let answer: Option<String> = parse_answer(page, &conf);
                 match answer {
-                    Some(content) => results.push(content),
+                    Some(content) => results.push(format!("{}\n{}", title, content)),
                     None => results.push(format!("Can't get answer from {}", link)),
                 }
             }
             None => break,
         }
     }
-    return Ok(results.join("\n==========\n"));
+    return Ok(results.join(SPLITTER));
 }
 
 fn parse_answer(page: String, config: &Config) -> Option<String> {
@@ -112,9 +115,11 @@ fn parse_answer_detailed(
             let mut formatted_answer: String = String::new();
             for sub_node in instruction.children() {
                 match sub_node.name() {
-                    Some("pre") | Some("code") => { formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags)) },
-                    Some(_) => { formatted_answer.push_str(&sub_node.text()) },
-                    None => continue
+                    Some("pre") | Some("code") => {
+                        formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags))
+                    }
+                    Some(_) => formatted_answer.push_str(&(sub_node.text() + "\n")),
+                    None => continue,
                 }
             }
             return Some(formatted_answer);
@@ -130,17 +135,16 @@ fn colorized_code(code: String, possible_tags: &Vec<String>) -> String {
     let ss = SyntaxSet::load_defaults_newlines();
     let ts: ThemeSet = ThemeSet::load_defaults();
     let syntax: &SyntaxReference = guess_syntax(&possible_tags, &ss);
-    let mut h = HighlightLines::new(&syntax, &ts.themes["base16-ocean.dark"]);
+    let mut h = HighlightLines::new(&syntax, &ts.themes["base16-eighties.dark"]);
     let mut colorized: String = String::new();
 
     for line in LinesWithEndings::from(code.as_str()) {
-        let escaped = as_24_bit_terminal_escaped(&h.highlight(line, &ss), true);
+        let escaped = as_24_bit_terminal_escaped(&h.highlight(line, &ss), false);
         colorized = colorized + escaped.as_str();
     }
     return colorized;
 }
 
-/// &SyntaxReference
 fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a SyntaxReference {
     for tag in possible_tags {
         let syntax = ss.find_syntax_by_token(tag.as_str());
@@ -187,24 +191,23 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
 ///
 /// # Returns
 /// A list of links with splitter.  Which can directly output by the caller.
-fn get_results_with_links_only(links: &Vec<String>) -> String {
+fn get_results_with_links_only(links: &Vec<String>, restricted_length: usize) -> String {
     let mut results: Vec<String> = Vec::new();
-    for link in links.iter() {
+    let length = links.len();
+    let mut index: usize = 0;
+    while index < length && index < restricted_length {
+        let link = &links[index as usize];
         if !link.contains("question") {
             continue;
         }
         let url: Url = Url::parse(link)
             .expect("Parse url failed, if you receive this message, please fire an issue.");
 
-        let answer: String = format!(
-            "Title - {}\n{}\n\n{}\n",
-            extract_question(url.path()),
-            *link,
-            "============="
-        );
+        let answer: String = format!("Title - {}\n{}", extract_question(url.path()), *link,);
         results.push(answer);
+        index += 1;
     }
-    return results.join("\n");
+    return results.join(SPLITTER);
 }
 
 /// Extract question content.
