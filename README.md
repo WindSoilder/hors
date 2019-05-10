@@ -90,29 +90,39 @@ print j['two']
 
 5. How to get more than one answers
 ```shell
-hors "what's the differenct between pickle and msgpack in python" -n 2 -a
+hors "set git remote url" -n 2 -a
 ```
 Here it is:
 ```
-- Answer from https://stackoverflow.com/questions/12331633/how-to-gzip-all-files-in-all-sub-directories-into-one-compressed-file-in-bash
+- Answer from https://stackoverflow.com/questions/2432764/how-to-change-the-uri-url-for-a-remote-git-repository
+You can
 
-tar -zcvf compressFileName.tar.gz folderToCompress
+git remote set-url origin new.git.url/here
 
+(see git help remote) or you can just edit .git/config and change the URLs there. You're not in any danger of losing history unless you do something very silly (and if you're worried, just make a copy of your repo, since your repo is your history.)
 
-everything in folderToCompress will go to compressFileName
-
-Edit: After review and comments I realized that people may get confused with compressFileName without an extension. If you want you can use .tar.gz extension(as suggested) with the compressFileName
 
 ^_^ ==================================================== ^_^
 
-- Answer from https://stackoverflow.com/questions/15279607/can-zlib-create-tar-file-on-windows
+- Answer from https://stackoverflow.com/questions/42830557/git-remote-add-origin-vs-remote-set-url-origin
+below is used to a add a new remote:
 
-gzip and zlib are used for compression. The tar archiving functionality is not provided by them. For creating a .tgz file, you typically use tar with czf flags, which then uses gzip for compression. If you need tar functionality, libarchive looks good for the job.
+git remote add origin git@github.com:User/UserRepo.git
+
+below is used to change the url of an existing remote repository:
+
+git remote set-url origin git@github.com:User/UserRepo.git
+
+below will push your code to the master branch of the remote repository defined with origin and -u let you point your current local branch to the remote master branch:
+
+git push -u origin master
+
+Documentation
 ```
 
 # Special thanks
 Very thanks for these awesome project :)
-- [howdoi](https://github.com/gleitz/howdoi) which inspired `hors` (And it's the `howdoi` implementation which uses `rust` language).
+- [howdoi](https://github.com/gleitz/howdoi) which inspired `hors` (Fow now `hors` is `howdoi` which implements in `rust`).
 - [reqwest](https://github.com/seanmonstar/reqwest) provides powerful http request api.
 - [syntect](https://github.com/trishume/syntect) provides syntax highlighting feature.
 - [rand](https://github.com/rust-random/rand) provides random choice generation.
