@@ -80,9 +80,38 @@ fn extract_links(page: &String) -> Option<Vec<String>> {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn test_extract_links() {}
+    use super::*;
 
     #[test]
-    fn test_extract_links_when_there_are_no_links_available() {}
+    fn test_extract_links() {
+        let page: String = String::from(
+            "
+<html>
+    <body>
+        <li class=\"b_algo\">
+            <h2><a target=\"_blank\" href=\"https://test_link1\"></a></h2>
+        </li>
+        <li class=\"b_algo\">
+            <h2><a target=\"_blank\" href=\"https://test_link2\"></a></h2>
+        </li>
+    </body>
+</html>",
+        );
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_some(), true);
+        assert_eq!(
+            possible_links.unwrap(),
+            vec![
+                String::from("https://test_link1"),
+                String::from("https://test_link2")
+            ]
+        )
+    }
+
+    #[test]
+    fn test_extract_links_when_there_are_no_links_available() {
+        let page: String = String::from("<html></html>");
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_none(), true);
+    }
 }
