@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate log;
 mod answer;
 mod config;
 mod engine;
@@ -72,6 +74,7 @@ fn main() -> Result<(), Box<Error>> {
             .unwrap(),
         matches.is_present("color"),
     );
+    debug!("User config: {:?}", conf);
     let answers: String = answer::get_answers(&target_links, conf)?;
     println!("{}", answers);
 

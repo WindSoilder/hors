@@ -1,5 +1,6 @@
 use crate::error::{HorError, Result};
 use crate::utils::random_agent;
+use reqwest::RequestBuilder;
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
 
@@ -42,10 +43,11 @@ fn fetch(query: &String) -> Result<String> {
         query
     );
     let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
-    let mut res = client
+    let request: RequestBuilder = client
         .get(url.as_str())
-        .header(reqwest::header::USER_AGENT, random_agent())
-        .send()?;
+        .header(reqwest::header::USER_AGENT, random_agent());
+    debug!("Request to bing information: {:?}", request);
+    let mut res = request.send()?;
     let page: String = res.text()?;
     return Ok(page);
 }
@@ -69,6 +71,7 @@ fn extract_links(page: &String) -> Option<Vec<String>> {
         }
     }
 
+    debug!("Links extract from bing: {:?}", links);
     if links.len() == 0 {
         return None;
     }

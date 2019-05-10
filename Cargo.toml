@@ -10,3 +10,7 @@ syntect = "*"
 reqwest = "*"
 select = "*"
 rand = "*"
+log = "*"
+
+[dev-dependencies]
+env_logger = "*"

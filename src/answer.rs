@@ -2,7 +2,7 @@
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use reqwest::Url;
+use reqwest::{Url, Response};
 use select::document::Document;
 use select::predicate::{Class, Name};
 use syntect::easy::HighlightLines;
@@ -35,11 +35,9 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
                 if !link.contains("question") {
                     continue;
                 }
-                let page: String = client
-                    .get(link)
-                    .header(reqwest::header::USER_AGENT, user_agent)
-                    .send()?
-                    .text()?;
+                let mut resp: Response = client.get(link).header(reqwest::header::USER_AGENT, user_agent).send()?;
+                debug!("Response status from stackoverflow: {:?}", resp);
+                let page: String = resp.text()?;
                 let title: String = format!("- Answer from {}", link);
                 let answer: Option<String> = parse_answer(page, &conf);
                 match answer {
