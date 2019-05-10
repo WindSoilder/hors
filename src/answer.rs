@@ -86,18 +86,18 @@ fn parse_answer_instruction(
     question_tags: Vec<String>,
     should_colorize: bool,
 ) -> Option<String> {
-    if let Some(code_instruction) = answer_node.find(Name("code")).next() {
-        if should_colorize {
-            return Some(colorized_code(code_instruction.text(), &question_tags));
-        } else {
-            return Some(code_instruction.text());
-        }
-    }
     if let Some(title) = answer_node.find(Name("pre")).next() {
         if should_colorize {
             return Some(colorized_code(title.text(), &question_tags));
         } else {
             return Some(title.text());
+        }
+    }
+    if let Some(code_instruction) = answer_node.find(Name("code")).next() {
+        if should_colorize {
+            return Some(colorized_code(code_instruction.text(), &question_tags));
+        } else {
+            return Some(code_instruction.text());
         }
     }
     return None;
@@ -115,10 +115,12 @@ fn parse_answer_detailed(
             let mut formatted_answer: String = String::new();
             for sub_node in instruction.children() {
                 match sub_node.name() {
-                    Some("pre") | Some("code") => {
+                    Some("pre") => formatted_answer
+                        .push_str(&(colorized_code(sub_node.text(), &question_tags) + "\n")),
+                    Some("code") => {
                         formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags))
                     }
-                    Some(_) => formatted_answer.push_str(&(sub_node.text() + "\n")),
+                    Some(_) => formatted_answer.push_str(&(sub_node.text() + "\n\n")),
                     None => continue,
                 }
             }
