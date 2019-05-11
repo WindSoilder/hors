@@ -2,6 +2,7 @@
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
 
 # Installation
+hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
 ```shell
 cargo install hors
 ```
