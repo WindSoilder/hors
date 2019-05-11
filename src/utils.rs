@@ -19,3 +19,14 @@ pub fn random_agent() -> &'static str {
         None => return DEFAULT_AGENT,
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_random_agent() {
+        assert!(USER_AGENTS.contains(&random_agent()));
+    }
+}

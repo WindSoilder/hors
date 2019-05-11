@@ -2,7 +2,7 @@
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use reqwest::{Url, Response};
+use reqwest::{Response, Url};
 use select::document::Document;
 use select::predicate::{Class, Name};
 use syntect::easy::HighlightLines;
@@ -14,9 +14,7 @@ const SPLITTER: &str = "\n^_^ ==================================================
 // TODO: Add docstring
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     match conf.option() {
-        OutputOption::Links => {
-            return Ok(get_results_with_links_only(links, conf.numbers() as usize))
-        }
+        OutputOption::Links => return Ok(answers_links_only(links, conf.numbers() as usize)),
         _ => return get_detailed_answer(links, conf),
     }
 }
@@ -35,7 +33,10 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
                 if !link.contains("question") {
                     continue;
                 }
-                let mut resp: Response = client.get(link).header(reqwest::header::USER_AGENT, user_agent).send()?;
+                let mut resp: Response = client
+                    .get(link)
+                    .header(reqwest::header::USER_AGENT, user_agent)
+                    .send()?;
                 debug!("Response status from stackoverflow: {:?}", resp);
                 let page: String = resp.text()?;
                 let title: String = format!("- Answer from {}", link);
@@ -181,8 +182,7 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
 //     return *ss.find_syntax_plain_text();
 // }
 
-// TODO: Give it more reasonable name.
-/// output links from the given stackoverflow links.
+/// Return links from the given stackoverflow links
 ///
 ///
 /// # Arguments
@@ -191,7 +191,7 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
 ///
 /// # Returns
 /// A list of links with splitter.  Which can directly output by the caller.
-fn get_results_with_links_only(links: &Vec<String>, restricted_length: usize) -> String {
+fn answers_links_only(links: &Vec<String>, restricted_length: usize) -> String {
     let mut results: Vec<String> = Vec::new();
     let length = links.len();
     let mut index: usize = 0;
@@ -221,4 +221,60 @@ fn extract_question(path: &str) -> String {
     // we want to extract the link out
     let splitted: Vec<&str> = path.split("/").collect();
     return splitted[splitted.len() - 1].replace("-", " ");
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_answer_links_only() {
+        let links: Vec<String> = vec![String::from(
+            "https://stackoverflow.com/questions/test/how-to-write-function",
+        )];
+        let restricted_length: usize = 1;
+        let results: String = format!(
+            "Title - {}\n{}",
+            "how to write function",
+            "https://stackoverflow.com/questions/test/how-to-write-function"
+        );
+        assert_eq!(answers_links_only(&links, restricted_length), results);
+    }
+
+    #[test]
+    fn test_answer_links_only_when_restricted_size_is_less_than_given_links() {
+        let links: Vec<String> = vec![
+            String::from("https://stackoverflow.com/questions/test/how-to-write-function"),
+            String::from("https://stackoverflow.com/questions/test/best-practise-for-rust"),
+        ];
+        let restricted_length: usize = 1;
+        let results: String = format!(
+            "Title - {}\n{}",
+            "how to write function",
+            "https://stackoverflow.com/questions/test/how-to-write-function"
+        );
+        assert_eq!(answers_links_only(&links, restricted_length), results);
+    }
+
+    #[test]
+    fn test_answer_links_only_when_restricted_size_is_large_than_given_links() {
+        let links: Vec<String> = vec![
+            String::from("https://stackoverflow.com/questions/test/how-to-write-function"),
+            String::from("https://stackoverflow.com/questions/test/best-practise-for-rust"),
+        ];
+        let restricted_length: usize = 1000;
+        let results: String = format!(
+            "{}\n{}{}{}\n{}",
+            "Title - how to write function",
+            "https://stackoverflow.com/questions/test/how-to-write-function",
+            SPLITTER,
+            "Title - best practise for rust",
+            "https://stackoverflow.com/questions/test/best-practise-for-rust"
+        );
+        assert_eq!(answers_links_only(&links, restricted_length), results);
+    }
+
+    fn test_parse_answer() {}
+
+    fn test_parse_answer_when_no_answers_available() {}
 }
