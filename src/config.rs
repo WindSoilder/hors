@@ -1,14 +1,22 @@
 #[derive(Debug)]
+/// The results output options is defined here.
 pub enum OutputOption {
+    /// Only output links.
     Links,
+    /// Output answer details, which contains code and plain text.
     All,
+    /// Only output code in answer.
     OnlyCode,
 }
 
 #[derive(Debug)]
+/// The user config information is integrated here.
 pub struct Config {
+    /// Terminal output options.
     option: OutputOption,
+    /// The number of answers to be output.
     numbers: u8,
+    /// Indicate that the output code shoule be colorized or not.
     colorize: bool,
 }
 

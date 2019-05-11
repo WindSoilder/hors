@@ -11,7 +11,20 @@ use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
 const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
-// TODO: Add docstring
+
+/// get answers from given links.
+///
+/// This function will go through network to find out answers.
+///
+/// # Arguments
+///
+/// * `links` - the links where answer existed.
+/// * `conf` - contains information about get_answer options.
+///
+/// # Return value
+///
+/// If search answers successfully, it will return the result string which can be
+/// print to terminal directly.  Else return an Error.
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     match conf.option() {
         OutputOption::Links => return Ok(answers_links_only(links, conf.numbers() as usize)),
@@ -19,8 +32,7 @@ pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     }
 }
 
-// TODO: Add docstring
-pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
+fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
     let user_agent: &str = random_agent();
     let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
@@ -30,6 +42,8 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
         let next_link = links_iter.next();
         match next_link {
             Some(link) => {
+                // the given links may contains the url doesn't contains `question`
+                // tag, so it's not a question, and just deal with nothing to it.
                 if !link.contains("question") {
                     continue;
                 }
@@ -54,7 +68,8 @@ pub fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> 
 
 fn parse_answer(page: String, config: &Config) -> Option<String> {
     let doc: Document = Document::from(page.as_str());
-    // The question tags may contains useful information about the language topic.
+    // The question tags may contains useful information about the language topic
+    // so syntect can use correct Syntex reference.
     let mut question_tags: Vec<String> = vec![];
     let tags = doc.find(Class("post-tag"));
     for tag in tags {
