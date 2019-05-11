@@ -1,6 +1,9 @@
 # hors
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
 
+# Screenshot
+![Screenshots of hors](screenshots/screenshot.png)
+
 # Installation
 hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
 ```shell
