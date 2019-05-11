@@ -1,9 +1,6 @@
 # hors
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
 
-About the name:
-`hors` is the abbreviation of `howdoi in rust`.
-
 # Installation
 ```shell
 cargo install hors
@@ -127,3 +124,6 @@ Very thanks for these awesome project :)
 - [syntect](https://github.com/trishume/syntect) provides syntax highlighting feature.
 - [rand](https://github.com/rust-random/rand) provides random choice generation.
 - [clap](https://github.com/clap-rs/clap) provides command line argument parser.
+
+# About the name
+`hors` is the abbreviation of `howdoi in rust`.
