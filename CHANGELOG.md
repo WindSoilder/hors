@@ -1,4 +1,4 @@
-# [0.1.0] - xxxx-xx-xx
+# [0.1.0] - 2019-05-11
 ## Added
 - The first implementation of hors
 - support *-l* argument
