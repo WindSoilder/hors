@@ -226,6 +226,7 @@ fn extract_question(path: &str) -> String {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::config::{Config, OutputOption};
 
     #[test]
     fn test_answer_links_only() {
@@ -274,7 +275,169 @@ mod test {
         assert_eq!(answers_links_only(&links, restricted_length), results);
     }
 
-    fn test_parse_answer() {}
+    #[test]
+    fn test_parse_answer() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>println!(\"hello world\")</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
 
-    fn test_parse_answer_when_no_answers_available() {}
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("println!(\"hello world\")"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_when_pre_and_code_both_existed() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <p>answer <code>goto</code> here </p>
+                        <pre>
+                            <code>println!(\"hello world\")</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("println!(\"hello world\")"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_when_only_code_existed() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <p>answer <code>goto</code> here </p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("goto"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_detailed() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <p>answer <code>goto</code> here </p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("answer goto here"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_colorized() {
+        // to testing answer colorized, we just want to make sure that
+        // the result has different length.
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\">python</a>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
+        let conf: Config = Config::new(OutputOption::All, 1, true);
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\">python</a>
+                <div class=\"answer\">
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let colorized_answer: String = parse_answer(page, &conf).unwrap();
+        assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
+        assert!(un_colorized_answer.trim().len() < colorized_answer.trim().len());
+    }
+
+    #[test]
+    fn test_parse_answer_when_no_answers_available() {
+        let page: String = String::from("");
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_none(), true);
+    }
+
+    #[test]
+    fn test_parse_answer_detailed_when_no_answers_available() {
+        let page: String = String::from("");
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+        assert_eq!(answer.is_none(), true);
+    }
 }
