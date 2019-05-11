@@ -5,14 +5,17 @@ authors = ["WindSoilder <WindSoilder@outlook.com>"]
 edition = "2018"
 license = "GPL-3.0"
 description = "instant coding answers via the command line(just like howdoi)"
+repository = "https://github.com/WindSoilder/hors"
+documentation = "https://github.com/WindSoilder/hors/blob/master/README.md"
+keyword = ["http", "client", "command line tools"]
 
 [dependencies]
-clap = "*"
-syntect = "*"
-reqwest = "*"
-select = "*"
-rand = "*"
-log = "*"
+clap = "2.33.0"
+syntect = "3.2.0"
+reqwest = "0.9.16"
+select = "0.4.2"
+rand = "0.6.5"
+log = "0.4.6"
 
 [dev-dependencies]
-env_logger = "*"
+env_logger = "0.6"
