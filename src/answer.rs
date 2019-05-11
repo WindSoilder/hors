@@ -171,32 +171,6 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
     return ss.find_syntax_plain_text();
 }
 
-//??? Why the following code doesn't work
-// fn guess_syntax2(possible_tags: Vec<String>) -> &SyntaxReference {
-//     let ss = SyntaxSet::load_defaults_newlines();
-//     for tag in possible_tags {
-//         let syntax = ss.find_syntax_by_token(tag.as_str());
-//         if let Some(result) = syntax {
-//             // ??? Why I can't return a SyntaxReference
-//             return result;
-//         }
-//     }
-//     return ss.find_syntax_plain_text();
-// }
-
-//??? Why the following code doesn't work either
-// fn guess_syntax3(possible_tags: Vec<String>) -> SyntaxReference {
-//     let ss = SyntaxSet::load_defaults_newlines();
-//     for tag in possible_tags {
-//         let syntax = ss.find_syntax_by_token(tag.as_str());
-//         if let Some(result) = syntax {
-//             // ??? Why I can't return a SyntaxReference
-//             return *result;
-//         }
-//     }
-//     return *ss.find_syntax_plain_text();
-// }
-
 /// Return links from the given stackoverflow links
 ///
 ///
