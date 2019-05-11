@@ -3,6 +3,8 @@ name = "hors"
 version = "0.1.0"
 authors = ["WindSoilder <WindSoilder@outlook.com>"]
 edition = "2018"
+license = "GNU General Public License v3.0"
+description = "instant coding answers via the command line(just like howdoi)"
 
 [dependencies]
 clap = "*"
