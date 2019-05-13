@@ -12,6 +12,11 @@ static USER_AGENTS: [&str; 6] =
     ];
 static DEFAULT_AGENT: &str = "hors";
 
+/// generate a random User-Agents
+///
+/// # Return value
+///
+/// A User-Agent str which can be used for User-Agent fields.
 pub fn random_agent() -> &'static str {
     let mut rng = thread_rng();
     match USER_AGENTS.choose(&mut rng) {
