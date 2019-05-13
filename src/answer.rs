@@ -298,6 +298,7 @@ mod test {
         <html>
             <body>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <pre>
                             <code>println!(\"hello world\")</code>
@@ -325,6 +326,7 @@ mod test {
         <html>
             <body>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <p>answer <code>goto</code> here </p>
                         <pre>
@@ -353,6 +355,7 @@ mod test {
         <html>
             <body>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <p>answer <code>goto</code> here </p>
                     </div>
@@ -378,6 +381,7 @@ mod test {
         <html>
             <body>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <p>answer <code>goto</code> here </p>
                     </div>
@@ -406,6 +410,7 @@ mod test {
             <body>
                 <a class=\"post-tag\">python</a>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <pre>
                             <code>print(1 + 2)</code>
@@ -425,6 +430,7 @@ mod test {
             <body>
                 <a class=\"post-tag\">python</a>
                 <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
                         <pre>
                             <code>print(1 + 2)</code>
@@ -456,4 +462,10 @@ mod test {
         let answer: Option<String> = parse_answer(page, &conf);
         assert_eq!(answer.is_none(), true);
     }
+
+    #[test]
+    fn test_select_answer() {}
+
+    #[test]
+    fn test_select_answer_when_no_answers_available() {}
 }
