@@ -4,6 +4,7 @@ use crate::error::Result;
 use crate::utils::random_agent;
 use reqwest::{Response, Url};
 use select::document::Document;
+use select::node::Node;
 use select::predicate::{Class, Name};
 use syntect::easy::HighlightLines;
 use syntect::highlighting::ThemeSet;
@@ -76,9 +77,9 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
         question_tags.push(tag.text());
     }
 
-    let mut first_answer = doc.find(Class("answer"));
+    let appropriate_answer = select_answer(&doc);
 
-    if let Some(answer) = first_answer.next() {
+    if let Some(answer) = appropriate_answer {
         match *config.option() {
             OutputOption::OnlyCode => {
                 return parse_answer_instruction(answer, question_tags, config.colorize());
@@ -93,6 +94,32 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
         }
     }
     return None;
+}
+
+/// Select answer by most voted.
+fn select_answer(doc: &Document) -> Option<Node> {
+    let mut selected_node: Option<Node> = None;
+    let mut selected_voted: i16 = 0;
+    let answers = doc.find(Class("answer"));
+
+    for answer in answers {
+        // fetch vote count to know which answer is best for users.
+        let voted: Node = answer.find(Class("js-vote-count")).next().expect(
+            "Can't find vote information :(  If you see this message, please fire an issue.",
+        );
+        debug!("Voted node infromation {:?}", voted);
+        // Hors think that the voted number should less than 32767, so make it i16 type.
+        let voted: i16 = voted
+            .text()
+            .trim()
+            .parse()
+            .expect("Vote information should be a number :(  If you see this message, please fire an issue.˝");
+        if voted > selected_voted {
+            selected_voted = voted;
+            selected_node = Some(answer);
+        }
+    }
+    return selected_node;
 }
 
 fn parse_answer_instruction(
