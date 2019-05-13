@@ -20,7 +20,10 @@ static DEFAULT_AGENT: &str = "hors";
 pub fn random_agent() -> &'static str {
     let mut rng = thread_rng();
     match USER_AGENTS.choose(&mut rng) {
-        Some(user_agent) => return user_agent,
+        Some(user_agent) => {
+            debug!("selected User-Agent: {}", user_agent);
+            return user_agent;
+        }
         None => return DEFAULT_AGENT,
     }
 }
