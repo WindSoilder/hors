@@ -1,4 +1,4 @@
-use crate::error::{HorError, Result};
+use crate::error::{HorsError, Result};
 use crate::utils::random_agent;
 use reqwest::RequestBuilder;
 use select::document::Document;
@@ -22,7 +22,7 @@ pub fn search(query: &String) -> Result<Vec<String>> {
     match extract_results {
         Some(links) => return Ok(links),
         None => {
-            return Err(HorError::from_parse("Can't find search result..."));
+            return Err(HorsError::from_parse("Can't find search result..."));
         }
     }
 }
