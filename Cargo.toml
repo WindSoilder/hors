@@ -7,7 +7,7 @@ license = "GPL-3.0"
 description = "instant coding answers via the command line(just like howdoi)"
 repository = "https://github.com/WindSoilder/hors"
 documentation = "https://github.com/WindSoilder/hors/blob/master/README.md"
-keyword = ["http", "client", "command line tools"]
+keywords = ["http", "client", "command line tools"]
 
 [dependencies]
 clap = "2.33.0"
