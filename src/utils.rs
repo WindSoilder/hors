@@ -25,7 +25,6 @@ pub fn random_agent() -> &'static str {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
