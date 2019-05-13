@@ -54,7 +54,7 @@ fn main() -> Result<(), Box<Error>> {
     let matches: ArgMatches = parser_matches();
 
     let target_links: Vec<String> =
-        engine::bing::search(&String::from(matches.value_of("QUERY").unwrap()))?;
+        engine::bing::search_links(&String::from(matches.value_of("QUERY").unwrap()))?;
 
     let output_option: OutputOption;
     if matches.is_present("link") {

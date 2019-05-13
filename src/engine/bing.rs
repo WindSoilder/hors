@@ -4,7 +4,7 @@ use reqwest::RequestBuilder;
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
 
-/// Search under the `bing` search engine.
+/// Search result links under the `bing` search engine.
 ///
 /// This function will go through network to find out useful links in bing.
 ///
@@ -16,7 +16,7 @@ use select::predicate::{Class, Name, Predicate};
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search(query: &String) -> Result<Vec<String>> {
+pub fn search_links(query: &String) -> Result<Vec<String>> {
     let page: String = fetch(query)?;
     let extract_results = extract_links(&page);
     match extract_results {
