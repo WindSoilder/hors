@@ -401,6 +401,38 @@ mod test {
     }
 
     #[test]
+    fn test_parse_answer_when_two_answers_available() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <p>answer <code>lower</code> here </p>
+                    </div>
+                </div>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">9000</div>
+                    <div class=\"post-text\">
+                        <p>answer <code>higher</code> here </p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("answer higher here"));
+        }
+    }
+
+    #[test]
     fn test_parse_answer_colorized() {
         // to testing answer colorized, we just want to make sure that
         // the result has different length.
@@ -462,10 +494,4 @@ mod test {
         let answer: Option<String> = parse_answer(page, &conf);
         assert_eq!(answer.is_none(), true);
     }
-
-    #[test]
-    fn test_select_answer() {}
-
-    #[test]
-    fn test_select_answer_when_no_answers_available() {}
 }
