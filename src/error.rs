@@ -6,6 +6,7 @@ use std::result::Result as StdResult;
 pub type Result<T> = StdResult<T, HorsError>;
 
 #[derive(Debug)]
+/// Error exposed by hors.
 pub struct HorsError {
     repr: Repr,
 }

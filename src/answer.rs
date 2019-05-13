@@ -13,7 +13,7 @@ use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
 const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 
-/// get answers from given links.
+/// Get answers from given links.
 ///
 /// This function will go through network to find out answers.
 ///

@@ -27,7 +27,7 @@ pub fn search_links(query: &String) -> Result<Vec<String>> {
     }
 }
 
-/// fetch actual page according to given query.
+/// Fetch actual page according to given query.
 ///
 /// # Arguments
 ///

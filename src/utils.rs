@@ -12,7 +12,7 @@ static USER_AGENTS: [&str; 6] =
     ];
 static DEFAULT_AGENT: &str = "hors";
 
-/// generate a random User-Agents
+/// Generate a random User-Agents.
 ///
 /// # Return value
 ///
