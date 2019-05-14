@@ -50,7 +50,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
     return parser.get_matches();
 }
 
-fn main() -> Result<(), Box<Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let matches: ArgMatches = parser_matches();
 
     let target_links: Vec<String> = engine::search_links(
