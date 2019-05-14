@@ -1,4 +1,6 @@
 mod bing;
+mod google;
+
 use crate::error::{HorsError, Result};
 use crate::utils::random_agent;
 use reqwest::RequestBuilder;
@@ -28,7 +30,13 @@ pub fn search_links(query: &String, engine: &String) -> Result<Vec<String>> {
 }
 
 fn get_query_url(query: &String, engine: &String) -> String {
-    return bing::get_query_url(query);
+    if engine == "bing" {
+        return bing::get_query_url(query);
+    } else if engine == "google" {
+        return google::get_query_url(query);
+    } else {
+        panic!("For now I can only support `bing` and `google`");
+    }
 }
 
 /// Fetch actual page according to given query.
@@ -62,5 +70,11 @@ fn fetch(search_url: &String) -> Result<String> {
 ///
 /// Links to the relative question, or returns None if we can't find it.
 fn extract_links(page: &String, engine: &String) -> Option<Vec<String>> {
-    return bing::extract_links(page);
+    if engine == "bing" {
+        return bing::extract_links(page);
+    } else if engine == "google" {
+        return google::extract_links(page);
+    } else {
+        panic!("For now I can only support `bing` and `google`");
+    }
 }

@@ -21,7 +21,7 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// # Arguments
 ///
-/// * `page` - the bing search result page, which is mainly got by `fetch` function
+/// * `page` - the bing search result page.
 ///
 /// # Return value
 ///
