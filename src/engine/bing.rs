@@ -1,55 +1,20 @@
-use crate::error::{HorsError, Result};
-use crate::utils::random_agent;
-use reqwest::RequestBuilder;
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
 
-/// Search result links under the `bing` search engine.
-///
-/// This function will go through network to find out useful links in bing.
+/// Get bing search url.
 ///
 /// # Arguments
 ///
-/// * `query` - The user input query String.
+/// * `query` - The user input query information.
 ///
 /// # Return value
 ///
-/// If search links successfully, it will return a Vector of String, which indicate
-/// relative links to got answer.  Else return an Error.
-pub fn search_links(query: &String) -> Result<Vec<String>> {
-    let page: String = fetch(query)?;
-    let extract_results = extract_links(&page);
-    match extract_results {
-        Some(links) => return Ok(links),
-        None => {
-            return Err(HorsError::from_parse("Can't find search result..."));
-        }
-    }
-}
-
-/// Fetch actual page according to given query.
-///
-/// # Arguments
-///
-/// * `query` - The user input query String.
-///
-/// # Return value
-///
-/// If get search result page successfully, it will return the content of page,
-/// or returns error.
-fn fetch(query: &String) -> Result<String> {
-    let url: String = format!(
+/// Return the query url, which can be fired with HTTP GET request.
+pub fn get_query_url(query: &String) -> String {
+    return format!(
         "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
         query
     );
-    let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
-    let request: RequestBuilder = client
-        .get(url.as_str())
-        .header(reqwest::header::USER_AGENT, random_agent());
-    debug!("Request to bing information: {:?}", request);
-    let mut res = request.send()?;
-    let page: String = res.text()?;
-    return Ok(page);
 }
 
 /// Extract links from given page.
@@ -61,7 +26,7 @@ fn fetch(query: &String) -> Result<String> {
 /// # Return value
 ///
 /// Links to the relative question, or returns None if we can't find it.
-fn extract_links(page: &String) -> Option<Vec<String>> {
+pub fn extract_links(page: &String) -> Option<Vec<String>> {
     let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
     let target_elements = doc.find(Class("b_algo").descendant(Name("h2")).descendant(Name("a")));

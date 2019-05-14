@@ -53,8 +53,10 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
 fn main() -> Result<(), Box<Error>> {
     let matches: ArgMatches = parser_matches();
 
-    let target_links: Vec<String> =
-        engine::bing::search_links(&String::from(matches.value_of("QUERY").unwrap()))?;
+    let target_links: Vec<String> = engine::search_links(
+        &String::from(matches.value_of("QUERY").unwrap()),
+        &String::from("bing"),
+    )?;
 
     let output_option: OutputOption;
     if matches.is_present("link") {
