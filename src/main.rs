@@ -9,6 +9,8 @@ mod utils;
 use clap::{App, Arg, ArgMatches};
 use config::{Config, OutputOption, SearchEngine};
 use std::error::Error;
+// ??? why use std::str::FromStr is required.
+use std::str::FromStr;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
@@ -61,15 +63,8 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
 fn main() -> Result<(), Box<dyn Error>> {
     let matches: ArgMatches = parser_matches();
 
-    let search_engine: SearchEngine;
-    let user_input_engine = matches.value_of("engine").unwrap_or_default();
-    if user_input_engine == "bing" {
-        search_engine = SearchEngine::Bing;
-    } else if user_input_engine == "google" {
-        search_engine = SearchEngine::Google;
-    } else {
-        panic!("Unsupported search engine, hors support `bing`, `google` for now.");
-    }
+    let search_engine =
+        SearchEngine::from_str(matches.value_of("engine").unwrap_or_default()).unwrap();
     debug!("Search under the {:?}", search_engine);
 
     let target_links: Vec<String> = engine::search_links(

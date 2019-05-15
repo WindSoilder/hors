@@ -1,3 +1,6 @@
+use crate::error::{HorsError, Result};
+use std::str::FromStr;
+
 #[derive(Debug)]
 /// The results output options is defined here.
 pub enum OutputOption {
@@ -48,5 +51,17 @@ impl Config {
 
     pub fn colorize(&self) -> bool {
         return self.colorize;
+    }
+}
+
+impl FromStr for SearchEngine {
+    type Err = HorsError;
+
+    fn from_str(s: &str) -> Result<Self> {
+        match s {
+            "bing" => return Ok(SearchEngine::Bing),
+            "google" => return Ok(SearchEngine::Google),
+            _ => return Err(HorsError::from_parse("Not supported search engine")),
+        }
     }
 }
