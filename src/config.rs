@@ -10,6 +10,15 @@ pub enum OutputOption {
 }
 
 #[derive(Debug)]
+/// supported search engine definition
+pub enum SearchEngine {
+    /// Microsoft bing search engine.
+    Bing,
+    /// Google search engine.
+    Google,
+}
+
+#[derive(Debug)]
 /// The user config information is integrated here.
 pub struct Config {
     /// Terminal output options.

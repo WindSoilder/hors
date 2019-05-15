@@ -1,6 +1,7 @@
 mod bing;
 mod google;
 
+use crate::config::SearchEngine;
 use crate::error::{HorsError, Result};
 use crate::utils::random_agent;
 use reqwest::RequestBuilder;
@@ -12,15 +13,16 @@ use reqwest::RequestBuilder;
 /// # Arguments
 ///
 /// * `query` - The user input query String.
+/// * `search_engine` - indicate which search engine we use to search result links.
 ///
 /// # Return value
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search_links(query: &String, engine: &String) -> Result<Vec<String>> {
-    let fetch_url: String = get_query_url(query, engine);
+pub fn search_links(query: &String, search_engine: SearchEngine) -> Result<Vec<String>> {
+    let fetch_url: String = get_query_url(query, &search_engine);
     let page: String = fetch(&fetch_url)?;
-    let extract_results = extract_links(&page, engine);
+    let extract_results = extract_links(&page, &search_engine);
     match extract_results {
         Some(links) => return Ok(links),
         None => {
@@ -29,13 +31,10 @@ pub fn search_links(query: &String, engine: &String) -> Result<Vec<String>> {
     }
 }
 
-fn get_query_url(query: &String, engine: &String) -> String {
-    if engine == "bing" {
-        return bing::get_query_url(query);
-    } else if engine == "google" {
-        return google::get_query_url(query);
-    } else {
-        panic!("For now I can only support `bing` and `google`");
+fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
+    match search_engine {
+        SearchEngine::Bing => return bing::get_query_url(query),
+        SearchEngine::Google => return google::get_query_url(query),
     }
 }
 
@@ -64,17 +63,15 @@ fn fetch(search_url: &String) -> Result<String> {
 ///
 /// # Arguments
 ///
-/// * `page` - the bing search result page, which is mainly got by `fetch` function
+/// * `page` - the bing search result page, which is mainly got by `fetch` function.
+/// * `search_engine` - indicate which search engine we can use to extract links out.
 ///
 /// # Return value
 ///
 /// Links to the relative question, or returns None if we can't find it.
-fn extract_links(page: &String, engine: &String) -> Option<Vec<String>> {
-    if engine == "bing" {
-        return bing::extract_links(page);
-    } else if engine == "google" {
-        return google::extract_links(page);
-    } else {
-        panic!("For now I can only support `bing` and `google`");
+fn extract_links(page: &String, search_engine: &SearchEngine) -> Option<Vec<String>> {
+    match search_engine {
+        SearchEngine::Bing => return bing::extract_links(page),
+        SearchEngine::Google => return google::extract_links(page),
     }
 }

@@ -7,7 +7,7 @@ mod error;
 mod utils;
 
 use clap::{App, Arg, ArgMatches};
-use config::{Config, OutputOption};
+use config::{Config, OutputOption, SearchEngine};
 use std::error::Error;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
@@ -41,6 +41,14 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .help("number of answers to return"),
         )
         .arg(
+            Arg::with_name("engine")
+                .long("engine")
+                .short("e")
+                .takes_value(true)
+                .default_value("bing")
+                .help("select middle search engine, currently support bing and google."),
+        )
+        .arg(
             Arg::with_name("version")
                 .long("version")
                 .short("v")
@@ -53,11 +61,6 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
 fn main() -> Result<(), Box<dyn Error>> {
     let matches: ArgMatches = parser_matches();
 
-    let target_links: Vec<String> = engine::search_links(
-        &String::from(matches.value_of("QUERY").unwrap()),
-        &String::from("bing"),
-    )?;
-
     let output_option: OutputOption;
     if matches.is_present("link") {
         output_option = OutputOption::Links;
@@ -66,6 +69,22 @@ fn main() -> Result<(), Box<dyn Error>> {
     } else {
         output_option = OutputOption::OnlyCode;
     }
+
+    let search_engine: SearchEngine;
+    let user_input_engine = matches.value_of("engine").unwrap_or_default();
+    if user_input_engine == "bing" {
+        search_engine = SearchEngine::Bing;
+    } else if user_input_engine == "google" {
+        search_engine = SearchEngine::Google;
+    } else {
+        panic!("Unsupported search engine, hors support `(bing, google)` for now.");
+    }
+    debug!("Search under the {:?}", search_engine);
+
+    let target_links: Vec<String> = engine::search_links(
+        &String::from(matches.value_of("QUERY").unwrap()),
+        search_engine,
+    )?;
 
     let conf: Config = Config::new(
         output_option,
