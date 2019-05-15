@@ -17,11 +17,14 @@ USAGE:
 
 FLAGS:
     -a, --all        display the full text of the answer.
+    -c, --color      enable colorized output
     -h, --help       Prints help information
     -l, --link       display only the answer link.
     -v, --version    displays the current version of howdoi
 
 OPTIONS:
+    -e, --engine <engine>                    select middle search engine, currently support `bing` and `google`.
+                                             [default: bing]
     -n, --number_answers <number_answers>    number of answers to return [default: 1]
 
 ARGS:
@@ -119,6 +122,11 @@ below will push your code to the master branch of the remote repository defined 
 git push -u origin master
 
 Documentation
+```
+
+6. The default search engine is bing, how can I use other search engine?
+```shell
+hors "set git remote url" -n 2 -a -e "google"
 ```
 
 # Special thanks

@@ -1,4 +1,8 @@
 # [unleased]
+## Added
+- Support google search engine
+- Support *-e* argument
+
 ## Changed
 - Hors will select answer by voted information.  Which means that if an answer is not accepted, but it's the most voted, hor will show that answer for you.
 
