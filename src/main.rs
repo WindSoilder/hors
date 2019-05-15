@@ -61,15 +61,6 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
 fn main() -> Result<(), Box<dyn Error>> {
     let matches: ArgMatches = parser_matches();
 
-    let output_option: OutputOption;
-    if matches.is_present("link") {
-        output_option = OutputOption::Links;
-    } else if matches.is_present("all") {
-        output_option = OutputOption::All;
-    } else {
-        output_option = OutputOption::OnlyCode;
-    }
-
     let search_engine: SearchEngine;
     let user_input_engine = matches.value_of("engine").unwrap_or_default();
     if user_input_engine == "bing" {
@@ -77,7 +68,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     } else if user_input_engine == "google" {
         search_engine = SearchEngine::Google;
     } else {
-        panic!("Unsupported search engine, hors support `(bing, google)` for now.");
+        panic!("Unsupported search engine, hors support `bing`, `google` for now.");
     }
     debug!("Search under the {:?}", search_engine);
 
@@ -86,6 +77,24 @@ fn main() -> Result<(), Box<dyn Error>> {
         search_engine,
     )?;
 
+    let conf: Config = init_config(&matches);
+    debug!("User config: {:?}", conf);
+    let answers: String = answer::get_answers(&target_links, conf)?;
+    println!("{}", answers);
+
+    return Ok(());
+}
+
+/// initialize config from user input arguments.
+fn init_config(matches: &ArgMatches) -> Config {
+    let output_option: OutputOption;
+    if matches.is_present("link") {
+        output_option = OutputOption::Links;
+    } else if matches.is_present("all") {
+        output_option = OutputOption::All;
+    } else {
+        output_option = OutputOption::OnlyCode;
+    }
     let conf: Config = Config::new(
         output_option,
         matches
@@ -95,9 +104,5 @@ fn main() -> Result<(), Box<dyn Error>> {
             .unwrap(),
         matches.is_present("color"),
     );
-    debug!("User config: {:?}", conf);
-    let answers: String = answer::get_answers(&target_links, conf)?;
-    println!("{}", answers);
-
-    return Ok(());
+    return conf;
 }
