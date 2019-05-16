@@ -79,4 +79,13 @@ mod tests {
         let possible_links: Option<Vec<String>> = extract_links(&page);
         assert_eq!(possible_links.is_none(), true);
     }
+
+    #[test]
+    fn test_get_query_url() {
+        let result: String = get_query_url(&String::from("how to write unit test"));
+        assert_eq!(
+            "https://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
+            result
+        );
+    }
 }

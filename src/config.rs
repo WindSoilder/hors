@@ -65,3 +65,22 @@ impl FromStr for SearchEngine {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_search_engine_from_str() {
+        let search_engine = SearchEngine::from_str("bing");
+        assert_eq!(search_engine.is_ok(), true);
+        let search_engine = SearchEngine::from_str("google");
+        assert_eq!(search_engine.is_ok(), true);
+    }
+
+    #[test]
+    fn test_search_engine_from_invalid_str() {
+        let search_engine = SearchEngine::from_str("what's this?");
+        assert_eq!(search_engine.is_err(), true);
+    }
+}

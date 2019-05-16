@@ -42,3 +42,56 @@ pub fn extract_links(page: &String) -> Option<Vec<String>> {
     }
     return Some(links);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_extract_links() {
+        let page: String = String::from(
+            "
+<html>
+    <body>
+        <div class=\"g\">
+            <div class=\"r\">
+                <a href=\"https://test_link1\">
+                </a>
+            </div>
+        </div>
+        <div class=\"g\">
+            <div class=\"r\">
+                <a href=\"https://test_link2\">
+                </a>
+            </div>
+        </div>
+    </body>
+</html>",
+        );
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_some(), true);
+        assert_eq!(
+            possible_links.unwrap(),
+            vec![
+                String::from("https://test_link1"),
+                String::from("https://test_link2")
+            ]
+        )
+    }
+
+    #[test]
+    fn test_extract_links_when_there_are_no_links_available() {
+        let page: String = String::from("<html></html>");
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_none(), true);
+    }
+
+    #[test]
+    fn test_get_query_url() {
+        let result: String = get_query_url(&String::from("how to write unit test"));
+        assert_eq!(
+            "https://www.google.com/search?q=site:stackoverflow.com%20how to write unit test",
+            result
+        );
+    }
+}
