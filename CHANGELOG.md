@@ -1,4 +1,4 @@
-# [unleased]
+# [0.2.0] - 2019-05-16
 ## Added
 - Support google search engine
 - Support *-e* argument
