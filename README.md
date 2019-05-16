@@ -10,7 +10,13 @@ hors is written in `Rust`.  The recommended way to install `hors` is through `ca
 cargo install hors
 ```
 
-# Support arguments
+# Tested platforms
+For now, `hors` has been tested with the following platforms:
+- linux
+- osx
+- windows
+
+# Usage
 ```shell
 USAGE:
     hors [FLAGS] [OPTIONS] <QUERY>
