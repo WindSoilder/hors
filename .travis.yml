@@ -8,3 +8,4 @@ os:
   - linux
   - osx
   - windows
+cache: cargo
