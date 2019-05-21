@@ -2,10 +2,13 @@
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
+use bincode::{deserialize_from, serialize_into};
 use reqwest::{Response, Url};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use syntect::easy::HighlightLines;
 use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
@@ -48,6 +51,14 @@ fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
                 if !link.contains("question") {
                     continue;
                 }
+                /*
+                TODO:
+                Firstly try to get link from cache, when we can get answer from cache
+                if user want to colorize the result, we can pass config to colorized.
+                then we can just retrive results from that cache
+                but if we can't find result from cache, then we have to get answer from network.
+                And save the results from network to inner struct AnswerRecords.
+                */
                 let mut resp: Response = client
                     .get(link)
                     .header(reqwest::header::USER_AGENT, user_agent)
@@ -237,6 +248,68 @@ fn extract_question(path: &str) -> String {
     // we want to extract the link out
     let splitted: Vec<&str> = path.split("/").collect();
     return splitted[splitted.len() - 1].replace("-", " ");
+}
+
+/// The answer record relative information is integrated here.
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
+struct AnswerRecord {
+    /// the url contains useful links.
+    link: String,
+    /// tags for the link, it may contains useful topic about the question.
+    tags: Vec<String>,
+    /// Actual answer for the question.
+    answer: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
+struct AnswerRecordsCache(HashMap<String, AnswerRecord>);
+
+impl AnswerRecordsCache {
+    fn load_answers() -> AnswerRecordsCache {
+        /*
+        TODO:
+        try to get answer files from $HOME/.hors/.answers
+        if we can't find the file
+            just return an empty AnswerRecords
+        else
+            deserialize the file and load it to answer records
+        */
+        return AnswerRecordsCache(HashMap::new());
+    }
+
+    fn get(&self, link: &String) -> Option<AnswerRecord> {
+        /*
+        TODO:
+        try to get answer according to specific link
+        if we can find relative record
+            just return it
+        Else
+            we return nothing
+        */
+        return None;
+    }
+
+    fn put(&self, answer: AnswerRecord) {
+        /*
+        TODO:
+        extract out link from answer
+        then save answer to inner hashmap
+        */
+    }
+
+    fn dump_answers() -> Result<()> {
+        /*
+        TODO:
+        if the inner size of answer records is too large
+            truncate it to have size 100
+        dump answer to spefic file $HOME/.hors/.answers
+        if we can dump successfully
+            return ok with nothing
+        Else
+            propogate error message out.
+        */
+        return Ok(());
+    }
 }
 
 #[cfg(test)]
