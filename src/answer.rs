@@ -265,7 +265,12 @@ struct AnswerRecord {
 struct AnswerRecordsCache(HashMap<String, AnswerRecord>);
 
 impl AnswerRecordsCache {
-    fn load_answers() -> AnswerRecordsCache {
+    /// Load answers into cache.
+    ///
+    /// # Return value
+    ///
+    /// Return the instance of AnswerRecordsCache.
+    pub fn load() -> AnswerRecordsCache {
         /*
         TODO:
         try to get answer files from $HOME/.hors/.answers
@@ -277,7 +282,15 @@ impl AnswerRecordsCache {
         return AnswerRecordsCache(HashMap::new());
     }
 
-    fn get(&self, link: &String) -> Option<AnswerRecord> {
+    /// Get answer from the given link.
+    ///
+    /// # Arguments
+    ///
+    /// * `link` - link contains stackoverflow question.
+    ///
+    /// # Return value
+    /// Return cached answer record if we can find it, else returns None.
+    pub fn get(&self, link: &String) -> Option<AnswerRecord> {
         /*
         TODO:
         try to get answer according to specific link
@@ -289,7 +302,12 @@ impl AnswerRecordsCache {
         return None;
     }
 
-    fn put(&self, answer: AnswerRecord) {
+    /// Put answer to cache.
+    ///
+    /// # Arguments
+    ///
+    /// * `answer` - answer information.
+    pub fn put(&self, answer: AnswerRecord) {
         /*
         TODO:
         extract out link from answer
@@ -297,7 +315,12 @@ impl AnswerRecordsCache {
         */
     }
 
-    fn dump_answers() -> Result<()> {
+    /// Save the data into local file.
+    ///
+    /// # Return value
+    ///
+    /// Returns Ok if save success, else return an error.
+    pub fn save(&self) -> Result<()> {
         /*
         TODO:
         if the inner size of answer records is too large
