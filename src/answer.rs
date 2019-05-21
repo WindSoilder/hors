@@ -9,6 +9,7 @@ use select::node::Node;
 use select::predicate::{Class, Name};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::time::{SystemTime, UNIX_EPOCH};
 use syntect::easy::HighlightLines;
 use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
@@ -257,8 +258,36 @@ struct AnswerRecord {
     link: String,
     /// tags for the link, it may contains useful topic about the question.
     tags: Vec<String>,
-    /// Actual answer for the question.
+    /// actual answer for the question.
     answer: String,
+    /// when it was created.
+    created_time: u128,
+}
+
+impl AnswerRecord {
+    pub fn new(link: String, tags: Vec<String>, answer: String) -> AnswerRecord {
+        return AnswerRecord {
+            link,
+            tags,
+            answer,
+            created_time: SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("Time went beckwards")
+                .as_millis(),
+        };
+    }
+
+    pub fn link(&self) -> &String {
+        return &self.link;
+    }
+
+    pub fn tags(&self) -> &Vec<String> {
+        return &self.tags;
+    }
+
+    pub fn answer(&self) -> &String {
+        return &self.answer;
+    }
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
