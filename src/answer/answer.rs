@@ -135,18 +135,14 @@ fn parse_answer_instruction(
     question_tags: Vec<String>,
     should_colorize: bool,
 ) -> Option<String> {
-    if let Some(title) = answer_node.find(Name("pre")).next() {
-        if should_colorize {
-            return Some(colorized_code(title.text(), &question_tags));
-        } else {
-            return Some(title.text());
-        }
-    }
-    if let Some(code_instruction) = answer_node.find(Name("code")).next() {
-        if should_colorize {
-            return Some(colorized_code(code_instruction.text(), &question_tags));
-        } else {
-            return Some(code_instruction.text());
+    let code_elements: [&str; 2] = ["pre", "code"];
+    for code_element in code_elements.iter() {
+        if let Some(title) = answer_node.find(Name(*code_element)).next() {
+            if should_colorize {
+                return Some(colorized_code(title.text(), &question_tags));
+            } else {
+                return Some(title.text());
+            }
         }
     }
     return None;
