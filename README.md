@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/WindSoilder/hors.svg?branch=master)](https://travis-ci.org/WindSoilder/hors)
+
 # hors
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
 
