@@ -3,6 +3,7 @@ use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
+use std::collections::HashMap;
 use reqwest::{Client, Response, Url};
 use select::document::Document;
 use select::node::Node;
@@ -11,6 +12,7 @@ use syntect::easy::HighlightLines;
 use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
+
 
 const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 
@@ -29,10 +31,21 @@ const SPLITTER: &str = "\n^_^ ==================================================
 /// print to terminal directly.  Else return an Error.
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     debug!("Try to load cache from local cache file.");
-    let mut records_cache: AnswerRecordsCache = AnswerRecordsCache::load();
+    let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
+    //? is there have a way to create variable without initialized?
+    let mut records_cache: AnswerRecordsCache;
+    match load_result {
+        Ok(cache) => {
+            records_cache = cache;
+        }
+        Err(err) => {
+            warn!("Can't load cache from local cache file, errmsg {:?}", err);
+            records_cache = AnswerRecordsCache::load_empty();
+        }
+    }
     debug!("Load cache complete.");
 
-    //? can we don't initialize results variable with un-initialized value?
+    //? is there have a way to create variable without initialized?
     let results: Result<String>;
     match conf.option() {
         OutputOption::Links => results = Ok(answers_links_only(links, conf.numbers() as usize)),

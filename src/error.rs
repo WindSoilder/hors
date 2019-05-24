@@ -1,6 +1,8 @@
 use std::convert::From;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+use std::io::Error as IOError;
+use bincode::Error as SedesError;
 use std::result::Result as StdResult;
 
 pub type Result<T> = StdResult<T, HorsError>;
@@ -20,6 +22,12 @@ impl Error for HorsError {
             Repr::Parse(_) => {
                 return None;
             }
+            Repr::IOError(io_err) => {
+                return io_err.source();
+            }
+            Repr::SedesError(sedes_err) => {
+                return sedes_err.source();
+            }
         }
     }
 }
@@ -33,6 +41,8 @@ impl Display for HorsError {
 #[derive(Debug)]
 enum Repr {
     Network(reqwest::Error),
+    IOError(IOError),
+    SedesError(SedesError),
     Parse(&'static str),
 }
 
@@ -48,6 +58,22 @@ impl From<reqwest::Error> for HorsError {
     fn from(error: reqwest::Error) -> Self {
         return HorsError {
             repr: Repr::Network(error),
+        };
+    }
+}
+
+impl From<IOError> for HorsError {
+    fn from(error: IOError) -> Self {
+        return HorsError {
+            repr: Repr::IOError(error),
+        };
+    }
+}
+
+impl From<SedesError> for HorsError {
+    fn from(error: SedesError) -> Self {
+        return HorsError {
+            repr: Repr::SedesError(error),
         };
     }
 }

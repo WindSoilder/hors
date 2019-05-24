@@ -19,6 +19,7 @@ rand = "0.6.5"
 log = "0.4.6"
 serde = { version = "1.0.91", features = ["derive"] }
 bincode = "1.1.4"
+dirs = "1.0.5"
 
 [dev-dependencies]
 env_logger = "0.6"

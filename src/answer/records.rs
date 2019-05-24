@@ -1,7 +1,10 @@
 use crate::error::Result;
 use bincode::{deserialize_from, serialize_into};
+use dirs::cache_dir;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::fs::{create_dir_all, File};
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// The answer record relative information is integrated here.
@@ -54,15 +57,19 @@ impl AnswerRecordsCache {
     /// # Return value
     ///
     /// Return the instance of AnswerRecordsCache.
-    pub fn load() -> AnswerRecordsCache {
-        /*
-        TODO:
-        try to get answer files from $HOME/.hors/.answers
-        if we can't find the file
-            just return an empty AnswerRecords
-        else
-            deserialize the file and load it to answer records
-        */
+    pub fn load() -> Result<AnswerRecordsCache> {
+        if let Some(dir) = cache_dir() {
+            // just create cache file if not existed, and deserialize it.
+            let cache_file: PathBuf = AnswerRecordsCache::create_cache_file(&dir)?;
+            let f = File::open(cache_file)?;
+            let answer_records: AnswerRecordsCache = deserialize_from(f)?;
+            return Ok(answer_records);
+        }
+        return Ok(AnswerRecordsCache(HashMap::new()));
+    }
+
+    /// Create cache with empty internal.
+    pub fn load_empty() -> AnswerRecordsCache {
         return AnswerRecordsCache(HashMap::new());
     }
 
@@ -119,5 +126,19 @@ impl AnswerRecordsCache {
             propogate error message out.
         */
         return Ok(());
+    }
+
+    fn create_cache_file(dir: &PathBuf) -> Result<PathBuf> {
+        let cache_directory: PathBuf = dir.join("hors");
+        print!("{:?}", cache_directory);
+        if !cache_directory.exists() {
+            create_dir_all(&cache_directory).unwrap();
+        }
+
+        let answers = cache_directory.join("answers");
+        if !answers.exists() {
+            File::create(&answers)?;
+        }
+        return Ok(answers);
     }
 }
