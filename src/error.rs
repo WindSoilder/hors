@@ -1,8 +1,8 @@
+use bincode::Error as SedesError;
 use std::convert::From;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::io::Error as IOError;
-use bincode::Error as SedesError;
 use std::result::Result as StdResult;
 
 pub type Result<T> = StdResult<T, HorsError>;

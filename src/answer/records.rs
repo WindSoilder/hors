@@ -114,7 +114,10 @@ impl AnswerRecordsCache {
         }
         if let Some(dir) = cache_dir() {
             let cache_path: PathBuf = dir.join("hors").join("answers");
-            let f = OpenOptions::new().write(true).truncate(true).open(cache_path)?;
+            let f = OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(cache_path)?;
             // dump answer to spefic file $CACHE/hors/answers
             serialize_into(f, self).unwrap();
         }
