@@ -30,25 +30,19 @@ const SPLITTER: &str = "\n^_^ ==================================================
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
-    //? is there have a way to create variable without initialized?
-    let mut records_cache: AnswerRecordsCache;
-    match load_result {
-        Ok(cache) => {
-            records_cache = cache;
-        }
+    let mut records_cache: AnswerRecordsCache = match load_result {
+        Ok(cache) => cache,
         Err(err) => {
             warn!("Can't load cache from local cache file, errmsg {:?}", err);
-            records_cache = AnswerRecordsCache::load_empty();
+            AnswerRecordsCache::load_empty()
         }
-    }
+    };
     debug!("Load cache complete.");
 
-    //? is there have a way to create variable without initialized?
-    let results: Result<String>;
-    match conf.option() {
-        OutputOption::Links => results = Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => results = get_detailed_answer(links, conf, &mut records_cache),
-    }
+    let results: Result<String> = match conf.option() {
+        OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
+        _ => get_detailed_answer(links, conf, &mut records_cache),
+    };
     if let Err(err) = records_cache.save() {
         warn!(
             "Can't save cache into local directory, error msg: {:?}",
