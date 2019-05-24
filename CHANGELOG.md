@@ -1,3 +1,7 @@
+# [unreleased]
+## Added
+- Hors will use internal cache to improve performance.
+
 # [0.2.0] - 2019-05-16
 ## Added
 - Support google search engine
