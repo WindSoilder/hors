@@ -1,8 +1,9 @@
 //! This module contains api to get results from stack overflow page
+use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use reqwest::{Response, Url};
+use reqwest::{Client, Response, Url};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
@@ -27,15 +28,31 @@ const SPLITTER: &str = "\n^_^ ==================================================
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
+    debug!("Try to load cache from local cache file.");
+    let mut records_cache: AnswerRecordsCache = AnswerRecordsCache::load();
+    debug!("Load cache complete.");
+
+    //? can we don't initialize results variable with un-initialized value?
+    let results: Result<String>;
     match conf.option() {
-        OutputOption::Links => return Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => return get_detailed_answer(links, conf),
+        OutputOption::Links => results = Ok(answers_links_only(links, conf.numbers() as usize)),
+        _ => results = get_detailed_answer(links, conf, &mut records_cache),
     }
+    if let Err(err) = records_cache.save() {
+        warn!(
+            "Can't save cache into local directory, error msg: {:?}",
+            err
+        );
+    }
+    return results;
 }
 
-fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
+fn get_detailed_answer(
+    links: &Vec<String>,
+    conf: Config,
+    records_cache: &mut AnswerRecordsCache,
+) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
-    let user_agent: &str = random_agent();
     let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
     let mut links_iter = links.iter();
 
@@ -48,20 +65,9 @@ fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
                 if !link.contains("question") {
                     continue;
                 }
-                /*
-                TODO:
-                Firstly try to get link from cache, when we can get answer from cache
-                if user want to colorize the result, we can pass config to colorized.
-                then we can just retrive results from that cache
-                but if we can't find result from cache, then we have to get answer from network.
-                And save the results from network to inner struct AnswerRecords.
-                */
-                let mut resp: Response = client
-                    .get(link)
-                    .header(reqwest::header::USER_AGENT, user_agent)
-                    .send()?;
-                debug!("Response status from stackoverflow: {:?}", resp);
-                let page: String = resp.text()?;
+
+                let page: String = get_page(&link, &client, records_cache)?;
+
                 let title: String = format!("- Answer from {}", link);
                 let answer: Option<String> = parse_answer(page, &conf);
                 match answer {
@@ -73,6 +79,37 @@ fn get_detailed_answer(links: &Vec<String>, conf: Config) -> Result<String> {
         }
     }
     return Ok(results.join(SPLITTER));
+}
+
+fn get_page(
+    link: &String,
+    client: &Client,
+    records_cache: &mut AnswerRecordsCache,
+) -> Result<String> {
+    // Firstly try to get link from cache.
+    let page_from_cache: Option<&String> = records_cache.get(link);
+
+    debug!(
+        "Can we get answer from cache? {:}",
+        page_from_cache.is_some()
+    );
+    match page_from_cache {
+        // When we can get answer from cache, just return it.
+        Some(page) => {
+            return Ok(page.to_string());
+        }
+        // When we can't get answer from cache, we should get page from network.
+        None => {
+            let mut resp: Response = client
+                .get(link)
+                .header(reqwest::header::USER_AGENT, random_agent())
+                .send()?;
+            debug!("Response status from stackoverflow: {:?}", resp);
+            let page: String = resp.text()?;
+            records_cache.put(link.to_string(), page.to_string());
+            return Ok(page);
+        }
+    }
 }
 
 fn parse_answer(page: String, config: &Config) -> Option<String> {
