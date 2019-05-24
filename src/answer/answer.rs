@@ -3,7 +3,6 @@ use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use std::collections::HashMap;
 use reqwest::{Client, Response, Url};
 use select::document::Document;
 use select::node::Node;

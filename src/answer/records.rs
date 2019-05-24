@@ -3,7 +3,7 @@ use bincode::{deserialize_from, serialize_into};
 use dirs::cache_dir;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs::{create_dir_all, File};
+use std::fs::{create_dir_all, File, OpenOptions};
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -30,14 +30,6 @@ impl AnswerRecord {
         };
     }
 
-    pub fn link(&self) -> &String {
-        return &self.link;
-    }
-
-    pub fn page(&self) -> &String {
-        return &self.page;
-    }
-
     pub fn is_too_old(&self) -> bool {
         const HALF_MONTH_IN_SECONDS: u64 = 15 * 24 * 3600;
         let current_time = SystemTime::now()
@@ -60,7 +52,7 @@ impl AnswerRecordsCache {
     pub fn load() -> Result<AnswerRecordsCache> {
         if let Some(dir) = cache_dir() {
             // just create cache file if not existed, and deserialize it.
-            let cache_file: PathBuf = AnswerRecordsCache::create_cache_file(&dir)?;
+            let cache_file: PathBuf = AnswerRecordsCache::create_file_if_not_existed(&dir)?;
             let f = File::open(cache_file)?;
             let answer_records: AnswerRecordsCache = deserialize_from(f)?;
             return Ok(answer_records);
@@ -115,20 +107,21 @@ impl AnswerRecordsCache {
     ///
     /// Returns Ok if save success, else return an error.
     pub fn save(&self) -> Result<()> {
-        /*
-        TODO:
-        if the inner size of answer records is too large
-            truncate it to have size 100
-        dump answer to spefic file $HOME/.hors/.answers
-        if we can dump successfully
-            return ok with nothing
-        Else
-            propogate error message out.
-        */
+        const MAX_SIZE: usize = 300;
+        // if the inner size of answer records is too large
+        if self.0.len() > MAX_SIZE {
+            // TODO: truncate it to have size MAX_SIZE
+        }
+        if let Some(dir) = cache_dir() {
+            let cache_path: PathBuf = dir.join("hors").join("answers");
+            let f = OpenOptions::new().write(true).truncate(true).open(cache_path)?;
+            // dump answer to spefic file $CACHE/hors/answers
+            serialize_into(f, self).unwrap();
+        }
         return Ok(());
     }
 
-    fn create_cache_file(dir: &PathBuf) -> Result<PathBuf> {
+    fn create_file_if_not_existed(dir: &PathBuf) -> Result<PathBuf> {
         let cache_directory: PathBuf = dir.join("hors");
         if !cache_directory.exists() {
             create_dir_all(&cache_directory).unwrap();
