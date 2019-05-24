@@ -15,7 +15,7 @@ use std::str::FromStr;
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
         .author("WindSoilder, WindSoilder@outlook.com")
-        .version("0.1.0")
+        .version("0.3.0")
         .arg(
             Arg::with_name("all")
                 .long("all")
