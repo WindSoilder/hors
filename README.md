@@ -136,13 +136,8 @@ hors "set git remote url" -n 2 -a -e "google"
 ```
 
 # Special thanks
-Very thanks for these awesome project :)
+Very thanks for the awesome project and links :)
 - [howdoi](https://github.com/gleitz/howdoi) which inspired `hors` (Fow now `hors` is `howdoi` which implements in `rust`).
-- [reqwest](https://github.com/seanmonstar/reqwest) provides powerful http request api.
-- [syntect](https://github.com/trishume/syntect) provides syntax highlighting feature.
-- [rand](https://github.com/rust-random/rand) provides random choice generation.
-- [clap](https://github.com/clap-rs/clap) provides command line argument parser.
-- [select](https://github.com/utkarshkukreti/select.rs) provides utils for parsing html data.
 - [stackoverflow](https://stackoverflow.com/) helps user solve question about coding.
 
 # About the name
