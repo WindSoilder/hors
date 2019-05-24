@@ -130,7 +130,6 @@ impl AnswerRecordsCache {
 
     fn create_cache_file(dir: &PathBuf) -> Result<PathBuf> {
         let cache_directory: PathBuf = dir.join("hors");
-        print!("{:?}", cache_directory);
         if !cache_directory.exists() {
             create_dir_all(&cache_directory).unwrap();
         }
