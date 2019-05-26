@@ -137,6 +137,16 @@ Documentation
 hors "set git remote url" -n 2 -a -e "google"
 ```
 
+# Customize
+`hors` is command line tools, which means that users can easily customize it.  For example, in Linux or MacOS, you can easily customize `hors` by alias.  You can add the following lines into `profile`:
+```shell
+alias hors="hors -c"
+```
+which will enable `hors` colorize output by default.  Let's says that we want to make `hors` output the whole answers, coloring output by default.  So we can add the following lines into `profile`:
+```shell
+alias hors="hors -c -a"
+```
+
 # Special thanks
 Very thanks for the awesome project and links :)
 - [howdoi](https://github.com/gleitz/howdoi) which inspired `hors` (Fow now `hors` is `howdoi` which implements in `rust`).
