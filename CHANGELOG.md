@@ -1,3 +1,7 @@
+# [0.3.1] - 2019-05-26
+## Added
+- More friendly documentation.
+
 # [0.3.0] - 2019-05-24
 ## Added
 - Hors will use internal cache to improve performance.
