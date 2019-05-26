@@ -138,7 +138,9 @@ hors "set git remote url" -n 2 -a -e "google"
 ```
 
 # Customize
-`hors` is command line tools, which means that users can easily customize it.  For example, in Linux or MacOS, you can easily customize `hors` by alias.  You can add the following lines into `profile`:
+`hors` is command line tools, which means that users can easily customize it.
+
+For example, in Linux or MacOS, you can easily customize `hors` by alias.  You can add the following lines into `profile`:
 ```shell
 alias hors="hors -c"
 ```
