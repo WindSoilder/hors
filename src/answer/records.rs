@@ -30,12 +30,20 @@ impl AnswerRecord {
         };
     }
 
-    pub fn is_too_old(&self) -> bool {
+    /// Make desicion that if this AnswerRecord is too old.
+    ///
+    /// If the self object lives longer than(not longer than equal) half
+    /// month, it's too old.
+    ///
+    /// # Arguments
+    ///
+    /// * `current_time` - given timestamp of current time as seconds.
+    ///
+    /// # Return value
+    ///
+    /// Return true if the object is too old.
+    pub fn is_too_old(&self, current_time: u64) -> bool {
         const HALF_MONTH_IN_SECONDS: u64 = 15 * 24 * 3600;
-        let current_time = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("Time went beckwards")
-            .as_secs();
         return (current_time - self.created_time) > HALF_MONTH_IN_SECONDS;
     }
 }
@@ -79,7 +87,11 @@ impl AnswerRecordsCache {
             // if we can find relative record
             Some(record) => {
                 // check if the record is too old
-                if record.is_too_old() {
+                let current_time = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .expect("Time went beckwards")
+                    .as_secs();
+                if record.is_too_old(current_time) {
                     return None;
                 }
                 return Some(&record.page);
@@ -135,5 +147,92 @@ impl AnswerRecordsCache {
             File::create(&answers)?;
         }
         return Ok(answers);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_answer_record_initialize() {
+        let link: String = "http://test_link".to_string();
+        let page: String = "<html></html>".to_string();
+        let current_time: u64 = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went beckwards")
+            .as_secs();
+        let test_record = AnswerRecord::new(link, page);
+        // we should expect the test_record's create_time - current_time
+        // is less than 1.
+        assert!(test_record.created_time - current_time < 1)
+    }
+
+    #[test]
+    fn test_answer_record_too_old() {
+        let link: String = "http://test_link".to_string();
+        let page: String = "<html></html>".to_string();
+        let current_time: u64 = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went beckwards")
+            .as_secs();
+        let test_record = AnswerRecord::new(link, page);
+        assert_eq!(test_record.is_too_old(current_time), false);
+
+        let half_month_and_one_second: u64 = 3600 * 24 * 15 + 1;
+        let time_after_half_month: u64 = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went beckwards")
+            .as_secs()
+            + half_month_and_one_second;
+        assert_eq!(test_record.is_too_old(time_after_half_month), true);
+    }
+
+    #[test]
+    fn test_answer_record_cache_empty() {
+        let record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        assert_eq!(record_cache.0.is_empty(), true);
+    }
+
+    #[test]
+    fn test_answer_record_put() {
+        let mut record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        record_cache.put("http://test_link".to_string(), "<html></html>".to_string());
+        assert_eq!(
+            record_cache.get(&String::from("http://test_link")),
+            Some(&String::from("<html></html>"))
+        );
+    }
+
+    #[test]
+    fn test_answer_record_put_if_key_is_already_existed() {
+        let mut record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        record_cache.put("http://test_link".to_string(), "<html></html>".to_string());
+        record_cache.put("http://test_link".to_string(), "<html>2</html>".to_string());
+        assert_eq!(
+            record_cache.get(&String::from("http://test_link")),
+            Some(&String::from("<html>2</html>"))
+        );
+    }
+
+    #[test]
+    fn test_answer_record_get() {
+        let mut record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        record_cache.put("http://test_link".to_string(), "<html></html>".to_string());
+        assert_eq!(
+            record_cache.get(&String::from("http://test_link")),
+            Some(&String::from("<html></html>"))
+        );
+    }
+
+    #[test]
+    fn test_answer_record_get_when_key_is_not_existed() {
+        let record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        assert_eq!(
+            record_cache
+                .get(&String::from("http://test_link"))
+                .is_none(),
+            true
+        );
     }
 }
