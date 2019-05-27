@@ -7,7 +7,7 @@ use select::predicate::{Class, Name, Predicate};
 ///
 /// * `query` - The user input query information.
 ///
-/// # Return value
+/// # Returns
 ///
 /// Return the query url, which can be fired with HTTP GET request.
 pub fn get_query_url(query: &String) -> String {
@@ -23,7 +23,7 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// * `page` - the google search result page.
 ///
-/// # Return value
+/// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {

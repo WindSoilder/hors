@@ -14,7 +14,7 @@ static DEFAULT_AGENT: &str = "hors";
 
 /// Generate a random User-Agents.
 ///
-/// # Return value
+/// # Returns
 ///
 /// A User-Agent str which can be used for User-Agent fields.
 pub fn random_agent() -> &'static str {

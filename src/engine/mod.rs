@@ -15,7 +15,7 @@ use reqwest::RequestBuilder;
 /// * `query` - The user input query String.
 /// * `search_engine` - indicate which search engine we use to search result links.
 ///
-/// # Return value
+/// # Returns
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
@@ -44,7 +44,7 @@ fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
 ///
 /// * `query` - The user input query String.
 ///
-/// # Return value
+/// # Returns
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
@@ -66,7 +66,7 @@ fn fetch(search_url: &String) -> Result<String> {
 /// * `page` - the bing search result page, which is mainly got by `fetch` function.
 /// * `search_engine` - indicate which search engine we can use to extract links out.
 ///
-/// # Return value
+/// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
 fn extract_links(page: &String, search_engine: &SearchEngine) -> Option<Vec<String>> {

@@ -39,7 +39,7 @@ impl AnswerRecord {
     ///
     /// * `current_time` - given timestamp of current time as seconds.
     ///
-    /// # Return value
+    /// # Returns
     ///
     /// Return true if the object is too old.
     pub fn is_too_old(&self, current_time: u64) -> bool {
@@ -54,7 +54,7 @@ pub struct AnswerRecordsCache(HashMap<String, AnswerRecord>);
 impl AnswerRecordsCache {
     /// Load answers into cache.
     ///
-    /// # Return value
+    /// # Returns
     ///
     /// Return the instance of AnswerRecordsCache.
     pub fn load() -> Result<AnswerRecordsCache> {
@@ -79,7 +79,7 @@ impl AnswerRecordsCache {
     ///
     /// * `link` - link contains stackoverflow question.
     ///
-    /// # Return value
+    /// # Returns
     /// Return cached page if we can find it, else returns None.
     pub fn get(&self, link: &String) -> Option<&String> {
         let possible_page: Option<&AnswerRecord> = self.0.get(link);
@@ -115,7 +115,7 @@ impl AnswerRecordsCache {
 
     /// Save the data into local file.
     ///
-    /// # Return value
+    /// # Returns
     ///
     /// Returns Ok if save success, else return an error.
     pub fn save(&self) -> Result<()> {

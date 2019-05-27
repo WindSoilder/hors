@@ -23,7 +23,7 @@ const SPLITTER: &str = "\n^_^ ==================================================
 /// * `links` - the links where answer existed.
 /// * `conf` - contains information about get_answer options.
 ///
-/// # Return value
+/// # Returns
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
@@ -43,6 +43,8 @@ pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
         OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
         _ => get_detailed_answer(links, conf, &mut records_cache),
     };
+
+    // when hors gets what we wanted answer, save it for next time using.
     if let Err(err) = records_cache.save() {
         warn!(
             "Can't save cache into local directory, error msg: {:?}",
