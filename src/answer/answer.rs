@@ -12,7 +12,7 @@ use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
-const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
+pub const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 
 /// Get answers from given links.
 ///
