@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate log;
-extern crate hors;
 
 use clap::{App, Arg, ArgMatches};
 use hors::answer;
