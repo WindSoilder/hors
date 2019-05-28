@@ -1,14 +1,13 @@
 #[macro_use]
 extern crate log;
-mod answer;
-mod config;
-mod engine;
-mod error;
-mod utils;
+extern crate hors;
 
 use clap::{App, Arg, ArgMatches};
-use config::{Config, OutputOption, SearchEngine};
-use std::error::Error;
+use hors::answer;
+use hors::config::{Config, OutputOption, SearchEngine};
+use hors::engine;
+use hors::error::Result;
+
 // ??? why use std::str::FromStr is required.
 use std::str::FromStr;
 
@@ -60,7 +59,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
     return parser.get_matches();
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     let matches: ArgMatches = parser_matches();
 
     let search_engine =
