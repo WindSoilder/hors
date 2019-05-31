@@ -11,9 +11,9 @@ os:
 cache: cargo
 
 after_success: |
-  if [[ "$TRAVIS_RUST_VERSION" = stable ]]; then
-    bash <(curl https://raw.githubusercontent.com/xd009642/tarpaulin/master/travis-install.sh)
-    # Calculate test coverage
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    cargo install cargo-tarpaulin -f
+    # the following two lines create and upload a report for codecov.io
     cargo tarpaulin --out Xml
     bash <(curl -s https://codecov.io/bash)
   fi
