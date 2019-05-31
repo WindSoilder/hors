@@ -1,5 +1,5 @@
-use hors::answer::{get_answers, AnswerRecordsCache, SPLITTER};
-use hors::config::{Config, OutputOption, SearchEngine};
+use hors::answer::{get_answers, SPLITTER};
+use hors::config::{Config, OutputOption};
 
 #[test]
 fn test_get_answers_with_links_only() {
@@ -61,15 +61,3 @@ print j['two']
 "
     )
 }
-
-//
-// Testing for AnswerRecordsCache.
-//
-#[test]
-fn test_answer_records_cache_load() {}
-
-#[test]
-fn test_answer_records_cache_save() {}
-
-#[test]
-fn test_answer_records_cache_clear() {}
