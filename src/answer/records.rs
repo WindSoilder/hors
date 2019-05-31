@@ -136,23 +136,6 @@ impl AnswerRecordsCache {
         return Ok(());
     }
 
-    /// Clear cache hardly.
-    ///
-    /// # Returns
-    ///
-    /// Returns Ok if clear success, else return an error.
-    pub fn clear(&self) -> Result<()> {
-        if let Some(dir) = cache_dir() {
-            let cache_path: PathBuf = dir.join("hors").join("answers");
-            // just open file with truncate flag to clear the file
-            OpenOptions::new()
-                .write(true)
-                .truncate(true)
-                .open(cache_path)?;
-        }
-        return Ok(());
-    }
-
     fn create_file_if_not_existed(dir: &PathBuf) -> Result<PathBuf> {
         let cache_directory: PathBuf = dir.join("hors");
         if !cache_directory.exists() {
