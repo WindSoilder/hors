@@ -10,13 +10,10 @@ os:
   - windows
 cache: cargo
 
-before_cache: |
-  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-    cargo install cargo-tarpaulin -f
-  fi
-
 after_success: |
-  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+  # only run code coverage report for linux system.
+  if [[ "$TRAVIS_RUST_VERSION" == stable && "$TRAVIS_OS_NAME" == linux ]]; then
+    cargo install cargo-tarpaulin -f
     # the following two lines create and upload a report for codecov.io
     cargo tarpaulin --out Xml
     bash <(curl -s https://codecov.io/bash)
