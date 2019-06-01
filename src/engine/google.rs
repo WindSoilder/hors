@@ -38,7 +38,18 @@ pub fn extract_links(page: &String) -> Option<Vec<String>> {
 
     debug!("Links extract from google: {:?}", links);
     if links.len() == 0 {
-        return None;
+        // try to find links through another way.
+        // TODO: this can be refactored.
+        let target_elements = doc.find(Class("l"));
+        for node in target_elements {
+            if let Some(link) = node.attr("href") {
+                links.push(String::from(link));
+            }
+        }
+
+        if links.len() == 0 {
+            return None;
+        }
     }
     return Some(links);
 }
