@@ -1,3 +1,13 @@
+# [0.3.2] - 2019-06-01
+## Added
+- Code has been re-structured, so integration test can be introduced for hors easily.
+
+## Removed
+- Remove google search engine support temporary (Because there are issues here, and it can't be solved quickly)
+
+## Fixed
+- hors may runs forever with *-l* argument in the previous version, it's fixed now.
+
 # [0.3.1] - 2019-05-26
 ## Added
 - More friendly documentation.
