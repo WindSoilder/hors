@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/WindSoilder/hors.svg?branch=master)](https://travis-ci.org/WindSoilder/hors)
 [![codecov](https://codecov.io/gh/WindSoilder/hors/branch/master/graph/badge.svg)](https://codecov.io/gh/WindSoilder/hors)
 
-# hors
+# [hors](https://crates.io/crates/hors)
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
 
 # Screenshot
@@ -32,7 +32,7 @@ FLAGS:
     -v, --version    displays the current version of howdoi
 
 OPTIONS:
-    -e, --engine <engine>                    select middle search engine, currently support `bing` and `google`.
+    -e, --engine <engine>                    select middle search engine, currently support `bing`.
                                              [default: bing]
     -n, --number_answers <number_answers>    number of answers to return [default: 1]
 
