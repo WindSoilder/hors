@@ -307,6 +307,21 @@ mod test {
     }
 
     #[test]
+    fn test_answer_links_only_when_contains_links_is_not_question() {
+        let links: Vec<String> = vec![
+            String::from("https://stackoverflow.com/tags/rust"), // this link shouldn't output
+            String::from("https://stackoverflow.com/questions/test/how-to-write-function"),
+        ];
+        let restricted_length: usize = 4;
+        let results: String = format!(
+            "Title - {}\n{}",
+            "how to write function",
+            "https://stackoverflow.com/questions/test/how-to-write-function"
+        );
+        assert_eq!(answers_links_only(&links, restricted_length), results);
+    }
+
+    #[test]
     fn test_answer_links_only_when_restricted_size_is_less_than_given_links() {
         let links: Vec<String> = vec![
             String::from("https://stackoverflow.com/questions/test/how-to-write-function"),
@@ -394,6 +409,28 @@ mod test {
         if let Some(code) = answer {
             assert_eq!(code.trim(), String::from("println!(\"hello world\")"));
         }
+    }
+
+    #[test]
+    fn test_parse_answer_when_no_code_available() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <p>answer here </p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_none(), true);
     }
 
     #[test]
@@ -501,6 +538,52 @@ mod test {
         </html>
         ",
         );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, true);
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\">python</a>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let colorized_answer: String = parse_answer(page, &conf).unwrap();
+        assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
+        assert!(un_colorized_answer.trim().len() < colorized_answer.trim().len());
+    }
+
+    #[test]
+    fn test_parse_answer_detailed_colorized() {
+        // to testing answer colorized, we just want to make sure that
+        // the result has different length.
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\">python</a>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
         let conf: Config = Config::new(OutputOption::All, 1, true);
@@ -509,6 +592,51 @@ mod test {
         <html>
             <body>
                 <a class=\"post-tag\">python</a>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let colorized_answer: String = parse_answer(page, &conf).unwrap();
+        assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
+        assert!(un_colorized_answer.trim().len() < colorized_answer.trim().len());
+    }
+
+    #[test]
+    fn test_parse_answer_colorized_when_no_tags_available() {
+        // when no tags information lays in the page, it should work too.
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\"></a>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <pre>
+                            <code>print(1 + 2)</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
+        let conf: Config = Config::new(OutputOption::All, 1, true);
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <a class=\"post-tag\"></a>
                 <div class=\"answer\">
                     <div class=\"js-vote-count\">130</div>
                     <div class=\"post-text\">
