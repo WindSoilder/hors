@@ -257,19 +257,23 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
 /// A list of links with splitter.  Which can directly output by the caller.
 fn answers_links_only(links: &Vec<String>, restricted_length: usize) -> String {
     let mut results: Vec<String> = Vec::new();
-    let length = links.len();
-    let mut index: usize = 0;
-    while index < length && index < restricted_length {
-        let link = &links[index as usize];
-        if !link.contains("question") {
-            continue;
-        }
-        let url: Url = Url::parse(link)
-            .expect("Parse url failed, if you receive this message, please fire an issue.");
+    let mut links_iter = links.iter();
+    for _ in 0..restricted_length {
+        let next_link = links_iter.next();
+        match next_link {
+            Some(link) => {
+                if !link.contains("question") {
+                    continue;
+                }
+                let url: Url = Url::parse(link)
+                    .expect("Parse url failed, if you receive this message, please fire an issue.");
 
-        let answer: String = format!("Title - {}\n{}", extract_question(url.path()), *link,);
-        results.push(answer);
-        index += 1;
+                let answer: String =
+                    format!("Title - {}\n{}", extract_question(url.path()), *link,);
+                results.push(answer);
+            }
+            None => break,
+        }
     }
     return results.join(SPLITTER);
 }
@@ -482,6 +486,60 @@ mod test {
 
         if let Some(code) = answer {
             assert_eq!(code.trim(), String::from("answer goto here"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_detailed_when_no_code_available() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <p>answer goto here</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("answer goto here"));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_detailed_when_only_pre_code() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"answer\">
+                    <div class=\"js-vote-count\">130</div>
+                    <div class=\"post-text\">
+                        <pre>
+                            print('go go go')
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        ",
+        );
+        let conf: Config = Config::new(OutputOption::All, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from("print('go go go')"));
         }
     }
 
