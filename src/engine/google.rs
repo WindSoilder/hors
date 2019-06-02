@@ -27,6 +27,7 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
+    print!("{:?}", page);
     let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
     let target_elements = doc.find(Class("r").descendant(Name("a")));

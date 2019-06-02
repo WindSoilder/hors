@@ -14,7 +14,7 @@ before_cache: |
 
 script:
   - cargo build --verbose
-  - cargo test --verbose
+  - cargo test -- --nocapture
 
 after_success: |
   # only run code coverage report for linux system.
