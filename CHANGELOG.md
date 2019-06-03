@@ -1,6 +1,6 @@
-# [Unreleased]
+# [0.3.3] - 2019-06-03
 ## Fixed
-- Support google search engine again.
+- Support google search engine again.  You can use `-e google` to use google search engine.
 
 # [0.3.2] - 2019-06-01
 ## Added

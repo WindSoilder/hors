@@ -13,7 +13,7 @@ use std::str::FromStr;
 fn parser_matches<'a>() -> ArgMatches<'a> {
     let parser = App::new("hors")
         .author("WindSoilder, WindSoilder@outlook.com")
-        .version("0.3.2")
+        .version("0.3.3")
         .arg(
             Arg::with_name("all")
                 .long("all")
