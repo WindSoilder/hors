@@ -1,6 +1,6 @@
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
-
+use reqwest::Url;
 /// Get google search url.
 ///
 /// # Arguments
@@ -27,31 +27,23 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
-    print!("{:?}", page);
     let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
     let target_elements = doc.find(Class("r").descendant(Name("a")));
     for node in target_elements {
-        if let Some(link) = node.attr("href") {
-            links.push(String::from(link));
+        if node.attr("ping").is_some() {
+            if let Some(link) = node.attr("href") {
+                let url: Url = Url::parse(link).expect("Parse url failed, if you receive this message, please fire an issue.");
+                if let Some(domain) = url.domain() {
+                    if domain.contains("stackoverflow.com") {
+                        links.push(String::from(link));
+                    }
+                }
+            }
         }
     }
 
     debug!("Links extract from google: {:?}", links);
-    if links.len() == 0 {
-        // try to find links through another way.
-        // TODO: this can be refactored.
-        let target_elements = doc.find(Class("l"));
-        for node in target_elements {
-            if let Some(link) = node.attr("href") {
-                links.push(String::from(link));
-            }
-        }
-
-        if links.len() == 0 {
-            return None;
-        }
-    }
     return Some(links);
 }
 
