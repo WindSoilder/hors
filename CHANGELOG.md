@@ -1,3 +1,7 @@
+# [Unreleased]
+## Fixed
+- Support google search engine again.
+
 # [0.3.2] - 2019-06-01
 ## Added
 - Code has been re-structured, so integration test can be introduced for hors easily.
