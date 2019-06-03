@@ -61,7 +61,7 @@ impl FromStr for SearchEngine {
         match s {
             "bing" => return Ok(SearchEngine::Bing),
             // FIXME: There are issues with google search engine, should fixed in the future.
-            // "google" => return Ok(SearchEngine::Google),
+            "google" => return Ok(SearchEngine::Google),
             _ => return Err(HorsError::from_parse("Not supported search engine")),
         }
     }
@@ -76,8 +76,8 @@ mod tests {
         let search_engine = SearchEngine::from_str("bing");
         assert_eq!(search_engine.is_ok(), true);
         // FIXME: There are issues with google search engine, should fixed in the future.
-        // let search_engine = SearchEngine::from_str("google");
-        // assert_eq!(search_engine.is_ok(), true);
+        let search_engine = SearchEngine::from_str("google");
+        assert_eq!(search_engine.is_ok(), true);
     }
 
     #[test]
