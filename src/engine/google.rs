@@ -1,6 +1,5 @@
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
-use reqwest::Url;
 /// Get google search url.
 ///
 /// # Arguments
@@ -29,21 +28,23 @@ pub fn get_query_url(query: &String) -> String {
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
     let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
-    let target_elements = doc.find(Class("r").descendant(Name("a")));
+    // use child rather than decendent, because in google search engine
+    // a node's structure is like this:
+    // <r>
+    //   <a href="test_link"></a>
+    //   <span><a href="not we need"></a></span>
+    // </r>
+    let target_elements = doc.find(Class("r").child(Name("a")));
     for node in target_elements {
-        if node.attr("ping").is_some() {
-            if let Some(link) = node.attr("href") {
-                let url: Url = Url::parse(link).expect("Parse url failed, if you receive this message, please fire an issue.");
-                if let Some(domain) = url.domain() {
-                    if domain.contains("stackoverflow.com") {
-                        links.push(String::from(link));
-                    }
-                }
-            }
+        if let Some(link) = node.attr("href") {
+            links.push(String::from(link));
         }
     }
 
     debug!("Links extract from google: {:?}", links);
+    if links.len() == 0 {
+        return None;
+    }
     return Some(links);
 }
 
