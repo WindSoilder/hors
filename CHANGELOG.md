@@ -1,3 +1,7 @@
+# [Unreleased]
+## Removed
+- *--version* argument is removed.  If you want to get the version of hors, just run `hors -h`, the output help message will contains version.
+
 # [0.3.3] - 2019-06-03
 ## Fixed
 - Support google search engine again.  You can use `-e google` to use google search engine.
