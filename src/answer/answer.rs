@@ -1,4 +1,4 @@
-//! This module contains api to get results from stack overflow page
+//! This module contains api to get results from stack overflow page.
 use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
@@ -246,7 +246,7 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
     return ss.find_syntax_plain_text();
 }
 
-/// Return links from the given stackoverflow links
+/// Return links from the given stackoverflow links.
 ///
 ///
 /// # Arguments

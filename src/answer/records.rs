@@ -37,14 +37,14 @@ impl AnswerRecord {
     ///
     /// # Arguments
     ///
-    /// * `current_time` - given timestamp of current time as seconds.
+    /// * `time` - given timestamp of time as seconds.
     ///
     /// # Returns
     ///
     /// Return true if the object is too old.
-    pub fn is_too_old(&self, current_time: u64) -> bool {
+    pub fn is_too_old(&self, time: u64) -> bool {
         const HALF_MONTH_IN_SECONDS: u64 = 15 * 24 * 3600;
-        return (current_time - self.created_time) > HALF_MONTH_IN_SECONDS;
+        return (time - self.created_time) > HALF_MONTH_IN_SECONDS;
     }
 }
 

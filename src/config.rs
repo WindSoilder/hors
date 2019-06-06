@@ -13,7 +13,7 @@ pub enum OutputOption {
 }
 
 #[derive(Debug)]
-/// supported search engine definition
+/// supported search engine definition.
 pub enum SearchEngine {
     /// Microsoft bing search engine.
     Bing,
