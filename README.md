@@ -32,8 +32,7 @@ FLAGS:
     -v, --version    displays the current version of howdoi
 
 OPTIONS:
-    -e, --engine <engine>                    select middle search engine, currently support `bing`.
-                                             [default: bing]
+    -e, --engine <engine>                    select middle search engine, currently support `bing` and `google`.  [default: bing]
     -n, --number_answers <number_answers>    number of answers to return [default: 1]
 
 ARGS:
