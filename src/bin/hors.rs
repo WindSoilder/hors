@@ -30,7 +30,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
             Arg::with_name("color")
                 .long("color")
                 .short("c")
-                .help("enable colorized output"),
+                .help("enable colorized output."),
         )
         .arg(
             Arg::with_name("number_answers")
@@ -38,7 +38,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .short("n")
                 .takes_value(true)
                 .default_value("1")
-                .help("number of answers to return"),
+                .help("number of answers to return."),
         )
         .arg(
             Arg::with_name("engine")
@@ -46,13 +46,13 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .short("e")
                 .takes_value(true)
                 .default_value("bing")
-                .help("select middle search engine, currently support `bing`."),
+                .help("select middle search engine, currently support `bing` and `google`."),
         )
         .arg(
             Arg::with_name("version")
                 .long("version")
                 .short("v")
-                .help("displays the current version of howdoi"),
+                .help("displays the current version of hors"),
         )
         .arg(Arg::with_name("QUERY").required(true));
     return parser.get_matches();
