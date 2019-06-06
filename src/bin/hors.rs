@@ -7,7 +7,6 @@ use hors::config::{Config, OutputOption, SearchEngine};
 use hors::engine;
 use hors::error::Result;
 
-// ??? why use std::str::FromStr is required.
 use std::str::FromStr;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
@@ -47,12 +46,6 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .takes_value(true)
                 .default_value("bing")
                 .help("select middle search engine, currently support `bing` and `google`."),
-        )
-        .arg(
-            Arg::with_name("version")
-                .long("version")
-                .short("v")
-                .help("displays the current version of hors"),
         )
         .arg(Arg::with_name("QUERY").required(true));
     return parser.get_matches();
