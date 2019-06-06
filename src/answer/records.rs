@@ -56,7 +56,8 @@ impl AnswerRecordsCache {
     ///
     /// # Returns
     ///
-    /// Return the instance of AnswerRecordsCache.
+    /// Return the instance of AnswerRecordsCache.  Error will be returned if
+    /// loading local cache file failed.
     pub fn load() -> Result<AnswerRecordsCache> {
         if let Some(dir) = cache_dir() {
             // just create cache file if not existed, and deserialize it.
@@ -68,7 +69,11 @@ impl AnswerRecordsCache {
         return Ok(AnswerRecordsCache(HashMap::new()));
     }
 
-    /// Create cache with empty internal.
+    /// Create cache with no records.
+    ///
+    /// # Returns
+    ///
+    /// An empty cache.
     pub fn load_empty() -> AnswerRecordsCache {
         return AnswerRecordsCache(HashMap::new());
     }
@@ -80,7 +85,7 @@ impl AnswerRecordsCache {
     /// * `link` - link contains stackoverflow question.
     ///
     /// # Returns
-    /// Return cached page if we can find it, else returns None.
+    /// Return cached page if we can find it and it's not too old, else returns None.
     pub fn get(&self, link: &String) -> Option<&String> {
         let possible_page: Option<&AnswerRecord> = self.0.get(link);
         match possible_page {

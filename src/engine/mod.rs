@@ -38,11 +38,11 @@ fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
     }
 }
 
-/// Fetch actual page according to given query.
+/// Fetch actual page according to given url.
 ///
 /// # Arguments
 ///
-/// * `query` - The user input query String.
+/// * `search_url` - The url which should lead to search result page.
 ///
 /// # Returns
 ///
@@ -63,7 +63,7 @@ fn fetch(search_url: &String) -> Result<String> {
 ///
 /// # Arguments
 ///
-/// * `page` - the bing search result page, which is mainly got by `fetch` function.
+/// * `page` - the search result page, which is mainly got by `fetch` function.
 /// * `search_engine` - indicate which search engine we can use to extract links out.
 ///
 /// # Returns

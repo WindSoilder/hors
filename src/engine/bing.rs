@@ -27,9 +27,10 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
-    let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
     let target_elements = doc.find(Class("b_algo").descendant(Name("h2")).descendant(Name("a")));
+    let mut links: Vec<String> = Vec::new();
+
     for node in target_elements {
         if let Some(link) = node.attr("href") {
             links.push(String::from(link));

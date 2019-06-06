@@ -26,7 +26,6 @@ pub fn get_query_url(query: &String) -> String {
 ///
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
-    let mut links: Vec<String> = Vec::new();
     let doc: Document = Document::from(page.as_str());
     // use child rather than decendent, because in google search engine
     // a node's structure is like this:
@@ -35,6 +34,8 @@ pub fn extract_links(page: &String) -> Option<Vec<String>> {
     //   <span><a href="not we need"></a></span>
     // </r>
     let target_elements = doc.find(Class("r").child(Name("a")));
+    let mut links: Vec<String> = Vec::new();
+
     for node in target_elements {
         if let Some(link) = node.attr("href") {
             links.push(String::from(link));

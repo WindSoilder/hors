@@ -29,6 +29,7 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 /// print to terminal directly.  Else return an Error.
 pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
     debug!("Try to load cache from local cache file.");
+    // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
     let mut records_cache: AnswerRecordsCache = match load_result {
         Ok(cache) => cache,
@@ -68,13 +69,12 @@ fn get_detailed_answer(
         match next_link {
             Some(link) => {
                 // the given links may contains the url doesn't contains `question`
-                // tag, so it's not a question, and just deal with nothing to it.
+                // tag, so it's not a question, just deal with nothing to it.
                 if !link.contains("question") {
                     continue;
                 }
 
                 let page: String = get_page(&link, &client, records_cache)?;
-
                 let title: String = format!("- Answer from {}", link);
                 let answer: Option<String> = parse_answer(page, &conf);
                 match answer {
@@ -281,12 +281,12 @@ fn answers_links_only(links: &Vec<String>, restricted_length: usize) -> String {
 /// Extract question content.
 ///
 /// # Example
-/// let question: &str = extract_question("questions/user_id/the-specific-question")
-/// assert_eq!(question, String::from("the specific question"))
+/// let question: String = extract_question("questions/user_id/the-specific-question");
+/// assert_eq!(question, String::from("the specific question"));
 fn extract_question(path: &str) -> String {
     // The stack overflow question have the following format
     // https://stackoverflow.com/questions/user_id/the-specific-question
-    // we want to extract the link out
+    // we want to extract the question part out.
     let splitted: Vec<&str> = path.split("/").collect();
     return splitted[splitted.len() - 1].replace("-", " ");
 }
@@ -727,5 +727,17 @@ mod test {
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
         assert_eq!(answer.is_none(), true);
+    }
+
+    #[test]
+    fn test_extract_question() {
+        let question: String = extract_question("questions/user_id/the-specific-question");
+        assert_eq!(question, String::from("the specific question"));
+    }
+
+    #[test]
+    fn test_extract_question_when_question_contains_one_word() {
+        let question: String = extract_question("questions/user_id/question");
+        assert_eq!(question, String::from("question"));
     }
 }
