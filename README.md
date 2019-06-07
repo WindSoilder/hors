@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/WindSoilder/hors.svg?branch=master)](https://travis-ci.org/WindSoilder/hors)
 [![codecov](https://codecov.io/gh/WindSoilder/hors/branch/master/graph/badge.svg)](https://codecov.io/gh/WindSoilder/hors)
+[![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
 
 # [hors](https://crates.io/crates/hors)
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
