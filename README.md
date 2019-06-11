@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/WindSoilder/hors.svg?branch=master)](https://travis-ci.org/WindSoilder/hors)
+[![Build Status](https://dev.azure.com/WindSoilder/hors/_apis/build/status/WindSoilder.hors?branchName=master)](https://dev.azure.com/WindSoilder/hors/_build/latest?definitionId=1&branchName=master)
 [![codecov](https://codecov.io/gh/WindSoilder/hors/branch/master/graph/badge.svg)](https://codecov.io/gh/WindSoilder/hors)
 [![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
 
