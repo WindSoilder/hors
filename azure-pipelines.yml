@@ -1,12 +1,31 @@
+strategy:
+  matrix:
+    windows-stable:
+      imageName: 'vs2017-win2016'
+      rustup_toolchain: stable
+    mac-stable:
+      imageName: 'macos-10.13'
+      rustup_toolchain: stable
+    linux-stable:
+      imageName: 'ubuntu-16.04'
+      rustup_toolchain: stable
+
 pool:
-  vmImage: 'ubuntu-16.04'
+  vmImage: $(imageName)
 
 steps:
   - script: |
-      curl https://sh.rustup.rs -sSf | sh -s -- -y
+      curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
       echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
     displayName: Install rust
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  - script: |
+      curl -sSf -o rustup-init.exe https://win.rustup.rs
+      rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+      echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+    displayName: Windows install rust
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
   - script: cargo build --all
-    displayName: Cargo build
+    displayName: Cargo build --verbose
   - script: cargo test --all
-    displayName: Cargo test
+    displayName: Cargo test --verbose
