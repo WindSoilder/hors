@@ -166,7 +166,7 @@ fn select_answer(doc: &Document) -> Option<Node> {
             .trim()
             .parse()
             .expect("Vote information should be a number :(  If you see this message, please fire an issue.˝");
-        if voted > selected_voted {
+        if selected_voted < voted {
             selected_voted = voted;
             selected_node = Some(answer);
         }

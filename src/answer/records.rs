@@ -126,7 +126,7 @@ impl AnswerRecordsCache {
     pub fn save(&self) -> Result<()> {
         const MAX_SIZE: usize = 300;
         // if the inner size of answer records is too large
-        if self.0.len() > MAX_SIZE {
+        if MAX_SIZE < self.0.len() {
             // TODO: truncate it to have size MAX_SIZE
         }
         if let Some(dir) = cache_dir() {
