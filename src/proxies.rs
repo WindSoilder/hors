@@ -22,7 +22,7 @@ fn get_from_environment() -> HashMap<String, String> {
 }
 
 #[cfg(target_os = "windows")]
-fn get_from_registry() -> Result<HashMap<String, String>> {
+fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     let internet_setting: RegKey =
         hkcu.open_subkey("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings")?;
