@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::env;
+use std::error::Error;
 #[cfg(target_os = "windows")]
 use winreg::enums::HKEY_CURRENT_USER;
 #[cfg(target_os = "windows")]
@@ -47,8 +48,10 @@ fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
                     );
                 }
                 _ => {
-                    // Contains invalid protocol setting, just return an empty proxies.
-                    return Ok(HashMap::new());
+                    // Contains invalid protocol setting, just break the loop
+                    // And make proxies to be empty.
+                    proxies.clear();
+                    break;
                 }
             }
         }
@@ -62,6 +65,7 @@ fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
             proxies.insert(String::from("ftp"), format!("https://{}", proxy_server));
         }
     }
+    return Ok(proxies);
 }
 
 #[cfg(target_os = "windows")]
@@ -69,7 +73,7 @@ fn get_from_registry_always_ok() -> HashMap<String, String> {
     let results = get_from_registry();
     match results {
         Ok(proxies) => proxies,
-        Err(e) => HashMap::new()
+        Err(_) => HashMap::new()
     }
 }
 
