@@ -23,7 +23,7 @@ fn get_from_environment() -> HashMap<String, String> {
 }
 
 #[cfg(target_os = "windows")]
-fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
+fn get_from_registry_impl() -> Result<HashMap<String, String>, Box<dyn Error>> {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     let internet_setting: RegKey =
         hkcu.open_subkey("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings")?;
@@ -37,7 +37,7 @@ fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
 
     let mut proxies: HashMap<String, String> = HashMap::new();
     if proxy_server.contains("=") {
-        // per-protocol settings
+        // per-protocol settings.
         for p in proxy_server.split(";") {
             let protocol_parts: Vec<&str> = p.split("=").collect();
             match protocol_parts.as_slice() {
@@ -56,7 +56,7 @@ fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
             }
         }
     } else {
-        // Use one setting for all protocols
+        // Use one setting for all protocols.
         if proxy_server.starts_with("http:") {
             proxies.insert(String::from("http"), proxy_server);
         } else {
@@ -69,21 +69,30 @@ fn get_from_registry() -> Result<HashMap<String, String>, Box<dyn Error>> {
 }
 
 #[cfg(target_os = "windows")]
-fn get_from_registry_always_ok() -> HashMap<String, String> {
-    let results = get_from_registry();
+fn get_from_registry() -> HashMap<String, String> {
+    let results = get_from_registry_impl();
     match results {
         Ok(proxies) => proxies,
-        Err(_) => HashMap::new()
+        Err(_) => HashMap::new(),
     }
 }
 
+/// Get system proxies information.
+///
+/// It can only support Linux, Unix like, and windows system.  Note that it will always
+/// return a HashMap, even if something runs into error when find registry information in
+/// Windows system.
+///
+/// Returns:
+///     System proxies information as a hashmap like
+///     {"http": "http://127.0.0.1:80", "https": "https://127.0.0.1:80"}
 pub fn get_proxies() -> HashMap<String, String> {
     let proxies: HashMap<String, String> = get_from_environment();
 
     if proxies.len() == 0 {
         // don't cared if we can't get proxies from registry, just return an empty proxies.
         #[cfg(target_os = "windows")]
-        let proxies = get_from_registry_always_ok();
+        let proxies = get_from_registry();
         return proxies
     } else {
         return proxies;
