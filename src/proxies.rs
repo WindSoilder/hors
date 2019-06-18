@@ -1,10 +1,33 @@
 use std::collections::HashMap;
 use std::env;
+#[cfg(target_os = "windows")]
 use std::error::Error;
 #[cfg(target_os = "windows")]
 use winreg::enums::HKEY_CURRENT_USER;
 #[cfg(target_os = "windows")]
 use winreg::RegKey;
+
+/// Get system proxies information.
+///
+/// It can only support Linux, Unix like, and windows system.  Note that it will always
+/// return a HashMap, even if something runs into error when find registry information in
+/// Windows system.
+///
+/// Returns:
+///     System proxies information as a hashmap like
+///     {"http": "http://127.0.0.1:80", "https": "https://127.0.0.1:80"}
+pub fn get_proxies() -> HashMap<String, String> {
+    let proxies: HashMap<String, String> = get_from_environment();
+
+    if proxies.len() == 0 {
+        // don't cared if we can't get proxies from registry, just return an empty proxies.
+        #[cfg(target_os = "windows")]
+        let proxies = get_from_registry();
+        return proxies;
+    } else {
+        return proxies;
+    }
+}
 
 fn get_from_environment() -> HashMap<String, String> {
     let mut proxies: HashMap<String, String> = HashMap::new();
@@ -42,10 +65,7 @@ fn get_from_registry_impl() -> Result<HashMap<String, String>, Box<dyn Error>> {
             let protocol_parts: Vec<&str> = p.split("=").collect();
             match protocol_parts.as_slice() {
                 [protocol, address] => {
-                    proxies.insert(
-                        String::from(*protocol),
-                        String::from(*address)
-                    );
+                    proxies.insert(String::from(*protocol), String::from(*address));
                 }
                 _ => {
                     // Contains invalid protocol setting, just break the loop
@@ -74,27 +94,5 @@ fn get_from_registry() -> HashMap<String, String> {
     match results {
         Ok(proxies) => proxies,
         Err(_) => HashMap::new(),
-    }
-}
-
-/// Get system proxies information.
-///
-/// It can only support Linux, Unix like, and windows system.  Note that it will always
-/// return a HashMap, even if something runs into error when find registry information in
-/// Windows system.
-///
-/// Returns:
-///     System proxies information as a hashmap like
-///     {"http": "http://127.0.0.1:80", "https": "https://127.0.0.1:80"}
-pub fn get_proxies() -> HashMap<String, String> {
-    let proxies: HashMap<String, String> = get_from_environment();
-
-    if proxies.len() == 0 {
-        // don't cared if we can't get proxies from registry, just return an empty proxies.
-        #[cfg(target_os = "windows")]
-        let proxies = get_from_registry();
-        return proxies
-    } else {
-        return proxies;
     }
 }
