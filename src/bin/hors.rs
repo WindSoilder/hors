@@ -47,6 +47,11 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .default_value("bing")
                 .help("select middle search engine, currently support `bing` and `google`."),
         )
+        .arg(
+            Arg::with_name("disable_proxy")
+                .long("disable_proxy")
+                .help("Disable system proxy setting."),
+        )
         .arg(Arg::with_name("QUERY").required(true));
     return parser.get_matches();
 }
