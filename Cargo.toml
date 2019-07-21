@@ -13,7 +13,7 @@ keywords = ["http", "client", "cli-tools"]
 [dependencies]
 clap = "2.33.0"
 syntect = "3.2.0"
-reqwest = "0.9.16"
+reqwest = "0.9.19"
 select = "0.4.2"
 rand = "0.6.5"
 log = "0.4.6"
@@ -23,6 +23,3 @@ dirs = "1.0.5"
 
 [dev-dependencies]
 env_logger = "0.6"
-
-[target.'cfg(windows)'.dependencies]
-winreg = "0.6"
