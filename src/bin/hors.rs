@@ -6,6 +6,7 @@ use hors::answer;
 use hors::config::{Config, OutputOption, SearchEngine};
 use hors::engine;
 use hors::error::Result;
+use reqwest::Client;
 
 use std::str::FromStr;
 
@@ -63,9 +64,11 @@ fn main() -> Result<()> {
         SearchEngine::from_str(matches.value_of("engine").unwrap_or_default()).unwrap();
     debug!("Search under the {:?}", search_engine);
 
+    let client: Client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
     let target_links: Vec<String> = engine::search_links(
         &String::from(matches.value_of("QUERY").unwrap()),
         search_engine,
+        client,
     )?;
 
     let conf: Config = init_config(&matches);

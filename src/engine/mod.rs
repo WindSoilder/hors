@@ -4,7 +4,7 @@ mod google;
 use crate::config::SearchEngine;
 use crate::error::{HorsError, Result};
 use crate::utils::random_agent;
-use reqwest::RequestBuilder;
+use reqwest::{Client, RequestBuilder};
 
 /// Search result links under the `bing` search engine.
 ///
@@ -14,14 +14,19 @@ use reqwest::RequestBuilder;
 ///
 /// * `query` - The user input query String.
 /// * `search_engine` - indicate which search engine we use to search result links.
+/// * `client` - reqwest::Client object, please ensure that it's build with cookie_store(true) option.
 ///
 /// # Returns
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search_links(query: &String, search_engine: SearchEngine) -> Result<Vec<String>> {
+pub fn search_links(
+    query: &String,
+    search_engine: SearchEngine,
+    client: Client,
+) -> Result<Vec<String>> {
     let fetch_url: String = get_query_url(query, &search_engine);
-    let page: String = fetch(&fetch_url)?;
+    let page: String = fetch(&fetch_url, client)?;
     let extract_results = extract_links(&page, &search_engine);
     match extract_results {
         Some(links) => return Ok(links),
@@ -43,13 +48,14 @@ fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
 /// # Arguments
 ///
 /// * `search_url` - The url which should lead to search result page.
+/// * `client` - An instance of `request::Client` object which can use to fire http request,
+///              please ensure that it's build with cookie_store(true) option.
 ///
 /// # Returns
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
-fn fetch(search_url: &String) -> Result<String> {
-    let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
+fn fetch(search_url: &String, client: Client) -> Result<String> {
     let request: RequestBuilder = client
         .get(search_url.as_str())
         .header(reqwest::header::USER_AGENT, random_agent());
