@@ -22,12 +22,14 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 ///
 /// * `links` - the links where answer existed.
 /// * `conf` - contains information about get_answer options.
+/// * `client` - An instance of `request::Client` object which can use to fire http request,
+///              please ensure that it's build with cookie_store(true) option.
 ///
 /// # Returns
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
+pub fn get_answers(links: &Vec<String>, conf: Config, client: &Client) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
@@ -42,7 +44,7 @@ pub fn get_answers(links: &Vec<String>, conf: Config) -> Result<String> {
 
     let results: Result<String> = match conf.option() {
         OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => get_detailed_answer(links, conf, &mut records_cache),
+        _ => get_detailed_answer(links, conf, &mut records_cache, &client),
     };
 
     // when hors gets what we wanted answer, save it for next time using.
@@ -59,9 +61,9 @@ fn get_detailed_answer(
     links: &Vec<String>,
     conf: Config,
     records_cache: &mut AnswerRecordsCache,
+    client: &Client
 ) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
-    let client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
     let mut links_iter = links.iter();
 
     for _ in 0..conf.numbers() {

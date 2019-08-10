@@ -73,7 +73,7 @@ fn main() -> Result<()> {
 
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
-    let answers: String = answer::get_answers(&target_links, conf)?;
+    let answers: String = answer::get_answers(&target_links, conf, &client)?;
     println!("{}", answers);
 
     return Ok(());

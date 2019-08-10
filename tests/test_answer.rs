@@ -1,3 +1,5 @@
+use reqwest::Client;
+
 use hors::answer::{get_answers, SPLITTER};
 use hors::config::{Config, OutputOption};
 
@@ -7,7 +9,8 @@ fn test_get_answers_with_links_only() {
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
     let conf: Config = Config::new(OutputOption::Links, 10, false);
-    let answers: String = get_answers(&links, conf)
+    let client: Client = reqwest::ClientBuilder::new().cookie_store(true).build().unwrap();
+    let answers: String = get_answers(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -25,7 +28,8 @@ fn test_get_answers_with_detailed_option() {
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
     let conf: Config = Config::new(OutputOption::All, 10, false);
-    let answers: String = get_answers(&links, conf)
+    let client: Client = reqwest::ClientBuilder::new().cookie_store(true).build().unwrap();
+    let answers: String = get_answers(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -48,7 +52,8 @@ fn test_get_answers_with_instruction() {
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
     let conf: Config = Config::new(OutputOption::OnlyCode, 10, false);
-    let answers: String = get_answers(&links, conf)
+    let client: Client = reqwest::ClientBuilder::new().cookie_store(true).build().unwrap();
+    let answers: String = get_answers(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
