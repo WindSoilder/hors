@@ -68,7 +68,7 @@ fn main() -> Result<()> {
     let target_links: Vec<String> = engine::search_links(
         &String::from(matches.value_of("QUERY").unwrap()),
         search_engine,
-        client,
+        &client,
     )?;
 
     let conf: Config = init_config(&matches);

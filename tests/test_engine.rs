@@ -10,7 +10,7 @@ fn test_search_links_with_bing_search_engine() {
     let target_links: Vec<String> = search_links(
         &String::from("how to parse json in rust"),
         search_engine,
-        client,
+        &client,
     )
     .unwrap();
     // for search results, what we can do is checking if
@@ -28,7 +28,7 @@ fn test_search_links_with_google_search_engine() {
     let target_links: Vec<String> = search_links(
         &String::from("how to parse json in rust"),
         search_engine,
-        client,
+        &client,
     )
     .unwrap();
     // for search results, what we can do is checking if

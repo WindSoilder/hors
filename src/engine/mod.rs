@@ -23,7 +23,7 @@ use reqwest::{Client, RequestBuilder};
 pub fn search_links(
     query: &String,
     search_engine: SearchEngine,
-    client: Client,
+    client: &Client,
 ) -> Result<Vec<String>> {
     let fetch_url: String = get_query_url(query, &search_engine);
     let page: String = fetch(&fetch_url, client)?;
@@ -55,7 +55,7 @@ fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
-fn fetch(search_url: &String, client: Client) -> Result<String> {
+fn fetch(search_url: &String, client: &Client) -> Result<String> {
     let request: RequestBuilder = client
         .get(search_url.as_str())
         .header(reqwest::header::USER_AGENT, random_agent());
