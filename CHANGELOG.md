@@ -1,6 +1,8 @@
 # [Unreleased]
-## Removed
-- *--version* argument is removed.  If you want to get the version of hors, just run `hors -h`, the output help message will contains version.
+
+# [0.3.4] - 2019-08-10
+## Fixed
+- Refactory code structure, and it should be quicker.
 
 # [0.3.3] - 2019-06-03
 ## Fixed
