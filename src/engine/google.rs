@@ -5,15 +5,23 @@ use select::predicate::{Class, Name, Predicate};
 /// # Arguments
 ///
 /// * `query` - The user input query information.
+/// * `use_https` - Return query url which is https scheme or http scheme.
 ///
 /// # Returns
 ///
 /// Return the query url, which can be fired with HTTP GET request.
-pub fn get_query_url(query: &String) -> String {
-    return format!(
-        "https://www.google.com/search?q=site:stackoverflow.com%20{}",
-        query
-    );
+pub fn get_query_url(query: &String, use_https: bool) -> String {
+    if use_https {
+        return format!(
+            "https://www.google.com/search?q=site:stackoverflow.com%20{}",
+            query
+        );
+    } else {
+        return format!(
+            "http://www.bing.com/search?q=site:stackoverflow.com%20{}",
+            query
+        );
+    }
 }
 
 /// Extract links from given page.
@@ -94,9 +102,18 @@ mod tests {
 
     #[test]
     fn test_get_query_url() {
-        let result: String = get_query_url(&String::from("how to write unit test"));
+        let result: String = get_query_url(&String::from("how to write unit test"), true);
         assert_eq!(
             "https://www.google.com/search?q=site:stackoverflow.com%20how to write unit test",
+            result
+        );
+    }
+
+    #[test]
+    fn test_get_query_url_with_https_option_disabled() {
+        let result: String = get_query_url(&String::from("how to write unit test"), false);
+        assert_eq!(
+            "http://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
             result
         );
     }

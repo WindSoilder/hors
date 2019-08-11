@@ -1,4 +1,6 @@
 # [Unreleased]
+## Fixed
+- Hors will try to use `http` to get stackoverflow links, if the `https` schema go failed.  This can improve search success rate.
 
 # [0.3.4] - 2019-08-10
 ## Fixed

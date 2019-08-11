@@ -25,21 +25,22 @@ pub fn search_links(
     search_engine: SearchEngine,
     client: &Client,
 ) -> Result<Vec<String>> {
-    let fetch_url: String = get_query_url(query, &search_engine);
-    let page: String = fetch(&fetch_url, client)?;
-    let extract_results = extract_links(&page, &search_engine);
-    match extract_results {
-        Some(links) => return Ok(links),
-        None => {
-            return Err(HorsError::from_parse("Can't find search result..."));
+    let https_opts: Vec<bool> = vec![true, false];
+    for opt in https_opts {
+        let fetch_url: String = get_query_url(query, &search_engine, opt);
+        let page: String = fetch(&fetch_url, client)?;
+        let extract_results = extract_links(&page, &search_engine);
+        if let Some(links) = extract_results {
+            return Ok(links);
         }
     }
+    return Err(HorsError::from_parse("Can't find search result..."));
 }
 
-fn get_query_url(query: &String, search_engine: &SearchEngine) -> String {
+fn get_query_url(query: &String, search_engine: &SearchEngine, use_https: bool) -> String {
     match search_engine {
-        SearchEngine::Bing => return bing::get_query_url(query),
-        SearchEngine::Google => return google::get_query_url(query),
+        SearchEngine::Bing => return bing::get_query_url(query, use_https),
+        SearchEngine::Google => return google::get_query_url(query, use_https),
     }
 }
 
