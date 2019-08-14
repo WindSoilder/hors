@@ -6,7 +6,7 @@ use hors::answer;
 use hors::config::{Config, OutputOption, SearchEngine};
 use hors::engine;
 use hors::error::Result;
-use reqwest::Client;
+use reqwest::{Client, ClientBuilder};
 
 use std::str::FromStr;
 
@@ -48,6 +48,11 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .default_value("bing")
                 .help("select middle search engine, currently support `bing` and `google`."),
         )
+        .arg(
+            Arg::with_name("disable_proxy")
+                .long("disable_proxy")
+                .help("Disable system proxy."),
+        )
         .arg(Arg::with_name("QUERY").required(true));
     return parser.get_matches();
 }
@@ -59,7 +64,15 @@ fn main() -> Result<()> {
         SearchEngine::from_str(matches.value_of("engine").unwrap_or_default()).unwrap();
     debug!("Search under the {:?}", search_engine);
 
-    let client: Client = reqwest::ClientBuilder::new().cookie_store(true).build()?;
+    // Initialize reqwest::Client instance.
+    let mut client_builder: ClientBuilder = reqwest::ClientBuilder::new().cookie_store(true);
+    if matches.is_present("disable_proxy") {
+        client_builder = client_builder.no_proxy();
+    } else {
+        client_builder = client_builder.use_sys_proxy();
+    }
+    let client: Client = client_builder.build()?;
+
     let target_links: Vec<String> = engine::search_links(
         &String::from(matches.value_of("QUERY").unwrap()),
         search_engine,
