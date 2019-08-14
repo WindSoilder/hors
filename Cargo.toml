@@ -12,14 +12,14 @@ keywords = ["http", "client", "cli-tools"]
 
 [dependencies]
 clap = "2.33.0"
-syntect = "3.2.0"
+syntect = "3.2.1"
 reqwest = "0.9.19"
-select = "0.4.2"
-rand = "0.6.5"
-log = "0.4.6"
-serde = { version = "1.0.91", features = ["derive"] }
+select = "0.4.3"
+rand = "0.7.0"
+log = "0.4.8"
+serde = { version = "1.0.98", features = ["derive"] }
 bincode = "1.1.4"
-dirs = "1.0.5"
+dirs = "2.0.2"
 
 [dev-dependencies]
 env_logger = "0.6"
