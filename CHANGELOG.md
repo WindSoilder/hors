@@ -1,4 +1,10 @@
 # [Unreleased]
+## Added
+- support *--disable_proxy* argumet.
+
+## Changed
+- `hors` will use system proxy by default.  If you don't want to use proxy, please run hors with `--disable_proxy` arguments.
+
 ## Fixed
 - Hors will try to use `http` to get stackoverflow links, if the `https` schema go failed.  This can improve search success rate.
 

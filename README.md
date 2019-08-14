@@ -25,11 +25,12 @@ USAGE:
     hors [FLAGS] [OPTIONS] <QUERY>
 
 FLAGS:
-    -a, --all        display the full text of the answer.
-    -c, --color      enable colorized output
-    -h, --help       Prints help information
-    -l, --link       display only the answer link.
-    -v, --version    displays the current version of howdoi
+    -a, --all              display the full text of the answer.
+    -c, --color            enable colorized output.
+        --disable_proxy    Disable using system proxy.
+    -h, --help             Prints help information
+    -l, --link             display only the answer link.
+    -V, --version          Prints version information
 
 OPTIONS:
     -e, --engine <engine>                    select middle search engine, currently support `bing` and `google`.  [default: bing]
