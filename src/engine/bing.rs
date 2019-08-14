@@ -14,7 +14,7 @@ use select::predicate::{Class, Name, Predicate};
 pub fn get_query_url(query: &String, use_https: bool) -> String {
     if use_https {
         return format!(
-           "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
+            "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
             query
         );
     } else {

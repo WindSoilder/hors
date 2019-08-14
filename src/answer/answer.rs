@@ -61,7 +61,7 @@ fn get_detailed_answer(
     links: &Vec<String>,
     conf: Config,
     records_cache: &mut AnswerRecordsCache,
-    client: &Client
+    client: &Client,
 ) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
     let mut links_iter = links.iter();
