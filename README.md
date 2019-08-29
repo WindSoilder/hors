@@ -1,5 +1,7 @@
 [![Build Status](https://dev.azure.com/WindSoilder/hors/_apis/build/status/WindSoilder.hors?branchName=master)](https://dev.azure.com/WindSoilder/hors/_build/latest?definitionId=1&branchName=master)
 [![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
+[![Appveyor CI Status](https://ci.appveyor.com/api/projects/status/github/WindSoilder/hors?svg=true)](https://ci.appveyor.com/api/projects/status/github/WindSoilder/hors?svg=true)
+
 
 # [hors](https://crates.io/crates/hors)
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
