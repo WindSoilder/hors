@@ -1,11 +1,6 @@
 environment:
   matrix:
   - TARGET: x86_64-pc-windows-msvc
-  - TARGET: i686-pc-windows-msvc
-  - TARGET: x86_64-pc-windows-gnu
-    MINGW_PATH: 'C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin'
-  - TARGET: i686-pc-windows-gnu
-    MINGW_PATH: 'C:\MinGW\bin'
 install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs/
   - rustup-init.exe -y --default-host %TARGET%
@@ -15,5 +10,5 @@ install:
   - cargo -vV
 build: false
 test_script:
-  - cargo test -- --test-threads=1
+  - cargo test --verbose
 skip_branch_with_pr: true
