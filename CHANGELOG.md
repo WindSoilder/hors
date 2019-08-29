@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.4.0] - 2019-08-29
 ## Added
 - support *--disable_proxy* argumet.
 
@@ -9,7 +11,7 @@
 - Hors will try to use `http` to get stackoverflow links, if the `https` schema go failed.  This can improve search success rate.
 
 # [0.3.4] - 2019-08-10
-## Fixed
+## Changed
 - Refactory code structure, and it should be quicker.
 
 # [0.3.3] - 2019-06-03
