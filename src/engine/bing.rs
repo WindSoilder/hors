@@ -13,15 +13,15 @@ use select::predicate::{Class, Name, Predicate};
 /// Return the query url, which can be fired with HTTP GET request.
 pub fn get_query_url(query: &String, use_https: bool) -> String {
     if use_https {
-        return format!(
+        format!(
             "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
             query
-        );
+        )
     } else {
-        return format!(
+        format!(
             "http://www.bing.com/search?q=site:stackoverflow.com%20{}",
             query
-        );
+        )
     }
 }
 
@@ -46,10 +46,10 @@ pub fn extract_links(page: &String) -> Option<Vec<String>> {
     }
 
     debug!("Links extract from bing: {:?}", links);
-    if links.len() == 0 {
+    if links.is_empty() {
         return None;
     }
-    return Some(links);
+    Some(links)
 }
 
 #[cfg(test)]

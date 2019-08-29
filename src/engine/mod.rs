@@ -34,13 +34,13 @@ pub fn search_links(
             return Ok(links);
         }
     }
-    return Err(HorsError::from_parse("Can't find search result..."));
+    Err(HorsError::from_parse("Can't find search result..."))
 }
 
 fn get_query_url(query: &String, search_engine: &SearchEngine, use_https: bool) -> String {
     match search_engine {
-        SearchEngine::Bing => return bing::get_query_url(query, use_https),
-        SearchEngine::Google => return google::get_query_url(query, use_https),
+        SearchEngine::Bing => bing::get_query_url(query, use_https),
+        SearchEngine::Google => google::get_query_url(query, use_https),
     }
 }
 
@@ -63,7 +63,7 @@ fn fetch(search_url: &String, client: &Client) -> Result<String> {
     debug!("Request to bing information: {:?}", request);
     let mut res = request.send()?;
     let page: String = res.text()?;
-    return Ok(page);
+    Ok(page)
 }
 
 /// Extract links from given page.
@@ -78,7 +78,7 @@ fn fetch(search_url: &String, client: &Client) -> Result<String> {
 /// Links to the relative question, or returns None if we can't find it.
 fn extract_links(page: &String, search_engine: &SearchEngine) -> Option<Vec<String>> {
     match search_engine {
-        SearchEngine::Bing => return bing::extract_links(page),
-        SearchEngine::Google => return google::extract_links(page),
+        SearchEngine::Bing => bing::extract_links(page),
+        SearchEngine::Google => google::extract_links(page),
     }
 }

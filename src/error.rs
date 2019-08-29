@@ -17,16 +17,16 @@ impl Error for HorsError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match &self.repr {
             Repr::Network(network_err) => {
-                return network_err.source();
+                network_err.source()
             }
             Repr::Parse(_) => {
-                return None;
+                None
             }
             Repr::IOError(io_err) => {
-                return io_err.source();
+                io_err.source()
             }
             Repr::SedesError(sedes_err) => {
-                return sedes_err.source();
+                sedes_err.source()
             }
         }
     }
@@ -48,32 +48,32 @@ enum Repr {
 
 impl HorsError {
     pub fn from_parse(reason: &'static str) -> HorsError {
-        return HorsError {
+        HorsError {
             repr: Repr::Parse(reason),
-        };
+        }
     }
 }
 
 impl From<reqwest::Error> for HorsError {
     fn from(error: reqwest::Error) -> Self {
-        return HorsError {
+        HorsError {
             repr: Repr::Network(error),
-        };
+        }
     }
 }
 
 impl From<IOError> for HorsError {
     fn from(error: IOError) -> Self {
-        return HorsError {
+        HorsError {
             repr: Repr::IOError(error),
-        };
+        }
     }
 }
 
 impl From<SedesError> for HorsError {
     fn from(error: SedesError) -> Self {
-        return HorsError {
+        HorsError {
             repr: Repr::SedesError(error),
-        };
+        }
     }
 }

@@ -34,23 +34,23 @@ pub struct Config {
 
 impl Config {
     pub fn new(output_option: OutputOption, numbers: u8, colorize: bool) -> Self {
-        return Config {
+        Config {
             option: output_option,
             numbers,
             colorize,
-        };
+        }
     }
 
     pub fn option(&self) -> &OutputOption {
-        return &self.option;
+        &self.option
     }
 
     pub fn numbers(&self) -> u8 {
-        return self.numbers;
+        self.numbers
     }
 
     pub fn colorize(&self) -> bool {
-        return self.colorize;
+        self.colorize
     }
 }
 
@@ -59,9 +59,9 @@ impl FromStr for SearchEngine {
 
     fn from_str(s: &str) -> Result<Self> {
         match s {
-            "bing" => return Ok(SearchEngine::Bing),
-            "google" => return Ok(SearchEngine::Google),
-            _ => return Err(HorsError::from_parse("Not supported search engine")),
+            "bing" => Ok(SearchEngine::Bing),
+            "google" => Ok(SearchEngine::Google),
+            _ => Err(HorsError::from_parse("Not supported search engine")),
         }
     }
 }

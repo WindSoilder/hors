@@ -54,7 +54,7 @@ pub fn get_answers(links: &Vec<String>, conf: Config, client: &Client) -> Result
             err
         );
     }
-    return results;
+    results
 }
 
 fn get_detailed_answer(
@@ -87,7 +87,7 @@ fn get_detailed_answer(
             None => break,
         }
     }
-    return Ok(results.join(SPLITTER));
+    Ok(results.join(SPLITTER))
 }
 
 fn get_page(
@@ -105,7 +105,7 @@ fn get_page(
     match page_from_cache {
         // When we can get answer from cache, just return it.
         Some(page) => {
-            return Ok(page.to_string());
+            Ok(page.to_string())
         }
         // When we can't get answer from cache, we should get page from network.
         None => {
@@ -116,7 +116,7 @@ fn get_page(
             debug!("Response status from stackoverflow: {:?}", resp);
             let page: String = resp.text()?;
             records_cache.put(link.to_string(), page.to_string());
-            return Ok(page);
+            Ok(page)
         }
     }
 }
@@ -147,7 +147,7 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
             ),
         }
     }
-    return None;
+    None
 }
 
 /// Select answer by most voted.
@@ -173,7 +173,7 @@ fn select_answer(doc: &Document) -> Option<Node> {
             selected_node = Some(answer);
         }
     }
-    return selected_node;
+    selected_node
 }
 
 fn parse_answer_instruction(
@@ -191,7 +191,7 @@ fn parse_answer_instruction(
             }
         }
     }
-    return None;
+    None
 }
 
 fn parse_answer_detailed(
@@ -218,7 +218,7 @@ fn parse_answer_detailed(
             return Some(formatted_answer);
         }
     }
-    return None;
+    None
 }
 
 /// make code block colorized.
@@ -233,9 +233,9 @@ fn colorized_code(code: String, possible_tags: &Vec<String>) -> String {
 
     for line in LinesWithEndings::from(code.as_str()) {
         let escaped = as_24_bit_terminal_escaped(&h.highlight(line, &ss), false);
-        colorized = colorized + escaped.as_str();
+        colorized += escaped.as_str();
     }
-    return colorized;
+    colorized
 }
 
 fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a SyntaxReference {
@@ -245,7 +245,7 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
             return result;
         }
     }
-    return ss.find_syntax_plain_text();
+    ss.find_syntax_plain_text()
 }
 
 /// Return links from the given stackoverflow links.
@@ -277,7 +277,7 @@ fn answers_links_only(links: &Vec<String>, restricted_length: usize) -> String {
             None => break,
         }
     }
-    return results.join(SPLITTER);
+    results.join(SPLITTER)
 }
 
 /// Extract question content.
@@ -289,8 +289,8 @@ fn extract_question(path: &str) -> String {
     // The stack overflow question have the following format
     // https://stackoverflow.com/questions/user_id/the-specific-question
     // we want to extract the question part out.
-    let splitted: Vec<&str> = path.split("/").collect();
-    return splitted[splitted.len() - 1].replace("-", " ");
+    let splitted: Vec<&str> = path.split('/').collect();
+    splitted[splitted.len() - 1].replace('-', " ")
 }
 
 #[cfg(test)]

@@ -20,14 +20,14 @@ struct AnswerRecord {
 
 impl AnswerRecord {
     pub fn new(link: String, page: String) -> AnswerRecord {
-        return AnswerRecord {
+        AnswerRecord {
             link,
             page,
             created_time: SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .expect("Time went beckwards")
                 .as_secs(),
-        };
+        }
     }
 
     /// Make desicion that if this AnswerRecord is too old.
@@ -44,7 +44,7 @@ impl AnswerRecord {
     /// Return true if the object is too old.
     pub fn is_too_old(&self, time: u64) -> bool {
         const HALF_MONTH_IN_SECONDS: u64 = 15 * 24 * 3600;
-        return (time - self.created_time) > HALF_MONTH_IN_SECONDS;
+        (time - self.created_time) > HALF_MONTH_IN_SECONDS
     }
 }
 
@@ -66,7 +66,7 @@ impl AnswerRecordsCache {
             let answer_records: AnswerRecordsCache = deserialize_from(f)?;
             return Ok(answer_records);
         }
-        return Ok(AnswerRecordsCache(HashMap::new()));
+        Ok(AnswerRecordsCache(HashMap::new()))
     }
 
     /// Create cache with no records.
@@ -75,7 +75,7 @@ impl AnswerRecordsCache {
     ///
     /// An empty cache.
     pub fn load_empty() -> AnswerRecordsCache {
-        return AnswerRecordsCache(HashMap::new());
+        AnswerRecordsCache(HashMap::new())
     }
 
     /// Get answer from the given link.
@@ -99,7 +99,7 @@ impl AnswerRecordsCache {
                 if record.is_too_old(current_time) {
                     return None;
                 }
-                return Some(&record.page);
+                Some(&record.page)
             }
             None => None,
         }
@@ -138,7 +138,7 @@ impl AnswerRecordsCache {
             // dump answer to spefic file $CACHE/hors/answers
             serialize_into(f, self).unwrap();
         }
-        return Ok(());
+        Ok(())
     }
 
     fn create_file_if_not_existed(dir: &PathBuf) -> Result<PathBuf> {
@@ -151,7 +151,7 @@ impl AnswerRecordsCache {
         if !answers.exists() {
             File::create(&answers)?;
         }
-        return Ok(answers);
+        Ok(answers)
     }
 }
 

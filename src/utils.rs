@@ -22,9 +22,9 @@ pub fn random_agent() -> &'static str {
     match USER_AGENTS.choose(&mut rng) {
         Some(user_agent) => {
             debug!("selected User-Agent: {}", user_agent);
-            return user_agent;
+            user_agent
         }
-        None => return DEFAULT_AGENT,
+        None => DEFAULT_AGENT,
     }
 }
 

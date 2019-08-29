@@ -54,7 +54,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .help("Disable system proxy."),
         )
         .arg(Arg::with_name("QUERY").required(true));
-    return parser.get_matches();
+    parser.get_matches()
 }
 
 fn main() -> Result<()> {
@@ -84,7 +84,7 @@ fn main() -> Result<()> {
     let answers: String = answer::get_answers(&target_links, conf, &client)?;
     println!("{}", answers);
 
-    return Ok(());
+    Ok(())
 }
 
 /// initialize config from user input arguments.
@@ -106,5 +106,5 @@ fn init_config(matches: &ArgMatches) -> Config {
             .unwrap(),
         matches.is_present("color"),
     );
-    return conf;
+    conf
 }
