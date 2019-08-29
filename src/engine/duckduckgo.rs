@@ -13,12 +13,12 @@ use select::predicate::Class;
 pub fn get_query_url(query: &String, use_https: bool) -> String {
     if use_https {
         format!(
-            "https://duckduckgo.com/search?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+            "https://duckduckgo.com/?q=site:stackoverflow.com%20{}&t=hj&ia=web",
             query
         )
     } else {
         format!(
-            "http://duckduckgo.com/search?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+            "http://duckduckgo.com/?q=site:stackoverflow.com%20{}&t=hj&ia=web",
             query
         )
     }
@@ -93,7 +93,7 @@ mod tests {
     fn test_get_query_url() {
         let result: String = get_query_url(&String::from("how to write unit test"), true);
         assert_eq!(
-            "https://duckduckgo.com/search?q=site:stackoverflow.com%20how to write unit test&t=hj&ia=web",
+            "https://duckduckgo.com/?q=site:stackoverflow.com%20how to write unit test&t=hj&ia=web",
             result
         );
     }
@@ -102,7 +102,7 @@ mod tests {
     fn test_get_query_url_with_https_option_disabled() {
         let result: String = get_query_url(&String::from("how to write unit test"), false);
         assert_eq!(
-            "http://duckduckgo.com/search?q=site:stackoverflow.com%20how to write unit test&t=hj&ia=web",
+            "http://duckduckgo.com/?q=site:stackoverflow.com%20how to write unit test&t=hj&ia=web",
             result
         );
     }
