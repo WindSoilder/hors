@@ -19,6 +19,8 @@ pub enum SearchEngine {
     Bing,
     /// Google search engine.
     Google,
+    /// DuckDuckGo search engine.
+    DuckDuckGo,
 }
 
 #[derive(Debug)]
@@ -61,6 +63,7 @@ impl FromStr for SearchEngine {
         match s {
             "bing" => Ok(SearchEngine::Bing),
             "google" => Ok(SearchEngine::Google),
+            "duckduckgo" => Ok(SearchEngine::DuckDuckGo),
             _ => Err(HorsError::from_parse("Not supported search engine")),
         }
     }

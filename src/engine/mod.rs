@@ -1,5 +1,6 @@
 mod bing;
 mod google;
+mod duckduckgo;
 
 use crate::config::SearchEngine;
 use crate::error::{HorsError, Result};
@@ -41,6 +42,7 @@ fn get_query_url(query: &String, search_engine: &SearchEngine, use_https: bool) 
     match search_engine {
         SearchEngine::Bing => bing::get_query_url(query, use_https),
         SearchEngine::Google => google::get_query_url(query, use_https),
+        SearchEngine::DuckDuckGo => duckduckgo::get_query_url(query, use_https),
     }
 }
 
@@ -80,5 +82,6 @@ fn extract_links(page: &String, search_engine: &SearchEngine) -> Option<Vec<Stri
     match search_engine {
         SearchEngine::Bing => bing::extract_links(page),
         SearchEngine::Google => google::extract_links(page),
+        SearchEngine::DuckDuckGo => duckduckgo::extract_links(page),
     }
 }
