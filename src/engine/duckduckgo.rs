@@ -11,6 +11,8 @@ use select::predicate::Class;
 ///
 /// Return the query url, which can be fired with HTTP GET request.
 pub fn get_query_url(query: &String, use_https: bool) -> String {
+    // For more information about query url, the information here is useful:
+    // https://stackoverflow.com/questions/37012469/duckduckgo-api-getting-search-results
     if use_https {
         format!(
             "https://duckduckgo.com/html?q=site:stackoverflow.com%20{}&t=hj&ia=web",
@@ -35,7 +37,6 @@ pub fn get_query_url(query: &String, use_https: bool) -> String {
 /// Links to the relative question, or returns None if we can't find it.
 pub fn extract_links(page: &String) -> Option<Vec<String>> {
     let doc: Document = Document::from(page.as_str());
-    println!("{}", page);
     let target_elements = doc.find(Class("result__a"));
     let mut links: Vec<String> = Vec::new();
 
