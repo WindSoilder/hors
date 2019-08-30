@@ -22,7 +22,7 @@ use reqwest::{Client, RequestBuilder};
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
 pub fn search_links(
-    query: &String,
+    query: &str,
     search_engine: SearchEngine,
     client: &Client,
 ) -> Result<Vec<String>> {

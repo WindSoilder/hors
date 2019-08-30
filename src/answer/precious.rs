@@ -1,4 +1,6 @@
 //! This module contains api to get results from stack overflow page.
+//! Yeah, our precious lays in stackoverflow.com.
+
 use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
