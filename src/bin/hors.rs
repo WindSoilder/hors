@@ -46,7 +46,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .short("e")
                 .takes_value(true)
                 .default_value("bing")
-                .help("select middle search engine, currently support `bing` and `google`."),
+                .help("select middle search engine, currently support `bing`, `google` and `duckduckgo`."),
         )
         .arg(
             Arg::with_name("disable_proxy")

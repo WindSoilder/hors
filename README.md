@@ -34,14 +34,15 @@ USAGE:
 FLAGS:
     -a, --all              display the full text of the answer.
     -c, --color            enable colorized output.
-        --disable_proxy    Disable using system proxy.
+        --disable_proxy    Disable system proxy.
     -h, --help             Prints help information
     -l, --link             display only the answer link.
     -V, --version          Prints version information
 
 OPTIONS:
-    -e, --engine <engine>                    select middle search engine, currently support `bing` and `google`.  [default: bing]
-    -n, --number_answers <number_answers>    number of answers to return [default: 1]
+    -e, --engine <engine>                    select middle search engine, currently support `bing`, `google` and
+                                             `duckduckgo`. [default: bing]
+    -n, --number_answers <number_answers>    number of answers to return. [default: 1]
 
 ARGS:
     <QUERY>

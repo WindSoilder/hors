@@ -1,4 +1,6 @@
 # [Unreleased]
+## Added
+- support *duckduckgo* search engine.  To apply it, use can use `-e duckduckgo`.
 
 # [0.4.0] - 2019-08-29
 ## Added
