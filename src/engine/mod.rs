@@ -1,6 +1,6 @@
 mod bing;
-mod google;
 mod duckduckgo;
+mod google;
 
 use crate::config::SearchEngine;
 use crate::error::{HorsError, Result};

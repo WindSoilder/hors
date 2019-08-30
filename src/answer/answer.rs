@@ -104,9 +104,7 @@ fn get_page(
     );
     match page_from_cache {
         // When we can get answer from cache, just return it.
-        Some(page) => {
-            Ok(page.to_string())
-        }
+        Some(page) => Ok(page.to_string()),
         // When we can't get answer from cache, we should get page from network.
         None => {
             let mut resp: Response = client

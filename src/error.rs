@@ -16,18 +16,10 @@ pub struct HorsError {
 impl Error for HorsError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match &self.repr {
-            Repr::Network(network_err) => {
-                network_err.source()
-            }
-            Repr::Parse(_) => {
-                None
-            }
-            Repr::IOError(io_err) => {
-                io_err.source()
-            }
-            Repr::SedesError(sedes_err) => {
-                sedes_err.source()
-            }
+            Repr::Network(network_err) => network_err.source(),
+            Repr::Parse(_) => None,
+            Repr::IOError(io_err) => io_err.source(),
+            Repr::SedesError(sedes_err) => sedes_err.source(),
         }
     }
 }
