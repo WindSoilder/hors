@@ -90,11 +90,7 @@ fn get_detailed_answer(
     Ok(results.join(SPLITTER))
 }
 
-fn get_page(
-    link: &str,
-    client: &Client,
-    records_cache: &mut AnswerRecordsCache,
-) -> Result<String> {
+fn get_page(link: &str, client: &Client, records_cache: &mut AnswerRecordsCache) -> Result<String> {
     // Firstly try to get link from cache.
     let page_from_cache: Option<&String> = records_cache.get(link);
 
