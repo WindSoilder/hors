@@ -10,7 +10,7 @@ use select::predicate::Class;
 /// # Returns
 ///
 /// Return the query url, which can be fired with HTTP GET request.
-pub fn get_query_url(query: &String, use_https: bool) -> String {
+pub fn get_query_url(query: &str, use_https: bool) -> String {
     // For more information about query url, the information here is useful:
     // https://stackoverflow.com/questions/37012469/duckduckgo-api-getting-search-results
     if use_https {
@@ -35,8 +35,8 @@ pub fn get_query_url(query: &String, use_https: bool) -> String {
 /// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
-pub fn extract_links(page: &String) -> Option<Vec<String>> {
-    let doc: Document = Document::from(page.as_str());
+pub fn extract_links(page: &str) -> Option<Vec<String>> {
+    let doc: Document = Document::from(page);
     let target_elements = doc.find(Class("result__a"));
     let mut links: Vec<String> = Vec::new();
 

@@ -38,7 +38,7 @@ pub fn search_links(
     Err(HorsError::from_parse("Can't find search result..."))
 }
 
-fn get_query_url(query: &String, search_engine: &SearchEngine, use_https: bool) -> String {
+fn get_query_url(query: &str, search_engine: &SearchEngine, use_https: bool) -> String {
     match search_engine {
         SearchEngine::Bing => bing::get_query_url(query, use_https),
         SearchEngine::Google => google::get_query_url(query, use_https),
@@ -58,9 +58,9 @@ fn get_query_url(query: &String, search_engine: &SearchEngine, use_https: bool) 
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
-fn fetch(search_url: &String, client: &Client) -> Result<String> {
+fn fetch(search_url: &str, client: &Client) -> Result<String> {
     let request: RequestBuilder = client
-        .get(search_url.as_str())
+        .get(search_url)
         .header(reqwest::header::USER_AGENT, random_agent());
     debug!("Request to bing information: {:?}", request);
     let mut res = request.send()?;
@@ -78,7 +78,7 @@ fn fetch(search_url: &String, client: &Client) -> Result<String> {
 /// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
-fn extract_links(page: &String, search_engine: &SearchEngine) -> Option<Vec<String>> {
+fn extract_links(page: &str, search_engine: &SearchEngine) -> Option<Vec<String>> {
     match search_engine {
         SearchEngine::Bing => bing::extract_links(page),
         SearchEngine::Google => google::extract_links(page),

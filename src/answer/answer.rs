@@ -29,7 +29,7 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub fn get_answers(links: &Vec<String>, conf: Config, client: &Client) -> Result<String> {
+pub fn get_answers(links: &[String], conf: Config, client: &Client) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
@@ -58,7 +58,7 @@ pub fn get_answers(links: &Vec<String>, conf: Config, client: &Client) -> Result
 }
 
 fn get_detailed_answer(
-    links: &Vec<String>,
+    links: &[String],
     conf: Config,
     records_cache: &mut AnswerRecordsCache,
     client: &Client,
@@ -91,7 +91,7 @@ fn get_detailed_answer(
 }
 
 fn get_page(
-    link: &String,
+    link: &str,
     client: &Client,
     records_cache: &mut AnswerRecordsCache,
 ) -> Result<String> {
@@ -198,7 +198,7 @@ fn parse_answer_detailed(
     should_colorize: bool,
 ) -> Option<String> {
     if let Some(instruction) = answer_node.find(Class("post-text")).next() {
-        if should_colorize == false {
+        if !should_colorize {
             return Some(instruction.text());
         } else {
             let mut formatted_answer: String = String::new();
@@ -222,7 +222,7 @@ fn parse_answer_detailed(
 /// make code block colorized.
 ///
 /// Note that this function should only accept code block.
-fn colorized_code(code: String, possible_tags: &Vec<String>) -> String {
+fn colorized_code(code: String, possible_tags: &[String]) -> String {
     let ss = SyntaxSet::load_defaults_newlines();
     let ts: ThemeSet = ThemeSet::load_defaults();
     let syntax: &SyntaxReference = guess_syntax(&possible_tags, &ss);
@@ -236,7 +236,7 @@ fn colorized_code(code: String, possible_tags: &Vec<String>) -> String {
     colorized
 }
 
-fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a SyntaxReference {
+fn guess_syntax<'a>(possible_tags: &[String], ss: &'a SyntaxSet) -> &'a SyntaxReference {
     for tag in possible_tags {
         let syntax = ss.find_syntax_by_token(tag.as_str());
         if let Some(result) = syntax {
@@ -255,7 +255,7 @@ fn guess_syntax<'a>(possible_tags: &Vec<String>, ss: &'a SyntaxSet) -> &'a Synta
 ///
 /// # Returns
 /// A list of links with splitter.  Which can directly output by the caller.
-fn answers_links_only(links: &Vec<String>, restricted_length: usize) -> String {
+fn answers_links_only(links: &[String], restricted_length: usize) -> String {
     let mut results: Vec<String> = Vec::new();
     let mut links_iter = links.iter();
     for _ in 0..restricted_length {

@@ -86,7 +86,7 @@ impl AnswerRecordsCache {
     ///
     /// # Returns
     /// Return cached page if we can find it and it's not too old, else returns None.
-    pub fn get(&self, link: &String) -> Option<&String> {
+    pub fn get(&self, link: &str) -> Option<&String> {
         let possible_page: Option<&AnswerRecord> = self.0.get(link);
         match possible_page {
             // if we can find relative record

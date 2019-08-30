@@ -11,7 +11,7 @@ use select::predicate::{Class, Name, Predicate};
 /// # Returns
 ///
 /// Return the query url, which can be fired with HTTP GET request.
-pub fn get_query_url(query: &String, use_https: bool) -> String {
+pub fn get_query_url(query: &str, use_https: bool) -> String {
     if use_https {
         format!(
             "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
@@ -34,8 +34,8 @@ pub fn get_query_url(query: &String, use_https: bool) -> String {
 /// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
-pub fn extract_links(page: &String) -> Option<Vec<String>> {
-    let doc: Document = Document::from(page.as_str());
+pub fn extract_links(page: &str) -> Option<Vec<String>> {
+    let doc: Document = Document::from(page);
     let target_elements = doc.find(Class("b_algo").descendant(Name("h2")).descendant(Name("a")));
     let mut links: Vec<String> = Vec::new();
 
