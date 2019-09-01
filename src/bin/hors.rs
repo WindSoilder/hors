@@ -78,7 +78,7 @@ fn main() -> Result<()> {
     });
 
     let target_links: Vec<String> = engine::search_links(
-        &String::from(matches.value_of("QUERY").unwrap()),
+        matches.value_of("QUERY").unwrap(),
         search_engine,
         &client,
     )?;
@@ -96,14 +96,14 @@ fn main() -> Result<()> {
 
 /// initialize config from user input arguments.
 fn init_config(matches: &ArgMatches) -> Config {
-    let output_option: OutputOption;
-    if matches.is_present("link") {
-        output_option = OutputOption::Links;
+    let output_option = if matches.is_present("link") {
+        OutputOption::Links
     } else if matches.is_present("all") {
-        output_option = OutputOption::All;
+        OutputOption::All
     } else {
-        output_option = OutputOption::OnlyCode;
-    }
+        OutputOption::OnlyCode
+    };
+
     let conf: Config = Config::new(
         output_option,
         matches
