@@ -8,6 +8,7 @@ use hors::engine;
 use hors::error::Result;
 use reqwest::{Client, ClientBuilder};
 
+use std::process;
 use std::str::FromStr;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
@@ -71,7 +72,10 @@ fn main() -> Result<()> {
     } else {
         client_builder = client_builder.use_sys_proxy();
     }
-    let client: Client = client_builder.build()?;
+    let client: Client = client_builder.build().unwrap_or_else(|err| {
+        eprintln!("Build client failed: {}", err);
+        process::exit(1);
+    });
 
     let target_links: Vec<String> = engine::search_links(
         &String::from(matches.value_of("QUERY").unwrap()),
@@ -81,7 +85,10 @@ fn main() -> Result<()> {
 
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
-    let answers: String = answer::get_answers(&target_links, conf, &client)?;
+    let answers: String = answer::get_answers(&target_links, conf, &client).unwrap_or_else(|err| {
+        eprintln!("Hors is running to error: {}", err);
+        process::exit(1);
+    });
     println!("{}", answers);
 
     Ok(())
