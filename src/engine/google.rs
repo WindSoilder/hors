@@ -42,13 +42,10 @@ pub fn extract_links(page: &str) -> Option<Vec<String>> {
     //   <span><a href="not we need"></a></span>
     // </r>
     let target_elements = doc.find(Class("r").child(Name("a")));
-    let mut links: Vec<String> = Vec::new();
-
-    for node in target_elements {
-        if let Some(link) = node.attr("href") {
-            links.push(String::from(link));
-        }
-    }
+    let links: Vec<String> = target_elements
+        .filter_map(|node| node.attr("href"))
+        .map(|link| String::from(link))
+        .collect();
 
     debug!("Links extract from google: {:?}", links);
     if links.is_empty() {

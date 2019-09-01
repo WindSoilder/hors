@@ -38,13 +38,10 @@ pub fn get_query_url(query: &str, use_https: bool) -> String {
 pub fn extract_links(page: &str) -> Option<Vec<String>> {
     let doc: Document = Document::from(page);
     let target_elements = doc.find(Class("result__a"));
-    let mut links: Vec<String> = Vec::new();
-
-    for node in target_elements {
-        if let Some(link) = node.attr("href") {
-            links.push(String::from(link));
-        }
-    }
+    let links: Vec<String> = target_elements
+        .filter_map(|node| node.attr("href"))
+        .map(|link| String::from(link))
+        .collect();
 
     debug!("Links extrace from duckduckgo: {:?}", links);
     if links.is_empty() {

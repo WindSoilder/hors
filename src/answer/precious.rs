@@ -121,11 +121,9 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     let doc: Document = Document::from(page.as_str());
     // The question tags may contains useful information about the language topic
     // so syntect can use correct Syntex reference.
-    let mut question_tags: Vec<String> = vec![];
-    let tags = doc.find(Class("post-tag"));
-    for tag in tags {
-        question_tags.push(tag.text());
-    }
+    let question_tags: Vec<String> = doc.find(Class("post-tag"))
+        .map(|tag_node| tag_node.text())
+        .collect();
 
     let appropriate_answer = select_answer(&doc);
 

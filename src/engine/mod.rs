@@ -7,7 +7,7 @@ use crate::error::{HorsError, Result};
 use crate::utils::random_agent;
 use reqwest::{Client, RequestBuilder};
 
-/// Search result links under the `bing` search engine.
+/// Search result links under the given search engine.
 ///
 /// This function will go through network to find out useful links in bing.
 ///
