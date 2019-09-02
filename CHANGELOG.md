@@ -2,6 +2,9 @@
 ## Added
 - support *duckduckgo* search engine.  To apply it, use can use `-e duckduckgo`.
 
+## Fixed
+- Hors will output more friendly error messages, all error messages will go to *stderr*.
+
 # [0.4.0] - 2019-08-29
 ## Added
 - support *--disable_proxy* argumet.

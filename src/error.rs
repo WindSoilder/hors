@@ -26,7 +26,7 @@ impl Error for HorsError {
 
 impl Display for HorsError {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-        write!(f, "Hor error occured, more information: {:?}", self.repr)
+        write!(f, "{:?}", self.repr)
     }
 }
 

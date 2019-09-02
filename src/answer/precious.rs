@@ -121,7 +121,8 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     let doc: Document = Document::from(page.as_str());
     // The question tags may contains useful information about the language topic
     // so syntect can use correct Syntex reference.
-    let question_tags: Vec<String> = doc.find(Class("post-tag"))
+    let question_tags: Vec<String> = doc
+        .find(Class("post-tag"))
         .map(|tag_node| tag_node.text())
         .collect();
 
@@ -276,7 +277,8 @@ fn answers_links_only(links: &[String], restricted_length: usize) -> String {
 
 /// Extract question content.
 ///
-/// # Example
+/// # Examples
+///
 /// let question: String = extract_question("questions/user_id/the-specific-question");
 /// assert_eq!(question, String::from("the specific question"));
 fn extract_question(path: &str) -> String {

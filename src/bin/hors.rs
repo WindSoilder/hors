@@ -77,11 +77,12 @@ fn main() -> Result<()> {
         process::exit(1);
     });
 
-    let target_links: Vec<String> = engine::search_links(
-        matches.value_of("QUERY").unwrap(),
-        search_engine,
-        &client,
-    )?;
+    let target_links: Vec<String> =
+        engine::search_links(matches.value_of("QUERY").unwrap(), search_engine, &client)
+            .unwrap_or_else(|err| {
+                eprintln!("Search for target link failed: {}", err);
+                process::exit(1);
+            });
 
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
