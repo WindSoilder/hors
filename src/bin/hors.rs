@@ -46,7 +46,7 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .long("engine")
                 .short("e")
                 .takes_value(true)
-                .default_value("bing")
+                .default_value("duckduckgo")
                 .help("select middle search engine, currently support `bing`, `google` and `duckduckgo`."),
         )
         .arg(

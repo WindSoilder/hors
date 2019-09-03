@@ -41,7 +41,7 @@ FLAGS:
 
 OPTIONS:
     -e, --engine <engine>                    select middle search engine, currently support `bing`, `google` and
-                                             `duckduckgo`. [default: bing]
+                                             `duckduckgo`. [default: duckduckgo]
     -n, --number_answers <number_answers>    number of answers to return. [default: 1]
 
 ARGS:

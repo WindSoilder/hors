@@ -5,6 +5,9 @@
 ## Fixed
 - Hors will output more friendly error messages, all error messages will go to *stderr*.
 
+## Changed
+- For now the default search engine is duckduckgo.
+
 # [0.4.0] - 2019-08-29
 ## Added
 - support *--disable_proxy* argumet.
