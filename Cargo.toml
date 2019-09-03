@@ -20,6 +20,7 @@ log = "0.4.8"
 serde = { version = "1.0.98", features = ["derive"] }
 bincode = "1.1.4"
 dirs = "2.0.2"
+url = "2.1.0"
 
 [dev-dependencies]
 env_logger = "0.6"

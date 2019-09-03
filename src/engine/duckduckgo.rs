@@ -1,5 +1,7 @@
 use select::document::Document;
 use select::predicate::Class;
+use url::form_urlencoded;
+
 /// Get DuckDuckgo search url.
 ///
 /// # Arguments
@@ -40,7 +42,19 @@ pub fn extract_links(page: &str) -> Option<Vec<String>> {
     let target_elements = doc.find(Class("result__a"));
     let links: Vec<String> = target_elements
         .filter_map(|node| node.attr("href"))
-        .map(|link| String::from(link))
+        .filter_map(|link| {
+            if link.starts_with("/l/?") {
+                // DuckDuckGo redirect link
+                // e.g. /l/?kh=-1&uddg=https%3A%2F%2Fdoc.rust%2Dlang.org%2Fstd%2Fprimitive.str.html
+                debug!("Extracting URL from redirect link {:?}", link);
+                let query = &link[4..]; // trim "/l/?"
+                form_urlencoded::parse(query.as_bytes())
+                    .find(|(k, _)| k == "uddg")
+                    .map(|(_, v)| v.into_owned())
+            } else {
+                Some(String::from(link))
+            }
+        })
         .collect();
 
     debug!("Links extrace from duckduckgo: {:?}", links);
