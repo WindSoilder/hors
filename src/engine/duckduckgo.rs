@@ -102,6 +102,51 @@ mod tests {
     }
 
     #[test]
+    fn test_extract_links_when_ddg_provide_redirect_links() {
+        let page: String = String::from(
+            "
+<html>
+    <body>
+        <div class=\"result__body\">
+            <a class=\"result__a\" href=\"/l/?kh=-1&uddg=https%3A%2F%2Ftest_link1\"></a>
+        </div>
+        div class=\"result__body\">
+            <a class=\"result__a\" href=\"/l/?kh=-1&uddg=https%3A%2F%2Ftest_link2\"></a>
+        </div>
+    </body>
+</html>",
+        );
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_some(), true);
+        assert_eq!(
+            possible_links.unwrap(),
+            vec![
+                String::from("https://test_link1"),
+                String::from("https://test_link2")
+            ]
+        )
+    }
+
+    #[test]
+    fn test_extract_links_when_ddg_provide_redirect_links_but_no_uddg_attributes() {
+        let page: String = String::from(
+            "
+        <html>
+            <body>
+                <div class=\"result__body\">
+                    <a class=\"result__a\" href=\"/l/?kh=-1\"></a>
+                </div>
+                div class=\"result__body\">
+                    <a class=\"result__a\" href=\"/l/?kh=-1\"></a>
+                </div>
+            </body>
+        </html>",
+        );
+        let possible_links: Option<Vec<String>> = extract_links(&page);
+        assert_eq!(possible_links.is_none(), true);
+    }
+
+    #[test]
     fn test_get_query_url() {
         let result: String = get_query_url(&String::from("how to write unit test"), true);
         assert_eq!(
