@@ -12,9 +12,10 @@ use std::process;
 use std::str::FromStr;
 
 fn parser_matches<'a>() -> ArgMatches<'a> {
-    let parser = App::new("hors")
-        .author("WindSoilder, WindSoilder@outlook.com")
-        .version("0.4.0")
+    let parser = App::new(env!("CARGO_PKG_NAME"))
+        .author(env!("CARGO_PKG_AUTHORS"))
+        .version(env!("CARGO_PKG_VERSION"))
+        .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name("all")
                 .long("all")

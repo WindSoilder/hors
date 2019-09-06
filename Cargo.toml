@@ -9,6 +9,7 @@ repository = "https://github.com/WindSoilder/hors"
 documentation = "https://github.com/WindSoilder/hors/blob/master/README.md"
 readme = "./README.md"
 keywords = ["http", "client", "cli-tools"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.0"
