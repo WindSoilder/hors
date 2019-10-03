@@ -13,7 +13,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.0"
-syntect = "3.2.1"
+syntect = "3.3.0"
 reqwest = "0.9.19"
 select = "0.4.3"
 rand = "0.7.1"
