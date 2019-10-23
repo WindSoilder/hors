@@ -68,10 +68,10 @@ fn test_get_answers_with_instruction() {
         .collect();
     assert_eq!(
         answers,
-        "- Answer from https://stackoverflow.com/questions/7771011/parse-json-in-python
+        r#"- Answer from https://stackoverflow.com/questions/7771011/parse-json-in-python
 import json
-j = json.loads('{\"one\" : \"1\", \"two\" : \"2\", \"three\" : \"3\"}')
+j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
 print j['two']
-"
+"#
     )
 }

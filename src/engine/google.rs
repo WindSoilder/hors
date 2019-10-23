@@ -61,23 +61,23 @@ mod tests {
     #[test]
     fn test_extract_links() {
         let page: String = String::from(
-            "
+            r#"
 <html>
     <body>
-        <div class=\"g\">
-            <div class=\"r\">
-                <a href=\"https://test_link1\">
+        <div class="g">
+            <div class="r">
+                <a href="https://test_link1">
                 </a>
             </div>
         </div>
-        <div class=\"g\">
-            <div class=\"r\">
-                <a href=\"https://test_link2\">
+        <div class="g">
+            <div class="r">
+                <a href="https://test_link2">
                 </a>
             </div>
         </div>
     </body>
-</html>",
+</html>"#,
         );
         let possible_links: Option<Vec<String>> = extract_links(&page);
         assert_eq!(possible_links.is_some(), true);
