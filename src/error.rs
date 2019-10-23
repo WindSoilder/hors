@@ -1,71 +1,58 @@
 use bincode::Error as SedesError;
 use std::convert::From;
-use std::error::Error;
+use std::error::Error as StdError;
 use std::fmt::{Display, Formatter};
 use std::io::Error as IOError;
 use std::result::Result as StdResult;
 
-pub type Result<T> = StdResult<T, HorsError>;
+pub type Result<T> = StdResult<T, Error>;
+
 
 #[derive(Debug)]
-/// Error exposed by hors.
-pub struct HorsError {
-    repr: Repr,
-}
-
-impl Error for HorsError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        match &self.repr {
-            Repr::Network(network_err) => network_err.source(),
-            Repr::Parse(_) => None,
-            Repr::IOError(io_err) => io_err.source(),
-            Repr::SedesError(sedes_err) => sedes_err.source(),
-        }
-    }
-}
-
-impl Display for HorsError {
-    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self.repr)
-    }
-}
-
-#[derive(Debug)]
-enum Repr {
+pub enum Error {
     Network(reqwest::Error),
     IOError(IOError),
     SedesError(SedesError),
     Parse(&'static str),
 }
 
-impl HorsError {
-    pub fn from_parse(reason: &'static str) -> HorsError {
-        HorsError {
-            repr: Repr::Parse(reason),
+impl StdError for Error {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match self {
+            Error::Network(network_err) => network_err.source(),
+            Error::Parse(_) => None,
+            Error::IOError(io_err) => io_err.source(),
+            Error::SedesError(sedes_err) => sedes_err.source(),
         }
     }
 }
 
-impl From<reqwest::Error> for HorsError {
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl Error {
+    pub fn from_parse(reason: &'static str) -> Error {
+        Error::Parse(reason)
+    }
+}
+
+impl From<reqwest::Error> for Error {
     fn from(error: reqwest::Error) -> Self {
-        HorsError {
-            repr: Repr::Network(error),
-        }
+        Error::Network(error)
     }
 }
 
-impl From<IOError> for HorsError {
+impl From<IOError> for Error {
     fn from(error: IOError) -> Self {
-        HorsError {
-            repr: Repr::IOError(error),
-        }
+        Error::IOError(error)
     }
 }
 
-impl From<SedesError> for HorsError {
+impl From<SedesError> for Error {
     fn from(error: SedesError) -> Self {
-        HorsError {
-            repr: Repr::SedesError(error),
-        }
+        Error::SedesError(error)
     }
 }

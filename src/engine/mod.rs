@@ -3,7 +3,7 @@ mod duckduckgo;
 mod google;
 
 use crate::config::SearchEngine;
-use crate::error::{HorsError, Result};
+use crate::error::{Error, Result};
 use crate::utils::random_agent;
 use reqwest::{Client, RequestBuilder};
 
@@ -35,7 +35,7 @@ pub fn search_links(
             return Ok(links);
         }
     }
-    Err(HorsError::from_parse("Can't find search result..."))
+    Err(Error::from_parse("Can't find search result..."))
 }
 
 fn get_query_url(query: &str, search_engine: &SearchEngine, use_https: bool) -> String {

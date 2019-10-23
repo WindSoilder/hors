@@ -1,4 +1,4 @@
-use crate::error::{HorsError, Result};
+use crate::error::{Error, Result};
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -57,14 +57,14 @@ impl Config {
 }
 
 impl FromStr for SearchEngine {
-    type Err = HorsError;
+    type Err = Error;
 
     fn from_str(s: &str) -> Result<Self> {
         match s {
             "bing" => Ok(SearchEngine::Bing),
             "google" => Ok(SearchEngine::Google),
             "duckduckgo" => Ok(SearchEngine::DuckDuckGo),
-            _ => Err(HorsError::from_parse("Not supported search engine")),
+            _ => Err(Error::from_parse("Not supported search engine")),
         }
     }
 }
