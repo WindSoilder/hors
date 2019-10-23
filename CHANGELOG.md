@@ -1,4 +1,7 @@
 # [Unreleased]
+## Changed
+- `Error` has been redesigned, for now it will be an `enum` rather than `struct`.
+- Rename from `HorsError` to `Error`.
 
 # [0.4.1] - 2019-09-10
 ## Added
