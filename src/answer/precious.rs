@@ -359,20 +359,20 @@ mod test {
     #[test]
     fn test_parse_answer() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
-                            <code>println!(\"hello world\")</code>
+                            <code>println!("hello world")</code>
                         </pre>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -380,28 +380,28 @@ mod test {
         assert_eq!(answer.is_some(), true);
 
         if let Some(code) = answer {
-            assert_eq!(code.trim(), String::from("println!(\"hello world\")"));
+            assert_eq!(code.trim(), String::from(r#"println!("hello world")"#));
         }
     }
 
     #[test]
     fn test_parse_answer_when_pre_and_code_both_existed() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer <code>goto</code> here </p>
                         <pre>
-                            <code>println!(\"hello world\")</code>
+                            <code>println!("hello world")</code>
                         </pre>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -409,25 +409,25 @@ mod test {
         assert_eq!(answer.is_some(), true);
 
         if let Some(code) = answer {
-            assert_eq!(code.trim(), String::from("println!(\"hello world\")"));
+            assert_eq!(code.trim(), String::from(r#"println!("hello world")"#));
         }
     }
 
     #[test]
     fn test_parse_answer_when_no_code_available() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer here </p>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -438,18 +438,18 @@ mod test {
     #[test]
     fn test_parse_answer_when_only_code_existed() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer <code>goto</code> here </p>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -464,18 +464,18 @@ mod test {
     #[test]
     fn test_parse_answer_detailed() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer <code>goto</code> here </p>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -490,18 +490,18 @@ mod test {
     #[test]
     fn test_parse_answer_detailed_when_no_code_available() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer goto here</p>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -516,12 +516,12 @@ mod test {
     #[test]
     fn test_parse_answer_detailed_when_only_pre_code() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             print('go go go')
                         </pre>
@@ -529,7 +529,7 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -544,24 +544,24 @@ mod test {
     #[test]
     fn test_parse_answer_when_two_answers_available() {
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <p>answer <code>lower</code> here </p>
                     </div>
                 </div>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">9000</div>
-                    <div class=\"post-text\">
+                <div class="answer">
+                    <div class="js-vote-count">9000</div>
+                    <div class="post-text">
                         <p>answer <code>higher</code> here </p>
                     </div>
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let answer: Option<String> = parse_answer(page, &conf);
@@ -578,13 +578,13 @@ mod test {
         // to testing answer colorized, we just want to make sure that
         // the result has different length.
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\">python</a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag">python</a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -592,19 +592,19 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
         let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
         let conf: Config = Config::new(OutputOption::OnlyCode, 1, true);
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\">python</a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag">python</a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -612,7 +612,7 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let colorized_answer: String = parse_answer(page, &conf).unwrap();
         assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
@@ -624,13 +624,13 @@ mod test {
         // to testing answer colorized, we just want to make sure that
         // the result has different length.
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\">python</a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag">python</a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -638,19 +638,19 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
         let conf: Config = Config::new(OutputOption::All, 1, true);
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\">python</a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag">python</a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -658,7 +658,7 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let colorized_answer: String = parse_answer(page, &conf).unwrap();
         assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
@@ -669,13 +669,13 @@ mod test {
     fn test_parse_answer_colorized_when_no_tags_available() {
         // when no tags information lays in the page, it should work too.
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\"></a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag"></a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -683,19 +683,19 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let conf: Config = Config::new(OutputOption::All, 1, false);
         let un_colorized_answer: String = parse_answer(page, &conf).unwrap();
         let conf: Config = Config::new(OutputOption::All, 1, true);
         let page: String = String::from(
-            "
+            r#"
         <html>
             <body>
-                <a class=\"post-tag\"></a>
-                <div class=\"answer\">
-                    <div class=\"js-vote-count\">130</div>
-                    <div class=\"post-text\">
+                <a class="post-tag"></a>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -703,7 +703,7 @@ mod test {
                 </div>
             </body>
         </html>
-        ",
+        "#,
         );
         let colorized_answer: String = parse_answer(page, &conf).unwrap();
         assert_ne!(un_colorized_answer.trim(), colorized_answer.trim());
