@@ -106,7 +106,7 @@ fn init_config(matches: &ArgMatches) -> Config {
         OutputOption::OnlyCode
     };
 
-    let conf: Config = Config::new(
+    Config::new(
         output_option,
         matches
             .value_of("number_answers")
@@ -114,6 +114,5 @@ fn init_config(matches: &ArgMatches) -> Config {
             .parse::<u8>()
             .unwrap(),
         matches.is_present("color"),
-    );
-    conf
+    )
 }
