@@ -35,7 +35,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(output_option: OutputOption, numbers: u8, colorize: bool) -> Self {
+    pub fn new(output_option: OutputOption, numbers: u8, colorize: bool) -> Config {
         Config {
             option: output_option,
             numbers,
