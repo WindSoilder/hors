@@ -5,7 +5,7 @@ use clap::{App, Arg, ArgMatches};
 use hors::answer;
 use hors::config::{Config, OutputOption, SearchEngine};
 use hors::engine;
-use hors::error::Result;
+use hors::Result;
 use reqwest::{Client, ClientBuilder};
 
 use std::process;

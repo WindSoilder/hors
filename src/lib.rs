@@ -12,7 +12,7 @@
 //! use hors::answer;
 //! use hors::config::{Config, OutputOption, SearchEngine};
 //! use hors::engine;
-//! use hors::error::Result;
+//! use hors::Result;
 //! use reqwest::{Client, ClientBuilder};
 //!
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
@@ -56,5 +56,7 @@ extern crate log;
 pub mod answer;
 pub mod config;
 pub mod engine;
-pub mod error;
+mod error;
 mod utils;
+
+pub use error::{Error, Result};
