@@ -1,7 +1,11 @@
 # [Unreleased]
+## Added
+- Some functions and structs are public from lib, for more information, please check the doc.
+
 ## Changed
 - `Error` has been redesigned, for now it will be an `enum` rather than `struct`.
 - Rename from `HorsError` to `Error`.
+- Documentation improved.
 
 # [0.4.1] - 2019-09-10
 ## Added
