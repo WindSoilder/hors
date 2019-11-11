@@ -2,10 +2,7 @@
 extern crate log;
 
 use clap::{App, Arg, ArgMatches};
-use hors::answer;
-use hors::config::{Config, OutputOption, SearchEngine};
-use hors::engine;
-use hors::Result;
+use hors::{self, Config, OutputOption, Result, SearchEngine};
 use reqwest::{Client, ClientBuilder};
 
 use std::process;
@@ -79,7 +76,7 @@ fn main() -> Result<()> {
     });
 
     let target_links: Vec<String> =
-        engine::search_links(matches.value_of("QUERY").unwrap(), search_engine, &client)
+        hors::search_links(matches.value_of("QUERY").unwrap(), search_engine, &client)
             .unwrap_or_else(|err| {
                 eprintln!("Search for target link failed: {}", err);
                 process::exit(1);
@@ -87,7 +84,7 @@ fn main() -> Result<()> {
 
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
-    let answers: String = answer::get_answers(&target_links, conf, &client).unwrap_or_else(|err| {
+    let answers: String = hors::get_answers(&target_links, conf, &client).unwrap_or_else(|err| {
         eprintln!("Hors is running to error: {}", err);
         process::exit(1);
     });

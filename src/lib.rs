@@ -9,16 +9,13 @@
 //!
 //! ```rust
 //! use std::str::FromStr;
-//! use hors::answer;
-//! use hors::config::{Config, OutputOption, SearchEngine};
-//! use hors::engine;
-//! use hors::Result;
+//! use hors::{self, Config, OutputOption, Result, SearchEngine};
 //! use reqwest::{Client, ClientBuilder};
 //!
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 //! // please make sure that `cookie_store` should set to `true` in client builder.
 //! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-//! let target_links: Vec<String> = engine::search_links(
+//! let target_links: Vec<String> = hors::search_links(
 //!     "how to parse json in rust",
 //!     search_engine,
 //!     &client
@@ -32,8 +29,7 @@
 //! Get actual answers according to stackoverflow links.
 //!
 //! ```rust
-//! use hors::answer;
-//! use hors::config::{Config, OutputOption};
+//! use hors::{self, Config, OutputOption};
 //! use reqwest::{Client, ClientBuilder};
 //!
 //! let conf: Config = Config::new(OutputOption::OnlyCode, 3, false);
@@ -42,7 +38,7 @@
 //! let links: Vec<String> = vec![
 //!     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 //! ];
-//! let answers: String = answer::get_answers(&links, conf, &client).unwrap();
+//! let answers: String = hors::get_answers(&links, conf, &client).unwrap();
 //! assert!(
 //!     answers.contains(
 //!         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
@@ -59,4 +55,7 @@ pub mod engine;
 mod error;
 mod utils;
 
+pub use answer::{get_answers, SPLITTER};
+pub use config::{Config, OutputOption, SearchEngine};
+pub use engine::search_links;
 pub use error::{Error, Result};
