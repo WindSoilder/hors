@@ -11,11 +11,26 @@ use reqwest::{Client, RequestBuilder};
 ///
 /// This function will go through network to find out useful links in bing.
 ///
-/// # Arguments
+/// # Examples
 ///
-/// * `query` - The user input query String.
-/// * `search_engine` - indicate which search engine we use to search result links.
-/// * `client` - reqwest::Client object, please ensure that it's build with cookie_store(true) option.
+/// ```rust
+/// use std::str::FromStr;
+/// use hors::{self, Config, OutputOption, Result, SearchEngine};
+/// use reqwest::{Client, ClientBuilder};
+///
+/// let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
+/// // please make sure that `cookie_store` should set to `true` in client builder.
+/// let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
+/// let target_links: Vec<String> = hors::search_links(
+///     "how to parse json in rust",
+///     search_engine,
+///     &client
+/// ).unwrap();
+/// assert_ne!(target_links.len(), 0);
+/// for link in target_links {
+///     assert!(link.contains("stackoverflow.com"));
+/// }
+/// ```
 ///
 /// # Returns
 ///

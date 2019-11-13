@@ -20,12 +20,25 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 ///
 /// This function will go through network to find out answers.
 ///
-/// # Arguments
+/// # Examples
 ///
-/// * `links` - the links where answer existed.
-/// * `conf` - contains information about get_answer options.
-/// * `client` - An instance of `request::Client` object which can use to fire http request,
-///              please ensure that it's build with cookie_store(true) option.
+/// ```rust
+/// use hors::{answer, Config, OutputOption};
+/// use reqwest::{Client, ClientBuilder};
+///
+/// let conf: Config = Config::new(OutputOption::All, 1, false);
+/// // please make sure that `cookie_store` should set to `true` in client builder.
+/// let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
+/// let links: Vec<String> = vec![
+///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
+/// ];
+/// let answers: String = hors::get_answers(&links, conf, &client).unwrap();
+/// assert!(
+///     answers.contains(
+///         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
+///     )
+/// );
+/// ```
 ///
 /// # Returns
 ///

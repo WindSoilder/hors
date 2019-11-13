@@ -2,7 +2,7 @@ use crate::error::{Error, Result};
 use std::str::FromStr;
 
 #[derive(Debug)]
-/// The results output options is defined here.
+/// The results output options.
 pub enum OutputOption {
     /// Only output links.
     Links,
