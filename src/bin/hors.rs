@@ -76,7 +76,7 @@ fn main() -> Result<()> {
     });
 
     let target_links: Vec<String> =
-        hors::search_links(matches.value_of("QUERY").unwrap(), search_engine, &client)
+        hors::search_links_with_client(matches.value_of("QUERY").unwrap(), search_engine, &client)
             .unwrap_or_else(|err| {
                 eprintln!("Search for target link failed: {}", err);
                 process::exit(1);

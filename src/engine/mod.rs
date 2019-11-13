@@ -5,11 +5,37 @@ mod google;
 use crate::config::SearchEngine;
 use crate::error::{Error, Result};
 use crate::utils::random_agent;
-use reqwest::{Client, RequestBuilder};
+use reqwest::{Client, ClientBuilder, RequestBuilder};
 
 /// Search result links under the given search engine.
 ///
-/// This function will go through network to find out useful links in bing.
+/// This function will go through network to find out useful links.
+///
+/// # Examples
+///
+/// ```rust
+/// use std::str::FromStr;
+/// use hors::{self, SearchEngine};
+///
+/// let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
+/// let target_links: Vec<String> = hors::search_links(
+///     "how to parse json in rust",
+///     search_engine
+/// ).unwrap();
+/// assert_ne!(target_links.len(), 0);
+/// for link in target_links {
+///     assert!(link.contains("stackoverflow.com"))
+/// }
+/// ```
+pub fn search_links(query: &str, search_engine: SearchEngine) -> Result<Vec<String>> {
+    let client: Client = ClientBuilder::new().cookie_store(true).build()?;
+
+    search_links_with_client(query, search_engine, &client)
+}
+
+/// Search result links under the given search engine.
+///
+/// This function will go through network to find out useful links.
 ///
 /// # Examples
 ///
@@ -21,7 +47,7 @@ use reqwest::{Client, RequestBuilder};
 /// let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 /// // please make sure that `cookie_store` should set to `true` in client builder.
 /// let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-/// let target_links: Vec<String> = hors::search_links(
+/// let target_links: Vec<String> = hors::search_links_with_client(
 ///     "how to parse json in rust",
 ///     search_engine,
 ///     &client
@@ -36,7 +62,7 @@ use reqwest::{Client, RequestBuilder};
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search_links(
+pub fn search_links_with_client(
     query: &str,
     search_engine: SearchEngine,
     client: &Client,

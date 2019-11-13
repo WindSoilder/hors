@@ -6,6 +6,7 @@
 - `Error` has been redesigned, for now it will be an `enum` rather than `struct`.
 - Rename from `HorsError` to `Error`.
 - Documentation improved.
+- Rename from `hors::engine::search_link` to `hors::engine::search_link_with_client`, the original `hors::engine::search_link` will be more simple to use.
 
 # [0.4.1] - 2019-09-10
 ## Added

@@ -15,7 +15,7 @@
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 //! // please make sure that `cookie_store` should set to `true` in client builder.
 //! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-//! let target_links: Vec<String> = hors::search_links(
+//! let target_links: Vec<String> = hors::search_links_with_client(
 //!     "how to parse json in rust",
 //!     search_engine,
 //!     &client
@@ -57,5 +57,5 @@ mod utils;
 
 pub use answer::{get_answers, SPLITTER};
 pub use config::{Config, OutputOption, SearchEngine};
-pub use engine::search_links;
+pub use engine::{search_links_with_client, search_links};
 pub use error::{Error, Result};
