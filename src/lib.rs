@@ -13,12 +13,9 @@
 //! use reqwest::{Client, ClientBuilder};
 //!
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
-//! // please make sure that `cookie_store` should set to `true` in client builder.
-//! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-//! let target_links: Vec<String> = hors::search_links_with_client(
+//! let target_links: Vec<String> = hors::search_links(
 //!     "how to parse json in rust",
 //!     search_engine,
-//!     &client
 //! ).unwrap();
 //! assert_ne!(target_links.len(), 0);
 //! for link in target_links {
