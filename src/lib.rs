@@ -40,6 +40,34 @@
 //!     )
 //! );
 //! ```
+//!
+//! # Advanced usage:
+//! Calling `get_answers` or `search_links` will make a new connection through network, if you want
+//! to make use of connection pool, please use `get_answers_with_client` and `search_links_with_client`.
+//!
+//! In this way, all you need to do is initialize a `reqwest::Client` through `reqwest::ClientBuilder`,
+//! just remember to set cookie_store on `ClientBuilder` to true.
+//!
+//! # Examples
+//!
+//! ```rust
+//! use std::str::FromStr;
+//! use hors::{self, Config, OutputOption, Result, SearchEngine};
+//! use reqwest::{Client, ClientBuilder};
+//!
+//! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
+//! // please make sure that `cookie_store` should set to `true` in client builder.
+//! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
+//! let target_links: Vec<String> = hors::search_links_with_client(
+//!     "how to parse json in rust",
+//!     search_engine,
+//!     &client
+//! ).unwrap();
+//! assert_ne!(target_links.len(), 0);
+//! for link in target_links {
+//!     assert!(link.contains("stackoverflow.com"));
+//! }
+//! ```
 
 #[macro_use]
 extern crate log;
