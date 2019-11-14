@@ -5,7 +5,7 @@ use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use reqwest::{Client, Response, Url, ClientBuilder};
+use reqwest::{Client, ClientBuilder, Response, Url};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
@@ -15,6 +15,36 @@ use syntect::parsing::{SyntaxReference, SyntaxSet};
 use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
 pub const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
+
+/// Get answers from given links.
+///
+/// This function will go through network to find out answers.
+///
+/// # Examples
+///
+/// ```rust
+/// use hors::{answer, Config, OutputOption};
+///
+/// let conf: Config = Config::new(OutputOption::All, 1, false);
+/// let links: Vec<String> = vec![
+///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
+/// ];
+/// let answers: String = hors::get_answers(&links, conf).unwrap();
+/// assert!(
+///     answers.contains(
+///         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
+///     )
+/// );
+/// ```
+///
+/// # Returns
+///
+/// If search answers successfully, it will return the result string which can be
+/// print to terminal directly.  Else return an Error.
+pub fn get_answers(links: &[String], conf: Config) -> Result<String> {
+    let client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
+    get_answers_with_client(links, conf, &client)
+}
 
 /// Get answers from given links.
 ///

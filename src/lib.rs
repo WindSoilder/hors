@@ -30,12 +30,10 @@
 //! use reqwest::{Client, ClientBuilder};
 //!
 //! let conf: Config = Config::new(OutputOption::OnlyCode, 3, false);
-//! // please make sure that `cookie_store` should set to `true` in client builder.
-//! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
 //! let links: Vec<String> = vec![
 //!     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 //! ];
-//! let answers: String = hors::get_answers_with_client(&links, conf, &client).unwrap();
+//! let answers: String = hors::get_answers(&links, conf).unwrap();
 //! assert!(
 //!     answers.contains(
 //!         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
@@ -52,7 +50,7 @@ pub mod engine;
 mod error;
 mod utils;
 
-pub use answer::{get_answers_with_client, SPLITTER};
+pub use answer::{get_answers, get_answers_with_client, SPLITTER};
 pub use config::{Config, OutputOption, SearchEngine};
 pub use engine::{search_links_with_client, search_links};
 pub use error::{Error, Result};
