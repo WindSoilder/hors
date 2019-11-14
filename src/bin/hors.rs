@@ -84,7 +84,7 @@ fn main() -> Result<()> {
 
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
-    let answers: String = hors::get_answers(&target_links, conf, &client).unwrap_or_else(|err| {
+    let answers: String = hors::get_answers_with_client(&target_links, conf, &client).unwrap_or_else(|err| {
         eprintln!("Hors is running to error: {}", err);
         process::exit(1);
     });

@@ -5,7 +5,7 @@ use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use crate::utils::random_agent;
-use reqwest::{Client, Response, Url};
+use reqwest::{Client, Response, Url, ClientBuilder};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
@@ -32,7 +32,7 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 /// let links: Vec<String> = vec![
 ///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 /// ];
-/// let answers: String = hors::get_answers(&links, conf, &client).unwrap();
+/// let answers: String = hors::get_answers_with_client(&links, conf, &client).unwrap();
 /// assert!(
 ///     answers.contains(
 ///         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
@@ -44,7 +44,7 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub fn get_answers(links: &[String], conf: Config, client: &Client) -> Result<String> {
+pub fn get_answers_with_client(links: &[String], conf: Config, client: &Client) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();

@@ -1,6 +1,6 @@
 use reqwest::Client;
 
-use hors::answer::{get_answers, SPLITTER};
+use hors::answer::{get_answers_with_client, SPLITTER};
 use hors::config::{Config, OutputOption};
 
 #[test]
@@ -13,7 +13,7 @@ fn test_get_answers_with_links_only() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -35,7 +35,7 @@ fn test_get_answers_with_detailed_option() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -62,7 +62,7 @@ fn test_get_answers_with_instruction() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, &client)
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
