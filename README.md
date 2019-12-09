@@ -4,7 +4,9 @@
 
 
 # [hors](https://crates.io/crates/hors)
-Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust
+Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust, along with easily usage lib.
+
+For binary usage, please go through the rest of this file.  For lib documentation, please check [here](https://docs.rs/hors/latest/hors/).
 
 # Screenshot
 ![Screenshots of hors](screenshots/screenshot.png)
@@ -188,6 +190,8 @@ assert!(
     )
 );
 ```
+
+For more information, please check [documentation](https://docs.rs/hors/latest/hors/)
 
 # Special thanks
 Very thanks for the awesome project and links :)
