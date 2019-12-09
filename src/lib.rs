@@ -9,8 +9,7 @@
 //!
 //! ```rust
 //! use std::str::FromStr;
-//! use hors::{self, Config, OutputOption, Result, SearchEngine};
-//! use reqwest::{Client, ClientBuilder};
+//! use hors::{self, Result, SearchEngine};
 //!
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 //! let target_links: Vec<String> = hors::search_links(
@@ -27,7 +26,6 @@
 //!
 //! ```rust
 //! use hors::{self, Config, OutputOption};
-//! use reqwest::{Client, ClientBuilder};
 //!
 //! let conf: Config = Config::new(OutputOption::OnlyCode, 3, false);
 //! let links: Vec<String> = vec![
