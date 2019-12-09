@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.5.0] - 2019-12-09
 ## Added
 - Some functions and structs are public from lib, for more information, please check the doc.
 
