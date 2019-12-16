@@ -19,7 +19,7 @@ select = "0.4.3"
 rand = "0.7.2"
 log = "0.4.8"
 serde = { version = "1.0.103", features = ["derive"] }
-bincode = "1.2.0"
+bincode = "1.2.1"
 dirs = "2.0.2"
 url = "2.1.0"
 
