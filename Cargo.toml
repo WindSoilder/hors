@@ -16,7 +16,7 @@ clap = "2.33.0"
 syntect = "3.3.0"
 reqwest = "0.9.24"
 select = "0.4.3"
-rand = "0.7.2"
+rand = "0.7.3"
 log = "0.4.10"
 serde = { version = "1.0.104", features = ["derive"] }
 bincode = "1.2.1"
