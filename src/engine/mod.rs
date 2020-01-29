@@ -27,10 +27,10 @@ use reqwest::{Client, ClientBuilder, RequestBuilder};
 ///     assert!(link.contains("stackoverflow.com"))
 /// }
 /// ```
-pub fn search_links(query: &str, search_engine: SearchEngine) -> Result<Vec<String>> {
+pub async fn search_links(query: &str, search_engine: SearchEngine) -> Result<Vec<String>> {
     let client: Client = ClientBuilder::new().cookie_store(true).build()?;
 
-    search_links_with_client(query, search_engine, &client)
+    search_links_with_client(query, search_engine, &client).await
 }
 
 /// Search result links under the given search engine.
@@ -62,7 +62,7 @@ pub fn search_links(query: &str, search_engine: SearchEngine) -> Result<Vec<Stri
 ///
 /// If search links successfully, it will return a Vector of String, which indicate
 /// relative links to got answer.  Else return an Error.
-pub fn search_links_with_client(
+pub async fn search_links_with_client(
     query: &str,
     search_engine: SearchEngine,
     client: &Client,
@@ -70,7 +70,7 @@ pub fn search_links_with_client(
     let https_opts: Vec<bool> = vec![true, false];
     for opt in https_opts {
         let fetch_url: String = get_query_url(query, &search_engine, opt);
-        let page: String = fetch(&fetch_url, client)?;
+        let page: String = fetch(&fetch_url, client).await?;
         let extract_results = extract_links(&page, &search_engine);
         if let Some(links) = extract_results {
             return Ok(links);
@@ -99,13 +99,13 @@ fn get_query_url(query: &str, search_engine: &SearchEngine, use_https: bool) -> 
 ///
 /// If get search result page successfully, it will return the content of page,
 /// or returns error.
-fn fetch(search_url: &str, client: &Client) -> Result<String> {
+async fn fetch(search_url: &str, client: &Client) -> Result<String> {
     let request: RequestBuilder = client
         .get(search_url)
         .header(reqwest::header::USER_AGENT, random_agent());
     debug!("Request to bing information: {:?}", request);
-    let mut res = request.send()?;
-    let page: String = res.text()?;
+    let res = request.send().await?;
+    let page: String = res.text().await?;
     Ok(page)
 }
 
