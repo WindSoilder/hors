@@ -1,4 +1,10 @@
 # [Unreleased]
+## Added
+- Support socks5 system proxy.
+
+## Changed
+- Upgrade reqwest version to 0.10.1.
+- Change all hors relative api to async.
 
 # [0.5.0] - 2019-12-09
 ## Added
