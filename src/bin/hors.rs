@@ -56,7 +56,8 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
     parser.get_matches()
 }
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let matches: ArgMatches = parser_matches();
 
     let search_engine =
@@ -67,8 +68,6 @@ fn main() -> Result<()> {
     let mut client_builder: ClientBuilder = reqwest::ClientBuilder::new().cookie_store(true);
     if matches.is_present("disable_proxy") {
         client_builder = client_builder.no_proxy();
-    } else {
-        client_builder = client_builder.use_sys_proxy();
     }
     let client: Client = client_builder.build().unwrap_or_else(|err| {
         eprintln!("Build client failed: {}", err);
@@ -77,6 +76,7 @@ fn main() -> Result<()> {
 
     let target_links: Vec<String> =
         hors::search_links_with_client(matches.value_of("QUERY").unwrap(), search_engine, &client)
+            .await
             .unwrap_or_else(|err| {
                 eprintln!("Search for target link failed: {}", err);
                 process::exit(1);
@@ -85,6 +85,7 @@ fn main() -> Result<()> {
     let conf: Config = init_config(&matches);
     debug!("User config: {:?}", conf);
     let answers: String = hors::get_answers_with_client(&target_links, conf, &client)
+        .await
         .unwrap_or_else(|err| {
             eprintln!("Hors is running to error: {}", err);
             process::exit(1);

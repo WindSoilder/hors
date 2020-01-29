@@ -41,9 +41,9 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub fn get_answers(links: &[String], conf: Config) -> Result<String> {
+pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
     let client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-    get_answers_with_client(links, conf, &client)
+    get_answers_with_client(links, conf, &client).await
 }
 
 /// Get answers from given links.
@@ -74,7 +74,7 @@ pub fn get_answers(links: &[String], conf: Config) -> Result<String> {
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub fn get_answers_with_client(links: &[String], conf: Config, client: &Client) -> Result<String> {
+pub async fn get_answers_with_client(links: &[String], conf: Config, client: &Client) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
@@ -89,7 +89,7 @@ pub fn get_answers_with_client(links: &[String], conf: Config, client: &Client) 
 
     let results: Result<String> = match conf.option() {
         OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => get_detailed_answer(links, conf, &mut records_cache, &client),
+        _ => get_detailed_answer(links, conf, &mut records_cache, &client).await,
     };
 
     // when hors gets what we wanted answer, save it for next time using.
@@ -102,7 +102,7 @@ pub fn get_answers_with_client(links: &[String], conf: Config, client: &Client) 
     results
 }
 
-fn get_detailed_answer(
+async fn get_detailed_answer(
     links: &[String],
     conf: Config,
     records_cache: &mut AnswerRecordsCache,
@@ -121,7 +121,7 @@ fn get_detailed_answer(
                     continue;
                 }
 
-                let page: String = get_page(&link, &client, records_cache)?;
+                let page: String = get_page(&link, &client, records_cache).await?;
                 let title: String = format!("- Answer from {}", link);
                 let answer: Option<String> = parse_answer(page, &conf);
                 match answer {
@@ -135,7 +135,7 @@ fn get_detailed_answer(
     Ok(results.join(SPLITTER))
 }
 
-fn get_page(link: &str, client: &Client, records_cache: &mut AnswerRecordsCache) -> Result<String> {
+async fn get_page(link: &str, client: &Client, records_cache: &mut AnswerRecordsCache) -> Result<String> {
     // Firstly try to get link from cache.
     let page_from_cache: Option<&String> = records_cache.get(link);
 
@@ -148,12 +148,13 @@ fn get_page(link: &str, client: &Client, records_cache: &mut AnswerRecordsCache)
         Some(page) => Ok(page.to_string()),
         // When we can't get answer from cache, we should get page from network.
         None => {
-            let mut resp: Response = client
+            let resp: Response = client
                 .get(link)
                 .header(reqwest::header::USER_AGENT, random_agent())
-                .send()?;
+                .send()
+                .await?;
             debug!("Response status from stackoverflow: {:?}", resp);
-            let page: String = resp.text()?;
+            let page: String = resp.text().await?;
             records_cache.put(link.to_string(), page.to_string());
             Ok(page)
         }
