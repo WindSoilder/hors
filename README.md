@@ -165,30 +165,19 @@ Hors can be used as a lib, here is an example:
 
 ```rust
 use std::str::FromStr;
-use hors::{self, Config, OutputOption, Result, SearchEngine};
+use hors::{self, SearchEngine};
 
-// Get stackoverflow links according to user input query.
 let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 let target_links: Vec<String> = hors::search_links(
     "how to parse json in rust",
     search_engine,
-).unwrap();
+)
+.await
+.unwrap();
 assert_ne!(target_links.len(), 0);
 for link in target_links {
     assert!(link.contains("stackoverflow.com"));
 }
-
-// Get actual answers according to stackoverflow links.
-let conf: Config = Config::new(OutputOption::OnlyCode, 3, false);
-let links: Vec<String> = vec![
-    String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
-];
-let answers: String = hors::get_answers(&links, conf).unwrap();
-assert!(
-    answers.contains(
-        r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
-    )
-);
 ```
 
 For more information, please check [documentation](https://docs.rs/hors/latest/hors/)
