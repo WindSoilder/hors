@@ -3,8 +3,8 @@ use reqwest::Client;
 use hors::answer::{get_answers_with_client, SPLITTER};
 use hors::config::{Config, OutputOption};
 
-#[test]
-fn test_get_answers_with_links_only() {
+#[tokio::test]
+async fn test_get_answers_with_links_only() {
     let links: Vec<String> = vec![String::from(
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
@@ -14,6 +14,7 @@ fn test_get_answers_with_links_only() {
         .build()
         .unwrap();
     let answers: String = get_answers_with_client(&links, conf, &client)
+        .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -25,8 +26,8 @@ https://stackoverflow.com/questions/7771011/parse-json-in-python"
     );
 }
 
-#[test]
-fn test_get_answers_with_detailed_option() {
+#[tokio::test]
+async fn test_get_answers_with_detailed_option() {
     let links: Vec<String> = vec![String::from(
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
@@ -36,6 +37,7 @@ fn test_get_answers_with_detailed_option() {
         .build()
         .unwrap();
     let answers: String = get_answers_with_client(&links, conf, &client)
+        .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -44,16 +46,16 @@ fn test_get_answers_with_detailed_option() {
         answers.trim(),
         r#"- Answer from https://stackoverflow.com/questions/7771011/parse-json-in-python
 
-Very simple:
+        Very simple:
 
 import json
-j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-print j['two']"#
+data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
+print data['two']"#
     )
 }
 
-#[test]
-fn test_get_answers_with_instruction() {
+#[tokio::test]
+async fn test_get_answers_with_instruction() {
     let links: Vec<String> = vec![String::from(
         "https://stackoverflow.com/questions/7771011/parse-json-in-python",
     )];
@@ -63,6 +65,7 @@ fn test_get_answers_with_instruction() {
         .build()
         .unwrap();
     let answers: String = get_answers_with_client(&links, conf, &client)
+        .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
         .collect();
@@ -70,8 +73,8 @@ fn test_get_answers_with_instruction() {
         answers,
         r#"- Answer from https://stackoverflow.com/questions/7771011/parse-json-in-python
 import json
-j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-print j['two']
+data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
+print data['two']
 "#
     )
 }
