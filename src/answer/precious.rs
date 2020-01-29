@@ -78,7 +78,11 @@ pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
 ///
 /// If search answers successfully, it will return the result string which can be
 /// print to terminal directly.  Else return an Error.
-pub async fn get_answers_with_client(links: &[String], conf: Config, client: &Client) -> Result<String> {
+pub async fn get_answers_with_client(
+    links: &[String],
+    conf: Config,
+    client: &Client,
+) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
@@ -139,7 +143,11 @@ async fn get_detailed_answer(
     Ok(results.join(SPLITTER))
 }
 
-async fn get_page(link: &str, client: &Client, records_cache: &mut AnswerRecordsCache) -> Result<String> {
+async fn get_page(
+    link: &str,
+    client: &Client,
+    records_cache: &mut AnswerRecordsCache,
+) -> Result<String> {
     // Firstly try to get link from cache.
     let page_from_cache: Option<&String> = records_cache.get(link);
 
