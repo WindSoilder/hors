@@ -14,6 +14,7 @@ use reqwest::{Client, ClientBuilder, RequestBuilder};
 /// # Examples
 ///
 /// ```rust
+/// # async fn run() {
 /// use std::str::FromStr;
 /// use hors::{self, SearchEngine};
 ///
@@ -21,11 +22,14 @@ use reqwest::{Client, ClientBuilder, RequestBuilder};
 /// let target_links: Vec<String> = hors::search_links(
 ///     "how to parse json in rust",
 ///     search_engine
-/// ).unwrap();
+/// )
+/// .await
+/// .unwrap();
 /// assert_ne!(target_links.len(), 0);
 /// for link in target_links {
 ///     assert!(link.contains("stackoverflow.com"))
 /// }
+/// # }
 /// ```
 pub async fn search_links(query: &str, search_engine: SearchEngine) -> Result<Vec<String>> {
     let client: Client = ClientBuilder::new().cookie_store(true).build()?;
@@ -44,6 +48,7 @@ pub async fn search_links(query: &str, search_engine: SearchEngine) -> Result<Ve
 /// use hors::{self, Config, OutputOption, Result, SearchEngine};
 /// use reqwest::{Client, ClientBuilder};
 ///
+/// # async fn run() {
 /// let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 /// // please make sure that `cookie_store` should set to `true` in client builder.
 /// let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
@@ -51,11 +56,14 @@ pub async fn search_links(query: &str, search_engine: SearchEngine) -> Result<Ve
 ///     "how to parse json in rust",
 ///     search_engine,
 ///     &client
-/// ).unwrap();
+/// )
+/// .await
+/// .unwrap();
 /// assert_ne!(target_links.len(), 0);
 /// for link in target_links {
 ///     assert!(link.contains("stackoverflow.com"));
 /// }
+/// # }
 /// ```
 ///
 /// # Returns

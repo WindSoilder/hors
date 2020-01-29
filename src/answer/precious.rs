@@ -25,16 +25,18 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 /// ```rust
 /// use hors::{answer, Config, OutputOption};
 ///
+/// # async fn run() {
 /// let conf: Config = Config::new(OutputOption::All, 1, false);
 /// let links: Vec<String> = vec![
 ///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 /// ];
-/// let answers: String = hors::get_answers(&links, conf).unwrap();
+/// let answers: String = hors::get_answers(&links, conf).await.unwrap();
 /// assert!(
 ///     answers.contains(
-///         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
+///         r#"data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
 ///     )
 /// );
+/// # }
 /// ```
 ///
 /// # Returns
@@ -56,18 +58,20 @@ pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
 /// use hors::{answer, Config, OutputOption};
 /// use reqwest::{Client, ClientBuilder};
 ///
+/// # async fn run() {
 /// let conf: Config = Config::new(OutputOption::All, 1, false);
 /// // please make sure that `cookie_store` should set to `true` in client builder.
 /// let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
 /// let links: Vec<String> = vec![
 ///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 /// ];
-/// let answers: String = hors::get_answers_with_client(&links, conf, &client).unwrap();
+/// let answers: String = hors::get_answers_with_client(&links, conf, &client).await.unwrap();
 /// assert!(
 ///     answers.contains(
-///         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
+///         r#"data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
 ///     )
 /// );
+/// # }
 /// ```
 ///
 /// # Returns

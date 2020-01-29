@@ -9,17 +9,21 @@
 //!
 //! ```rust
 //! use std::str::FromStr;
-//! use hors::{self, Result, SearchEngine};
+//! use hors::{self, SearchEngine};
 //!
+//! # async fn run() {
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 //! let target_links: Vec<String> = hors::search_links(
 //!     "how to parse json in rust",
 //!     search_engine,
-//! ).unwrap();
+//! )
+//! .await
+//! .unwrap();
 //! assert_ne!(target_links.len(), 0);
 //! for link in target_links {
 //!     assert!(link.contains("stackoverflow.com"));
 //! }
+//! # }
 //! ```
 //!
 //! Get actual answers according to stackoverflow links.
@@ -27,16 +31,18 @@
 //! ```rust
 //! use hors::{self, Config, OutputOption};
 //!
+//! # async fn run() {
 //! let conf: Config = Config::new(OutputOption::OnlyCode, 3, false);
 //! let links: Vec<String> = vec![
 //!     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 //! ];
-//! let answers: String = hors::get_answers(&links, conf).unwrap();
+//! let answers: String = hors::get_answers(&links, conf).await.unwrap();
 //! assert!(
 //!     answers.contains(
-//!         r#"j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
+//!         r#"data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#
 //!     )
 //! );
+//! # }
 //! ```
 //!
 //! # Advanced usage:
@@ -50,9 +56,10 @@
 //!
 //! ```rust
 //! use std::str::FromStr;
-//! use hors::{self, Config, OutputOption, Result, SearchEngine};
+//! use hors::{self, Config, OutputOption, SearchEngine};
 //! use reqwest::{Client, ClientBuilder};
 //!
+//! # async fn run() {
 //! let search_engine: SearchEngine = SearchEngine::from_str("bing").unwrap();
 //! // please make sure that `cookie_store` should set to `true` in client builder.
 //! let mut client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
@@ -60,11 +67,14 @@
 //!     "how to parse json in rust",
 //!     search_engine,
 //!     &client
-//! ).unwrap();
+//! )
+//! .await
+//! .unwrap();
 //! assert_ne!(target_links.len(), 0);
 //! for link in target_links {
 //!     assert!(link.contains("stackoverflow.com"));
 //! }
+//! # }
 //! ```
 
 #[macro_use]
