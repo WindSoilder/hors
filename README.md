@@ -148,6 +148,14 @@ Documentation
 hors "set git remote url" -n 2 -a -e "google"
 ```
 
+# Proxy support
+If the network seems blocked, you can try to configure proxy like this:
+```shell
+export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;
+```
+
+Of cause it should be a valid proxy in your machine.
+
 # Customize
 `hors` is command line tools, which means that users can easily customize it.
 
