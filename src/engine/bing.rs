@@ -39,6 +39,7 @@ pub fn extract_links(page: &str) -> Option<Vec<String>> {
     let target_elements = doc.find(Class("b_algo").descendant(Name("h2")).descendant(Name("a")));
     let links: Vec<String> = target_elements
         .filter_map(|node| node.attr("href"))
+        .filter(|link| link.contains("stackoverflow.com"))
         .map(|link| String::from(link))
         .collect();
 
@@ -60,10 +61,13 @@ mod tests {
 <html>
     <body>
         <li class="b_algo">
-            <h2><a target="_blank" href="https://test_link1"></a></h2>
+            <h2><a target="_blank" href="https://test_link_invalid.com"></a></h2>
         </li>
         <li class="b_algo">
-            <h2><a target="_blank" href="https://test_link2"></a></h2>
+            <h2><a target="_blank" href="https://stackoverflow.com"></a></h2>
+        </li>
+        <li class="b_algo">
+            <h2><a target="_blank" href="https://stackoverflow.com/aa"></a></h2>
         </li>
     </body>
 </html>"#,
@@ -73,8 +77,8 @@ mod tests {
         assert_eq!(
             possible_links.unwrap(),
             vec![
-                String::from("https://test_link1"),
-                String::from("https://test_link2")
+                String::from("https://stackoverflow.com"),
+                String::from("https://stackoverflow.com/aa")
             ]
         )
     }
