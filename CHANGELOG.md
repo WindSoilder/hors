@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.6.0] - 2020-01-30
 ## Added
 - Support socks5 system proxy.
 
