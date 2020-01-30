@@ -584,7 +584,7 @@ dependencies = [
 
 [[package]]
 name = "hors"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "bincode 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
