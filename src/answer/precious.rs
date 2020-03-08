@@ -233,7 +233,7 @@ fn parse_answer_instruction(
     should_colorize: bool,
 ) -> Option<String> {
     let code_elements: [&str; 2] = ["pre", "code"];
-    for code_element in code_elements.iter() {
+    for code_element in &code_elements {
         if let Some(title) = answer_node.find(Name(*code_element)).next() {
             if should_colorize {
                 return Some(colorized_code(title.text(), &question_tags));
