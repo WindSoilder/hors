@@ -1,5 +1,9 @@
 # [Unreleased]
 
+# [0.6.2] - 2020-04-19
+## Changed
+- Don't need to install `bindgen` for now.
+
 # [0.6.1] - 2020-01-30
 ## Added
 - Support socks5 system proxy.

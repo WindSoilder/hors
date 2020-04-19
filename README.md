@@ -17,11 +17,6 @@ hors is written in `Rust`.  The recommended way to install `hors` is through `ca
 cargo install hors
 ```
 
-## Note
-For compiling with current version, you'll need the dependencies for  [bindgen](https://rust-lang.github.io/rust-bindgen/requirements.html) available at build time.
-
-For more information, please check out the following [issue](https://github.com/rust-onig/rust-onig/issues/109), sorry for the inconvenience.
-
 # Tested platforms
 For now, `hors` has been tested with the following platforms:
 - linux
