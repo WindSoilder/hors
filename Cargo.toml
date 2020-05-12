@@ -19,7 +19,7 @@ tokio = { version = "0.2", features = ["full"] }
 select = "0.4.3"
 rand = "0.7.3"
 log = "0.4.8"
-serde = { version = "1.0.106", features = ["derive"] }
+serde = { version = "1.0.110", features = ["derive"] }
 bincode = "1.2.1"
 dirs = "2.0.2"
 url = "2.1.1"
