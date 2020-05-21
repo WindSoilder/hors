@@ -12,7 +12,7 @@ keywords = ["http", "client", "cli-tools"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = "2.33.0"
+clap = "2.33.1"
 syntect = "4.1.1"
 reqwest = { version="0.10.4", features=["json", "socks", "cookies"] }
 tokio = { version = "0.2", features = ["full"] }
