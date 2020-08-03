@@ -13,7 +13,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.1"
-syntect = "4.2.0"
+syntect = "4.3.0"
 reqwest = { version="0.10.6", features=["json", "socks", "cookies"] }
 tokio = { version = "0.2", features = ["full"] }
 select = "0.4.3"
