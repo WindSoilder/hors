@@ -16,7 +16,7 @@ clap = "2.33.1"
 syntect = "4.3.0"
 reqwest = { version="0.10.7", features=["json", "socks", "cookies"] }
 tokio = { version = "0.2", features = ["full"] }
-select = "0.4.3"
+select = "0.5.0"
 rand = "0.7.3"
 log = "0.4.11"
 serde = { version = "1.0.114", features = ["derive"] }
