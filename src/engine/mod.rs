@@ -7,6 +7,30 @@ use crate::error::{Error, Result};
 use crate::utils::random_agent;
 use reqwest::{Client, ClientBuilder, RequestBuilder};
 
+/// Search engine trait
+pub trait Engine {
+    /// Get relative url to make search through query information.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` - The user input query information.
+    /// * `use_https` - Return query url which is https scheme or http scheme.
+    ///
+    /// # Returns
+    ///
+    /// Return the query url, which can be fired with HTTP GET request.
+    fn get_query_url(&self, query: &str, use_https: bool) -> String;
+
+    /// Extract stackoverflow links from given page.
+    ///
+    /// # Arguments
+    ///
+    /// * `page` - the search result page, which is mainly fetched from `http GET` method.
+    ///
+    /// Links to the relative question, or returns None if we can't find it.
+    fn extract_links(&self, pages: &str) -> Option<Vec<String>>;
+}
+
 /// Search result links under the given search engine.
 ///
 /// This function will go through network to find out useful links.
