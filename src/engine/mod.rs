@@ -100,10 +100,16 @@ pub async fn search_links_with_client(
     client: &Client,
 ) -> Result<Vec<String>> {
     let https_opts: Vec<bool> = vec![true, false];
+    let engine: Box<dyn Engine> = match search_engine {
+        SearchEngine::Bing => Box::new(bing::Bing),
+        SearchEngine::Google => Box::new(google::Google),
+        SearchEngine::DuckDuckGo => Box::new(duckduckgo::DuckDuckGo),
+    };
+
     for opt in https_opts {
-        let fetch_url: String = get_query_url(query, &search_engine, opt);
+        let fetch_url: String = get_query_url(query, &*engine, opt);
         let page: String = fetch(&fetch_url, client).await?;
-        let extract_results = extract_links(&page, &search_engine);
+        let extract_results = extract_links(&page, &*engine);
         if let Some(links) = extract_results {
             return Ok(links);
         }
@@ -111,12 +117,8 @@ pub async fn search_links_with_client(
     Err(Error::from_parse("Can't find search result..."))
 }
 
-fn get_query_url(query: &str, search_engine: &SearchEngine, use_https: bool) -> String {
-    match search_engine {
-        SearchEngine::Bing => bing::get_query_url(query, use_https),
-        SearchEngine::Google => google::get_query_url(query, use_https),
-        SearchEngine::DuckDuckGo => duckduckgo::get_query_url(query, use_https),
-    }
+fn get_query_url(query: &str, search_engine: &dyn Engine, use_https: bool) -> String {
+    search_engine.get_query_url(query, use_https)
 }
 
 /// Fetch actual page according to given url.
@@ -151,10 +153,6 @@ async fn fetch(search_url: &str, client: &Client) -> Result<String> {
 /// # Returns
 ///
 /// Links to the relative question, or returns None if we can't find it.
-fn extract_links(page: &str, search_engine: &SearchEngine) -> Option<Vec<String>> {
-    match search_engine {
-        SearchEngine::Bing => bing::extract_links(page),
-        SearchEngine::Google => google::extract_links(page),
-        SearchEngine::DuckDuckGo => duckduckgo::extract_links(page),
-    }
+fn extract_links(page: &str, search_engine: &dyn Engine) -> Option<Vec<String>> {
+    search_engine.extract_links(page)
 }
