@@ -1,4 +1,9 @@
 # [Unreleased]
+## Added
+- Add *-r* argument, if you don't need colorize output.
+
+## Removed
+- Remove *-c* argument, for now colorize output is default behavior.
 
 # [0.6.2] - 2020-04-19
 ## Changed
