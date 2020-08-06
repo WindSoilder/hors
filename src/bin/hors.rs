@@ -26,10 +26,10 @@ fn parser_matches<'a>() -> ArgMatches<'a> {
                 .help("display only the answer link."),
         )
         .arg(
-            Arg::with_name("color")
-                .long("color")
-                .short("c")
-                .help("enable colorized output."),
+            Arg::with_name("raw")
+                .long("raw")
+                .short("r")
+                .help("make raw output (not colorized).")
         )
         .arg(
             Arg::with_name("number_answers")
@@ -112,6 +112,6 @@ fn init_config(matches: &ArgMatches) -> Config {
             .unwrap_or_default()
             .parse::<u8>()
             .unwrap(),
-        matches.is_present("color"),
+        !matches.is_present("raw"),
     )
 }
