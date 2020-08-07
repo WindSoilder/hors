@@ -28,7 +28,7 @@ struct Opts {
     engine: String,
     #[clap(short, long, about("Disable system proxy."))]
     disable_proxy: bool,
-    query: String,
+    query: Vec<String>,
 }
 
 #[tokio::main]
@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
     });
 
     let target_links: Vec<String> =
-        hors::search_links_with_client(&opts.query, search_engine, &client)
+        hors::search_links_with_client(&opts.query.join(" "), search_engine, &client)
             .await
             .unwrap_or_else(|err| {
                 eprintln!("Search for target link failed: {}", err);
