@@ -47,7 +47,7 @@ OPTIONS:
 # Usage example
 1.  Want to know how to export pandas dataframe to csv?
 ```shell
-hors "pandas dataframe to csv"
+hors pandas dataframe to csv"
 ```
 
 Here it is:
@@ -59,7 +59,7 @@ df.to_csv(file_name, sep='\t')
 
 2. If we just want to know where is the answer existed?
 ```shell
-hors "pandas dataframe to csv" -l
+hors pandas dataframe to csv" -l
 ```
 
 Here it is:
@@ -70,7 +70,7 @@ https://stackoverflow.com/questions/16923281/pandas-writing-dataframe-to-csv-fil
 
 3. If we want more about the answer detailed?
 ```shell
-hors "how to parse json in rust" -a
+hors how to parse json in rust" -a
 ```
 
 Here it is:
@@ -96,7 +96,7 @@ fn main() {
 
 4. How to get more than one answers
 ```shell
-hors "set git remote url" -n 2 -a
+hors set git remote url" -n 2 -a
 ```
 Here it is:
 ```
@@ -128,7 +128,7 @@ Documentation
 
 5. The default search engine is bing, how can I use other search engine?
 ```shell
-hors "set git remote url" -n 2 -a -e "google"
+hors set git remote url" -n 2 -a -e "google"
 ```
 
 # Proxy support
