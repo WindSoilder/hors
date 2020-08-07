@@ -1,6 +1,6 @@
 use crate::error::Result;
 use bincode::{deserialize_from, serialize_into};
-use dirs::cache_dir;
+use directories::BaseDirs;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::{create_dir_all, File, OpenOptions};
@@ -59,8 +59,9 @@ impl AnswerRecordsCache {
     /// Return the instance of AnswerRecordsCache.  Error will be returned if
     /// loading local cache file failed.
     pub fn load() -> Result<AnswerRecordsCache> {
-        if let Some(dir) = cache_dir() {
+        if let Some(base_dirs) = BaseDirs::new() {
             // just create cache file if not existed, and deserialize it.
+            let dir = base_dirs.cache_dir().to_path_buf();
             let cache_file: PathBuf = AnswerRecordsCache::create_file_if_not_existed(&dir)?;
             let f = File::open(cache_file)?;
             let answer_records: AnswerRecordsCache = deserialize_from(f)?;
@@ -129,7 +130,8 @@ impl AnswerRecordsCache {
         if MAX_SIZE < self.0.len() {
             // TODO: truncate it to have size MAX_SIZE
         }
-        if let Some(dir) = cache_dir() {
+        if let Some(base_dirs) = BaseDirs::new() {
+            let dir = base_dirs.cache_dir();
             let cache_path: PathBuf = dir.join("hors").join("answers");
             let f = OpenOptions::new()
                 .write(true)
