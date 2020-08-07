@@ -108,10 +108,15 @@ pub async fn search_links_with_client(
 
     for opt in https_opts {
         let fetch_url: String = get_query_url(query, &*engine, opt);
-        let page: String = fetch(&fetch_url, client).await?;
-        let extract_results = extract_links(&page, &*engine);
-        if let Some(links) = extract_results {
-            return Ok(links);
+        let page: Result<String> = fetch(&fetch_url, client).await;
+        match page {
+            Ok(page) => {
+                let extract_results = extract_links(&page, &*engine);
+                if let Some(links) = extract_results {
+                    return Ok(links);
+                }
+            }
+            Err(e) => warn!("Erorr for get url {}: {}", fetch_url, e),
         }
     }
     Err(Error::from_parse("Can't find search result..."))
