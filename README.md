@@ -1,4 +1,4 @@
-[![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
+    [![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
 [![CI](https://github.com/WindSoilder/hors/workflows/CI/badge.svg)](https://github.com/WindSoilder/hors/actions?query=workflow%3ACI)
 
 
@@ -25,23 +25,23 @@ For now, `hors` has been tested with the following platforms:
 # Usage
 ```shell
 USAGE:
-    hors [FLAGS] [OPTIONS] <QUERY>
+    hors [FLAGS] [OPTIONS] <query>
+
+ARGS:
+    <query>
 
 FLAGS:
-    -a, --all              display the full text of the answer.
-    -c, --color            enable colorized output.
-        --disable_proxy    Disable system proxy.
+    -a, --all              display the full text of answer.
+    -d, --disable-proxy    Disable system proxy.
     -h, --help             Prints help information
     -l, --link             display only the answer link.
+    -r, --raw              make raw output (not colorized).
     -V, --version          Prints version information
 
 OPTIONS:
     -e, --engine <engine>                    select middle search engine, currently support `bing`, `google` and
                                              `duckduckgo`. [default: duckduckgo]
-    -n, --number_answers <number_answers>    number of answers to return. [default: 1]
-
-ARGS:
-    <QUERY>
+    -n, --number-answers <number-answers>    number of answers to return. [default: 1]
 ```
 
 # Usage example
@@ -94,18 +94,7 @@ fn main() {
 }
 ```
 
-4. What if we want to make output code colorized?
-```shell
-hors "how to parse json in python" -c
-```
-Here it is:
-```python
-import json
-j = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-print j['two']
-```
-
-5. How to get more than one answers
+4. How to get more than one answers
 ```shell
 hors "set git remote url" -n 2 -a
 ```
@@ -137,7 +126,7 @@ git push -u origin master
 Documentation
 ```
 
-6. The default search engine is bing, how can I use other search engine?
+5. The default search engine is bing, how can I use other search engine?
 ```shell
 hors "set git remote url" -n 2 -a -e "google"
 ```
