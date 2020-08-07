@@ -25,10 +25,10 @@ For now, `hors` has been tested with the following platforms:
 # Usage
 ```shell
 USAGE:
-    hors [FLAGS] [OPTIONS] <query>
+    hors [FLAGS] [OPTIONS] [query]...
 
 ARGS:
-    <query>
+    <query>...
 
 FLAGS:
     -a, --all              display the full text of answer.
@@ -40,7 +40,7 @@ FLAGS:
 
 OPTIONS:
     -e, --engine <engine>                    select middle search engine, currently support `bing`, `google` and
-                                             `duckduckgo`. [default: duckduckgo]
+                                             `duckduckgo`. [env: HORS_ENGINE=]  [default: duckduckgo]
     -n, --number-answers <number-answers>    number of answers to return. [default: 1]
 ```
 

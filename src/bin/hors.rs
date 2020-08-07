@@ -23,6 +23,7 @@ struct Opts {
         short,
         long,
         default_value = "duckduckgo",
+        env = "HORS_ENGINE",
         about("select middle search engine, currently support `bing`, `google` and `duckduckgo`.")
     )]
     engine: String,
