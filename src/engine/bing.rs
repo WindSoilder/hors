@@ -26,7 +26,7 @@ impl Engine for Bing {
         let links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .filter(|link| link.contains("stackoverflow.com"))
-            .map(|link| String::from(link))
+            .map(String::from)
             .collect();
 
         debug!("Links extract from bing: {:?}", links);
