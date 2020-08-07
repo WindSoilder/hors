@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.6.3] - 2020-08-07
 ## Added
 - Add *-r* argument, if you don't need colorize output.
 
