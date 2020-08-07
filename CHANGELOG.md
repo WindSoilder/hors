@@ -1,6 +1,8 @@
 # [Unreleased]
+# [0.6.5] - 2020-08-08
 ## Added
 - introduce `HORS_ENGINE` env variable, to specify which search engine to use.  For now it can be `bing`, `google`, `duckduckgo`.
+- Make use of `rustls`, so `openssl` is no longer needed.
 
 ## Fixed
 - For now `"` between query string is no-longer needed.  So you can run `hors pandas dataframe to csv -l`.
