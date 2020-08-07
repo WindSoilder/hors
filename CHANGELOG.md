@@ -1,4 +1,9 @@
 # [Unreleased]
+## Added
+- introduce `HORS_ENGINE` env variable, to specify which search engine to use.  For now it can be `bing`, `google`, `duckduckgo`.
+
+## Fixed
+- For now `"` between query string is no-longer needed.  So you can run `hors pandas dataframe to csv -l`.
 
 # [0.6.3] - 2020-08-07
 ## Added
