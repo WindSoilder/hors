@@ -35,11 +35,7 @@ struct Opts {
 async fn main() -> Result<()> {
     let opts: Opts = Opts::parse();
 
-    let search_engine = SearchEngine::from_str(&opts.engine);
-    if let Err(e) = &search_engine {
-        eprintln!("Error occured while parsing `--engine` value: {}", e);
-    }
-    let search_engine = search_engine.unwrap();
+    let search_engine = SearchEngine::from_str(&opts.engine)?;
     debug!("Search under the {:?}", search_engine);
 
     // Initialize reqwest::Client instance.
