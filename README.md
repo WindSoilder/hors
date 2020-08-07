@@ -1,4 +1,4 @@
-    [![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
+[![Crate](https://img.shields.io/crates/v/hors.svg)](https://crates.io/crates/hors)
 [![CI](https://github.com/WindSoilder/hors/workflows/CI/badge.svg)](https://github.com/WindSoilder/hors/actions?query=workflow%3ACI)
 
 
