@@ -28,17 +28,14 @@ impl Engine for DuckDuckGo {
         let links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .filter_map(|link| {
-                if link.starts_with("/l/?") {
-                    // DuckDuckGo redirect link
-                    // e.g. /l/?kh=-1&uddg=https%3A%2F%2Fdoc.rust%2Dlang.org%2Fstd%2Fprimitive.str.html
-                    debug!("Extracting URL from redirect link {:?}", link);
-                    let query = &link[4..]; // trim "/l/?"
-                    form_urlencoded::parse(query.as_bytes())
-                        .find(|(k, _)| k == "uddg")
-                        .map(|(_, v)| v.into_owned())
-                } else {
-                    Some(String::from(link))
-                }
+                // The link may hide in uddg attribute.
+                // e.g: /l/?kh=-1&uddg=https%3A%2F%2Fdoc.rust%2Dlang.org%2Fstd%2Fprimitive.str.html
+                // So try to find uddg parameter first.
+                let redirect_link = form_urlencoded::parse(link.as_bytes())
+                    .find(|(k, _)| k == "uddg")
+                    .map(|(_, v)| v.into_owned());
+                // If we can't find redirect link in uddg, just return link.
+                redirect_link.or(Some(String::from(link)))
             })
             .collect();
 
@@ -133,7 +130,7 @@ mod tests {
         );
         let engine = DuckDuckGo;
         let possible_links: Option<Vec<String>> = engine.extract_links(&page);
-        assert_eq!(possible_links.is_none(), true);
+        assert_eq!(possible_links.is_some(), true);
     }
 
     #[test]
