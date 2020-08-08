@@ -130,7 +130,7 @@ mod tests {
         );
         let engine = DuckDuckGo;
         let possible_links: Option<Vec<String>> = engine.extract_links(&page);
-        assert_eq!(possible_links.is_none(), true);
+        assert_eq!(possible_links.is_some(), true);
     }
 
     #[test]
