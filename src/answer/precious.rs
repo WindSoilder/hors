@@ -9,6 +9,7 @@ use reqwest::{Client, ClientBuilder, Response, Url};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
+use std::collections::HashSet;
 use syntect::easy::HighlightLines;
 use syntect::highlighting::ThemeSet;
 use syntect::parsing::{SyntaxReference, SyntaxSet};
@@ -177,10 +178,18 @@ fn parse_answer(page: String, config: &Config) -> Option<String> {
     let doc: Document = Document::from(page.as_str());
     // The question tags may contains useful information about the language topic
     // so syntect can use correct Syntex reference.
-    let question_tags: Vec<String> = doc
+    let mut question_tags: Vec<String> = doc
         .find(Class("post-tag"))
         .map(|tag_node| tag_node.text())
         .collect();
+
+    // Ideally, we can take the best SyntaxSet according to user-input code in answers.
+    // Like <pre class="lang-rust"><code>println!("hello");</code></pre>.  And we can use rust syntaxset to colorize code.
+    // But maybe this property is loaded by `js` dynamiclly, so it's hard to fetch this attribute for now.
+    //
+    // So we make another way: sort these question tags by the 'Popularity of programming language'.
+    // The language is more 'popular', the more possibility to get right syntax set.
+    sort_tags(&mut question_tags);
 
     let appropriate_answer = select_answer(&doc);
 
@@ -343,6 +352,57 @@ fn extract_question(path: &str) -> String {
     // we want to extract the question part out.
     let splitted: Vec<&str> = path.split('/').collect();
     splitted[splitted.len() - 1].replace('-', " ")
+}
+
+/// Sort question tags inplace.
+///
+/// It makes some popular *programming languages* tags(like C, C++) to the front of other tags.
+///
+/// # Examples
+///
+/// let mut tags: Vec<String> = vec!["json", "rust"];
+/// sorted_tags(&mut tags);
+/// assert_eq!(tags, vec!["rust", "json"]);
+fn sort_tags(tags: &mut Vec<String>) {
+    // The list is get from SyntaxSet::load_defaults_newlines().syntaxes();
+    // And picks some languages seems more popular.
+    let tier_1_tags: HashSet<&str> = [
+        "java",
+        "javascript",
+        "lisp",
+        "latex",
+        "lua",
+        "matlab",
+        "ocaml",
+        "objective-c++",
+        "objective-c",
+        "php",
+        "pascal",
+        "perl",
+        "python",
+        "r",
+        "ruby",
+        "rust",
+        "scala",
+        "c#",
+        "c++",
+        "c",
+        "d",
+        "erlang",
+        "go",
+        "haskell",
+    ]
+    .iter()
+    .cloned()
+    .collect();
+
+    tags.sort_by_key(|t| {
+        if tier_1_tags.contains(t.as_str()) {
+            0
+        } else {
+            9
+        }
+    })
 }
 
 #[cfg(test)]
@@ -793,5 +853,46 @@ mod test {
     fn test_extract_question_when_question_contains_one_word() {
         let question: String = extract_question("questions/user_id/question");
         assert_eq!(question, String::from("question"));
+    }
+
+    #[test]
+    fn test_sort_tags_when_no_tags() {
+        let mut tags = vec![];
+        sort_tags(&mut tags);
+        assert_eq!(tags.len(), 0);
+    }
+
+    #[test]
+    fn test_sort_tags_contains_all_pupular_lang_tags() {
+        let mut tags = vec!["rust".to_string(), "python".to_string()];
+        sort_tags(&mut tags);
+        assert_eq!(tags, vec!["rust".to_string(), "python".to_string()]);
+    }
+
+    #[test]
+    fn test_sort_tags_contains_all_unpopular_lang_tags() {
+        let mut tags = vec!["json".to_string(), "xml".to_string()];
+        sort_tags(&mut tags);
+        assert_eq!(tags, vec!["json".to_string(), "xml".to_string()]);
+    }
+
+    #[test]
+    fn test_sort_tags_contains_both_popular_and_unpupular_lang_tags() {
+        let mut tags = vec![
+            "json".to_string(),
+            "rust".to_string(),
+            "xml".to_string(),
+            "java".to_string(),
+        ];
+        sort_tags(&mut tags);
+        assert_eq!(
+            tags,
+            vec![
+                "rust".to_string(),
+                "java".to_string(),
+                "json".to_string(),
+                "xml".to_string()
+            ]
+        );
     }
 }
