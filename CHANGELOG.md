@@ -1,4 +1,8 @@
 # [Unreleased]
+## Fixed
+- search with `duckduckgo` engine is more stable.
+- make output more friendly, `hors` will try to select proper syntax to colorize output.
+
 # [0.6.5] - 2020-08-08
 ## Added
 - introduce `HORS_ENGINE` env variable, to specify which search engine to use.  For now it can be `bing`, `google`, `duckduckgo`.
