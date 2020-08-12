@@ -1,4 +1,5 @@
 # [Unreleased]
+# [0.6.6] - 2020-08-12
 ## Fixed
 - search with `duckduckgo` engine is more stable.
 - make output more friendly, `hors` will try to select proper syntax to colorize output.
