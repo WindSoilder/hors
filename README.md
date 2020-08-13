@@ -12,15 +12,17 @@ For binary usage, please go through the rest of this file.  For lib documentatio
 
 # Installation
 hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
+
 ```shell
 cargo install hors
 ```
 
 # Tested platforms
 For now, `hors` has been tested with the following platforms:
-- linux
-- osx
-- windows
+
+- Linux
+- OSX
+- Windows
 
 # Usage
 ```shell
@@ -137,7 +139,7 @@ If the network seems blocked, you can try to configure proxy like this:
 export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;
 ```
 
-Of cause it should be a valid proxy in your machine.
+Of course, it should be a valid proxy in your machine.
 
 # Use hors as lib
 Hors can be used as a lib, here is an example:
@@ -159,12 +161,12 @@ for link in target_links {
 }
 ```
 
-For more information, please check [documentation](https://docs.rs/hors/latest/hors/)
+For more information, please check the [documentation](https://docs.rs/hors/latest/hors/)
 
 # Special thanks
 Very thanks for the awesome project and links :)
 - [howdoi](https://github.com/gleitz/howdoi) inspires `hors` (Fow now `hors` is `howdoi` which implements in `rust`).
-- [stackoverflow](https://stackoverflow.com/) helps user solve question about coding.
+- [stackoverflow](https://stackoverflow.com/) helps users solve questions about coding.
 
 # About the name
 `hors` is the abbreviation of `howdoi in rust`.
