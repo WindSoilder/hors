@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
     // Initialize reqwest::Client instance.
     let mut client_builder: ClientBuilder = reqwest::ClientBuilder::new().cookie_store(true);
     if opts.disable_proxy {
-        println!("disable proxy");
+        debug!("disable proxy");
         client_builder = client_builder.no_proxy();
     }
     let client: Client = client_builder.build().unwrap_or_else(|err| {
