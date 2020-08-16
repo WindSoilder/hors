@@ -244,8 +244,13 @@ fn parse_answer_instruction(
     let code_elements: [&str; 2] = ["pre", "code"];
     for code_element in &code_elements {
         if let Some(title) = answer_node.find(Name(*code_element)).next() {
+            println!("{:?}", title);
+            let syntax: Option<String> = if let Some(s) = title.attr("class") {
+                class_string_syntax(s.to_string())
+            } else { None };
+
             if should_colorize {
-                return Some(colorized_code(title.text(), &question_tags));
+                return Some(colorized_code(title.text(), &question_tags, syntax));
             } else {
                 return Some(title.text());
             }
@@ -265,11 +270,18 @@ fn parse_answer_detailed(
         } else {
             let mut formatted_answer: String = String::new();
             for sub_node in instruction.children() {
+                println!("{:?}", sub_node);
+                let syntax: Option<String> = if let Some(s) = sub_node.attr("class") {
+                    class_string_syntax(s.to_string())
+                } else { None };
+
                 match sub_node.name() {
-                    Some("pre") => formatted_answer
-                        .push_str(&(colorized_code(sub_node.text(), &question_tags) + "\n")),
+                    Some("pre") => {
+                        formatted_answer
+                            .push_str(&(colorized_code(sub_node.text(), &question_tags, syntax) + "\n"))
+                    },
                     Some("code") => {
-                        formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags))
+                        formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags, syntax))
                     }
                     Some(_) => formatted_answer.push_str(&(sub_node.text() + "\n\n")),
                     None => continue,
@@ -283,11 +295,21 @@ fn parse_answer_detailed(
 
 /// make code block colorized.
 ///
-/// Note that this function should only accept code block.
-fn colorized_code(code: String, possible_tags: &[String]) -> String {
+/// Note that this function should only accept code block and an optional syntax name.
+fn colorized_code(code: String, possible_tags: &[String], syntax_name: Option<String>) -> String {
     let ss = SyntaxSet::load_defaults_newlines();
     let ts: ThemeSet = ThemeSet::load_defaults();
-    let syntax: &SyntaxReference = guess_syntax(&possible_tags, &ss);
+    let syntax: &SyntaxReference = if let Some(name) = syntax_name {
+        if let Some(s) = ss.find_syntax_by_name(name.as_str()) {
+            s
+        } else {
+            println!("Unable to find lang!");
+            guess_syntax(&possible_tags, &ss)
+        }
+    } else {
+        println!("No langs!");
+        guess_syntax(&possible_tags, &ss)
+    };
     let mut h = HighlightLines::new(&syntax, &ts.themes["base16-eighties.dark"]);
     let mut colorized: String = String::new();
 
@@ -306,6 +328,17 @@ fn guess_syntax<'a>(possible_tags: &[String], ss: &'a SyntaxSet) -> &'a SyntaxRe
         }
     }
     ss.find_syntax_plain_text()
+}
+
+fn class_string_syntax<'a>(class_string: String) -> Option<String> {
+    let classes_arr = class_string.split(" ");
+    let mut syntax_name: Option<String> = None;
+
+    if let Some(syntax_class) = classes_arr.into_iter().find(|&x| x.starts_with("lang-")) {
+        syntax_name = Some((&syntax_class["lang-".len()..]).to_string());
+    }
+
+    syntax_name
 }
 
 /// Return links from the given stackoverflow links.
