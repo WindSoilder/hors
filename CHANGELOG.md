@@ -1,4 +1,7 @@
 # [Unreleased]
+## Added
+- Support non-truecolor terminal colorize.
+
 # [0.6.6] - 2020-08-12
 ## Fixed
 - search with `duckduckgo` engine is more stable.
