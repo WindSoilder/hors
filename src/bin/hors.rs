@@ -34,6 +34,8 @@ struct Opts {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    #[cfg(windows)]
+    let _ = ansi_term::enable_ansi_support();
     let opts: Opts = Opts::parse();
 
     let search_engine = SearchEngine::from_str(&opts.engine)?;
