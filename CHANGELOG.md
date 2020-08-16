@@ -1,4 +1,5 @@
 # [Unreleased]
+# [0.6.7] - 2020-08-16
 ## Added
 - Support non-truecolor terminal colorize.
 
