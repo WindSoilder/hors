@@ -1,6 +1,6 @@
 [package]
 name = "hors"
-version = "0.6.7"
+version = "0.6.8"
 authors = ["WindSoilder <WindSoilder@outlook.com>"]
 edition = "2018"
 license = "GPL-3.0"
