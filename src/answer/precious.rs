@@ -1,6 +1,7 @@
 //! This module contains api to get results from stack overflow page.
 //! Yeah, our precious lays in stackoverflow.com.
 
+use super::colorize::colorize_code;
 use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
@@ -10,10 +11,6 @@ use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
 use std::collections::HashSet;
-use syntect::easy::HighlightLines;
-use syntect::highlighting::ThemeSet;
-use syntect::parsing::{SyntaxReference, SyntaxSet};
-use syntect::util::{as_24_bit_terminal_escaped, LinesWithEndings};
 
 pub const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 
@@ -245,7 +242,7 @@ fn parse_answer_instruction(
     for code_element in &code_elements {
         if let Some(title) = answer_node.find(Name(*code_element)).next() {
             if should_colorize {
-                return Some(colorized_code(title.text(), &question_tags));
+                return Some(colorize_code(title.text(), &question_tags));
             } else {
                 return Some(title.text());
             }
@@ -267,9 +264,9 @@ fn parse_answer_detailed(
             for sub_node in instruction.children() {
                 match sub_node.name() {
                     Some("pre") => formatted_answer
-                        .push_str(&(colorized_code(sub_node.text(), &question_tags) + "\n")),
+                        .push_str(&(colorize_code(sub_node.text(), &question_tags) + "\n")),
                     Some("code") => {
-                        formatted_answer.push_str(&colorized_code(sub_node.text(), &question_tags))
+                        formatted_answer.push_str(&colorize_code(sub_node.text(), &question_tags))
                     }
                     Some(_) => formatted_answer.push_str(&(sub_node.text() + "\n\n")),
                     None => continue,
@@ -279,33 +276,6 @@ fn parse_answer_detailed(
         }
     }
     None
-}
-
-/// make code block colorized.
-///
-/// Note that this function should only accept code block.
-fn colorized_code(code: String, possible_tags: &[String]) -> String {
-    let ss = SyntaxSet::load_defaults_newlines();
-    let ts: ThemeSet = ThemeSet::load_defaults();
-    let syntax: &SyntaxReference = guess_syntax(&possible_tags, &ss);
-    let mut h = HighlightLines::new(&syntax, &ts.themes["base16-eighties.dark"]);
-    let mut colorized: String = String::new();
-
-    for line in LinesWithEndings::from(code.as_str()) {
-        let escaped = as_24_bit_terminal_escaped(&h.highlight(line, &ss), false);
-        colorized += escaped.as_str();
-    }
-    colorized
-}
-
-fn guess_syntax<'a>(possible_tags: &[String], ss: &'a SyntaxSet) -> &'a SyntaxReference {
-    for tag in possible_tags {
-        let syntax = ss.find_syntax_by_token(tag.as_str());
-        if let Some(result) = syntax {
-            return result;
-        }
-    }
-    ss.find_syntax_plain_text()
 }
 
 /// Return links from the given stackoverflow links.
