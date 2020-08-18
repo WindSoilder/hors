@@ -2,7 +2,7 @@
 extern crate log;
 
 use clap::{self, Clap};
-use hors::{self, Config, OutputOption, Result, SearchEngine};
+use hors::{self, Config, Error, OutputOption, Result, SearchEngine};
 use reqwest::{Client, ClientBuilder};
 
 use std::process;
@@ -17,7 +17,12 @@ struct Opts {
     link: bool,
     #[clap(short, long, about("make raw output (not colorized)."))]
     raw: bool,
-    #[clap(short, long, default_value = "1", about("number of answers to return."))]
+    #[clap(
+        short,
+        long,
+        default_value = "1",
+        about("number of answers to return.")
+    )]
     number_answers: u8,
     #[clap(
         short,
@@ -56,7 +61,15 @@ async fn main() -> Result<()> {
         hors::search_links_with_client(&opts.query.join(" "), search_engine, &client)
             .await
             .unwrap_or_else(|err| {
-                eprintln!("Search for target link failed: {}", err);
+                if let Error::Parse(_) = err {
+                    eprintln!(
+                        "Search stackoverflow link failed with '{:?}' search engine, \
+                         you can try another engine through `-e` argument, or specify `$HORS_ENGINE` env variable to another value", search_engine
+                    );
+                } else {
+                    eprintln!("Run query failed with '{:?}' search engine: {}, \
+                    you can try another engine through `-e` argument, or specify `$HORS_ENGINE` env variable to another value", search_engine, err);
+                }
                 process::exit(1);
             });
 

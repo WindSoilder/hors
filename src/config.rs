@@ -12,7 +12,7 @@ pub enum OutputOption {
     OnlyCode,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// supported search engine definition.
 pub enum SearchEngine {
     /// Microsoft bing search engine.
