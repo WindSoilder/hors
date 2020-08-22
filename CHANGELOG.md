@@ -1,4 +1,7 @@
 # [Unreleased]
+## Fixed
+- When search throught search engine failed, will try to provide a more user friendly message.
+
 # [0.6.8] - 2020-08-16
 ## Added
 - Support non-truecolor terminal colorize.
