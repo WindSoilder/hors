@@ -21,6 +21,8 @@ pub enum SearchEngine {
     Google,
     /// DuckDuckGo search engine.
     DuckDuckGo,
+    /// Stackoverflow internal search.
+    StackOverflow,
 }
 
 #[derive(Debug)]
@@ -64,6 +66,7 @@ impl FromStr for SearchEngine {
             "bing" => Ok(SearchEngine::Bing),
             "google" => Ok(SearchEngine::Google),
             "duckduckgo" => Ok(SearchEngine::DuckDuckGo),
+            "stackoverflow" => Ok(SearchEngine::StackOverflow),
             _ => Err(Error::from_parse("Not supported search engine")),
         }
     }

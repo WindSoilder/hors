@@ -1,6 +1,7 @@
 mod bing;
 mod duckduckgo;
 mod google;
+mod stackoverflow;
 
 use crate::config::SearchEngine;
 use crate::error::{Error, Result};
@@ -104,6 +105,7 @@ pub async fn search_links_with_client(
         SearchEngine::Bing => Box::new(bing::Bing),
         SearchEngine::Google => Box::new(google::Google),
         SearchEngine::DuckDuckGo => Box::new(duckduckgo::DuckDuckGo),
+        SearchEngine::StackOverflow => Box::new(stackoverflow::StackOverflow::new()),
     };
 
     for opt in https_opts {
