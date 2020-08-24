@@ -1,9 +1,14 @@
+// The stackoverflow search make use of stackexchange API.
+// For more usage information, please refer to:
+// https://api.stackexchange.com/docs/advanced-search
+
 use super::Engine;
 use serde::Deserialize;
 
 // filter str can help us make less network traffic
 // We just need the question_link, and more quota information.
 const FILTER_STR: &str = "!)8aEDWeNHfyXN.d";
+
 const VERSION: &str = "2.2";
 const API_DOMAIN: &str = "api.stackexchange.com";
 const API_KEY: &str = ")y68C9pNW6NnT86cYkKHCQ((";
@@ -88,5 +93,55 @@ mod tests {
             format!("http://api.stackexchange.com/2.2/search/advanced?\
             key=aaa&pagesize=10&site=stackoverflow&order=desc&sort=relevance&q=how to write unit test&filter={}", "!)8aEDWeNHfyXN.d")
         )
+    }
+
+    #[test]
+    fn test_extract_links() {
+        let engine = StackOverflow::new("aaa".to_string(), 10);
+        let result = engine.extract_links(
+            r#"
+            {
+                "items": [{"link": "http://aaa.com/"}, {"link": "http://aaa.com/bb"}],
+                "quota_max": 10,
+                "quota_remaining": 9
+        }"#,
+        );
+        assert_eq!(result.is_some(), true);
+        assert_eq!(
+            result.unwrap(),
+            vec![
+                String::from("http://aaa.com/"),
+                String::from("http://aaa.com/bb")
+            ]
+        )
+    }
+
+    #[test]
+    fn test_extract_links_with_wrong_format() {
+        let engine = StackOverflow::new("aaa".to_string(), 10);
+        let possible_links: Option<Vec<String>> = engine.extract_links(
+            r#"
+            {
+                "items": [],
+                "quota_remaining": 9
+            }"#,
+        );
+        assert_eq!(possible_links.is_none(), true);
+    }
+
+    #[test]
+    fn test_extract_links_with_no_items() {
+        let engine = StackOverflow::new("aaa".to_string(), 10);
+        let possible_links: Option<Vec<String>> = engine.extract_links(
+            r#"
+            {
+                "items": [],
+                "quota_max": 10,
+                "quota_remaining": 9
+            }"#,
+        );
+        let expected: Vec<String> = vec![];
+        assert_eq!(possible_links.is_some(), true);
+        assert_eq!(possible_links.unwrap(), expected);
     }
 }
