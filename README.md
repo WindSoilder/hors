@@ -41,8 +41,9 @@ FLAGS:
     -V, --version          Prints version information
 
 OPTIONS:
-    -e, --engine <engine>                    select middle search engine, currently support `bing`, `google` and
-                                             `duckduckgo`. [env: HORS_ENGINE=]  [default: duckduckgo]
+    -e, --engine <engine>                    select middle search engine, currently support `bing`, `google`,
+                                             `duckduckgo`, `stackoverflow`. [env: HORS_ENGINE=bing]  [default:
+                                             duckduckgo]
     -n, --number-answers <number-answers>    number of answers to return. [default: 1]
 ```
 
