@@ -23,12 +23,14 @@ impl Engine for DuckDuckGo {
     }
 
     fn extract_links(&self, page: &str) -> Option<Vec<String>> {
-        error!("{}", page);
+        println!("{}", page);
+        println!("==================");
         let doc: Document = Document::from(page);
         let target_elements = doc.find(Class("result__a"));
         let links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .filter_map(|link| {
+                println!("{}", link);
                 // The link may hide in uddg attribute.
                 // e.g: /l/?kh=-1&uddg=https%3A%2F%2Fdoc.rust%2Dlang.org%2Fstd%2Fprimitive.str.html
                 // So try to find uddg parameter first.
