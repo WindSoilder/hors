@@ -23,6 +23,7 @@ impl Engine for DuckDuckGo {
     }
 
     fn extract_links(&self, page: &str) -> Option<Vec<String>> {
+        error!("{}", page);
         let doc: Document = Document::from(page);
         let target_elements = doc.find(Class("result__a"));
         let links: Vec<String> = target_elements
@@ -42,7 +43,6 @@ impl Engine for DuckDuckGo {
         debug!("Links extrace from duckduckgo: {:?}", links);
         if links.is_empty() {
             error!("What happened to ddg?");
-            error!("{}", page);
             return None;
         }
         Some(links)
