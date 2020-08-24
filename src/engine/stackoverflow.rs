@@ -26,14 +26,14 @@ impl Default for StackOverflow {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Questions {
+struct Questions {
     items: Vec<QuestionItem>,
     quota_max: u16,
     quota_remaining: u16,
 }
 
 #[derive(Deserialize, Debug)]
-pub struct QuestionItem {
+struct QuestionItem {
     link: String,
 }
 
