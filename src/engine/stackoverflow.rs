@@ -1,7 +1,3 @@
-// The stackoverflow search make use of stackexchange API.
-// For more usage information, please refer to:
-// https://api.stackexchange.com/docs/advanced-search
-
 use super::Engine;
 use serde::Deserialize;
 
@@ -13,8 +9,13 @@ const VERSION: &str = "2.2";
 const API_DOMAIN: &str = "api.stackexchange.com";
 const API_KEY: &str = ")y68C9pNW6NnT86cYkKHCQ((";
 
+/// StackOverflow search engine.
+/// The search engine use stackexchange API to make search.
+/// Reach https://api.stackexchange.com/docs/advanced-search to see more usage details.
 pub struct StackOverflow {
+    /// Request key for stackexchange.
     api_key: String,
+    /// The length of questions we need to fetch in a query.
     page_size: u8,
 }
 
@@ -26,6 +27,7 @@ impl StackOverflow {
 
 impl Default for StackOverflow {
     fn default() -> Self {
+        // By default we only need to search 10 records per query.
         StackOverflow::new(API_KEY.to_string(), 10)
     }
 }
