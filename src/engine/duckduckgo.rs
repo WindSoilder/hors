@@ -41,8 +41,8 @@ impl Engine for DuckDuckGo {
 
         debug!("Links extrace from duckduckgo: {:?}", links);
         if links.is_empty() {
-            pringln!("What happened to ddg?");
-            println!("{}", page);
+            error!("What happened to ddg?");
+            error!("{}", page);
             return None;
         }
         Some(links)
