@@ -105,7 +105,7 @@ pub async fn search_links_with_client(
         SearchEngine::Bing => Box::new(bing::Bing),
         SearchEngine::Google => Box::new(google::Google),
         SearchEngine::DuckDuckGo => Box::new(duckduckgo::DuckDuckGo),
-        SearchEngine::StackOverflow => Box::new(stackoverflow::StackOverflow::new()),
+        SearchEngine::StackOverflow => Box::new(stackoverflow::StackOverflow::default()),
     };
 
     for opt in https_opts {
