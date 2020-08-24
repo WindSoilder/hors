@@ -32,6 +32,12 @@ struct Questions {
     quota_remaining: u16,
 }
 
+impl Questions {
+    pub fn into_iter(self) -> std::vec::IntoIter<QuestionItem> {
+        self.items.into_iter()
+    }
+}
+
 #[derive(Deserialize, Debug)]
 struct QuestionItem {
     link: String,
@@ -53,7 +59,7 @@ impl Engine for StackOverflow {
                 warn!("Deserialize json response failed: {}", e);
                 None
             }
-            Ok(questions) => Some(questions.items.into_iter().map(|q| q.link).collect()),
+            Ok(questions) => Some(questions.into_iter().map(|q| q.link).collect()),
         }
     }
 }
