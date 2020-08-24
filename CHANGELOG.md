@@ -1,4 +1,7 @@
 # [Unreleased]
+## Added
+- Support stackoverflow internal search engine, we can run with `-e stackoverflow` to enable this.
+
 ## Fixed
 - When search throught search engine failed, will try to provide a more user friendly message.
 
