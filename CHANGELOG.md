@@ -1,4 +1,5 @@
 # [Unreleased]
+# [0.6.9] - 2020-08-25
 ## Added
 - Support stackoverflow internal search engine, we can run with `-e stackoverflow` to enable this.
 
