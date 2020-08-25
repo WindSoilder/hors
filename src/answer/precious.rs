@@ -235,7 +235,6 @@ fn parse_answer_instruction(
     let code_elements: [&str; 2] = ["pre", "code"];
     for code_element in &code_elements {
         if let Some(title) = answer_node.find(Name(*code_element)).next() {
-            println!("{:?}", title);
             let syntax: Option<String> = if let Some(s) = title.attr("class") {
                 class_string_syntax(s.to_string())
             } else { None };
@@ -261,7 +260,6 @@ fn parse_answer_detailed(
         } else {
             let mut formatted_answer: String = String::new();
             for sub_node in instruction.children() {
-                println!("{:?}", sub_node);
                 let syntax: Option<String> = if let Some(s) = sub_node.attr("class") {
                     class_string_syntax(s.to_string())
                 } else { None };
@@ -292,13 +290,13 @@ fn colorized_code(code: String, possible_tags: &[String], syntax_name: Option<St
     let ts: ThemeSet = ThemeSet::load_defaults();
     let syntax: &SyntaxReference = if let Some(name) = syntax_name {
         if let Some(s) = ss.find_syntax_by_name(name.as_str()) {
+            debug!("Found syntax language '{}'", s);
             s
         } else {
-            println!("Unable to find lang!");
             guess_syntax(&possible_tags, &ss)
         }
     } else {
-        println!("No langs!");
+        debug!("Guessing syntax language");
         guess_syntax(&possible_tags, &ss)
     };
     let mut h = HighlightLines::new(&syntax, &ts.themes["base16-eighties.dark"]);
