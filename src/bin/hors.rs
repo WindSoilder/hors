@@ -67,7 +67,7 @@ async fn main() -> Result<()> {
                          you can try another engine through `-e` argument, or specify `$HORS_ENGINE` env variable to another value", search_engine
                     );
                 } else {
-                    eprintln!("Run query failed with '{:?}' search engine: {}, \
+                    eprintln!("Run query failed with '{:?}' search engine, error message: {}, \
                     you can try another engine through `-e` argument, or specify `$HORS_ENGINE` env variable to another value", search_engine, err);
                 }
                 process::exit(1);

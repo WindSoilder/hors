@@ -44,7 +44,9 @@ async fn test_search_links_with_google_search_engine() {
     }
 }
 
+// Ignore the duckduckgo test in CI, because it may returns None due to duckduckgo internal error.
 #[tokio::test]
+#[ignore]
 async fn test_search_links_with_duckduckgo_search_engine() {
     let search_engine: SearchEngine = SearchEngine::from_str("duckduckgo").unwrap();
     let client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
