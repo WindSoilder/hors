@@ -535,7 +535,7 @@ dependencies = [
 
 [[package]]
 name = "hors"
-version = "0.6.9"
+version = "0.6.10"
 dependencies = [
  "ansi_colours 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "ansi_term 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
