@@ -1,4 +1,8 @@
 # [Unreleased]
+# [0.6.10] - 2020-08-31
+## Fixed
+- Fit for new css attribute of so.
+
 # [0.6.9] - 2020-08-25
 ## Added
 - Support stackoverflow internal search engine, we can run with `-e stackoverflow` to enable this.
