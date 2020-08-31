@@ -15,7 +15,7 @@ categories = ["command-line-utilities"]
 clap = "3.0.0-beta.1"
 syntect = "4.4.0"
 base64 = "0.12.3"
-reqwest = { version="0.10.7", features=["json", "socks", "cookies", "rustls-tls", "gzip"], default-features=false }
+reqwest = { version="0.10.8", features=["json", "socks", "cookies", "rustls-tls", "gzip"], default-features=false }
 tokio = { version = "0.2", features = ["full"] }
 select = "0.5.0"
 rand = "0.7.3"
