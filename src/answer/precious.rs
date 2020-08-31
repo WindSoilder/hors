@@ -256,7 +256,7 @@ fn parse_answer_detailed(
     question_tags: Vec<String>,
     should_colorize: bool,
 ) -> Option<String> {
-    if let Some(instruction) = answer_node.find(Class("post-text")).next() {
+    if let Some(instruction) = answer_node.find(Class("js-post-body")).next() {
         if !should_colorize {
             return Some(instruction.text());
         } else {
@@ -450,7 +450,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>println!("hello world")</code>
                         </pre>
@@ -478,7 +478,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer <code>goto</code> here </p>
                         <pre>
                             <code>println!("hello world")</code>
@@ -507,7 +507,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer here </p>
                     </div>
                 </div>
@@ -529,7 +529,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer <code>goto</code> here </p>
                     </div>
                 </div>
@@ -555,7 +555,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer <code>goto</code> here </p>
                     </div>
                 </div>
@@ -581,7 +581,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer goto here</p>
                     </div>
                 </div>
@@ -607,7 +607,7 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             print('go go go')
                         </pre>
@@ -635,13 +635,13 @@ mod test {
             <body>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer <code>lower</code> here </p>
                     </div>
                 </div>
                 <div class="answer">
                     <div class="js-vote-count">9000</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <p>answer <code>higher</code> here </p>
                     </div>
                 </div>
@@ -670,7 +670,7 @@ mod test {
                 <a class="post-tag">python</a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -690,7 +690,7 @@ mod test {
                 <a class="post-tag">python</a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -716,7 +716,7 @@ mod test {
                 <a class="post-tag">python</a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -736,7 +736,7 @@ mod test {
                 <a class="post-tag">python</a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -761,7 +761,7 @@ mod test {
                 <a class="post-tag"></a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
@@ -781,7 +781,7 @@ mod test {
                 <a class="post-tag"></a>
                 <div class="answer">
                     <div class="js-vote-count">130</div>
-                    <div class="post-text">
+                    <div class="js-post-body">
                         <pre>
                             <code>print(1 + 2)</code>
                         </pre>
