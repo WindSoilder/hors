@@ -1,4 +1,7 @@
 # [Unreleased]
+## Fixed
+- Fix `-a` option sometimes leads to `Can't get answer from <xxx>` error message.
+
 # [0.6.10] - 2020-08-31
 ## Fixed
 - Fit for new css attribute of so.
