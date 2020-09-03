@@ -256,7 +256,13 @@ fn parse_answer_detailed(
     question_tags: Vec<String>,
     should_colorize: bool,
 ) -> Option<String> {
-    if let Some(instruction) = answer_node.find(Class("js-post-body")).next() {
+    // stackoverflow may return answer body with `js-post-body` or `post-text` class.
+    // so we should class decision first.
+    let answer_body = answer_node
+        .find(Class("js-post-body"))
+        .next()
+        .or_else(|| answer_node.find(Class("post-text")).next());
+    if let Some(instruction) = answer_body {
         if !should_colorize {
             return Some(instruction.text());
         } else {
@@ -451,6 +457,34 @@ mod test {
                 <div class="answer">
                     <div class="js-vote-count">130</div>
                     <div class="js-post-body">
+                        <pre>
+                            <code>println!("hello world")</code>
+                        </pre>
+                    </div>
+                </div>
+            </body>
+        </html>
+        "#,
+        );
+        let conf: Config = Config::new(OutputOption::OnlyCode, 1, false);
+        let answer: Option<String> = parse_answer(page, &conf);
+
+        assert_eq!(answer.is_some(), true);
+
+        if let Some(code) = answer {
+            assert_eq!(code.trim(), String::from(r#"println!("hello world")"#));
+        }
+    }
+
+    #[test]
+    fn test_parse_answer_with_post_text_class() {
+        let page: String = String::from(
+            r#"
+        <html>
+            <body>
+                <div class="answer">
+                    <div class="js-vote-count">130</div>
+                    <div class="post-text">
                         <pre>
                             <code>println!("hello world")</code>
                         </pre>
