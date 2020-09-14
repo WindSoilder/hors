@@ -83,10 +83,13 @@ extern crate log;
 pub mod answer;
 pub mod config;
 pub mod engine;
+
 mod error;
+mod output;
 mod utils;
 
 pub use answer::{get_answers, get_answers_with_client, SPLITTER};
-pub use config::{Config, OutputOption, SearchEngine};
+pub use config::{Config, OutputOption, PagingOption, SearchEngine};
 pub use engine::{search_links, search_links_with_client};
 pub use error::{Error, Result};
+pub use output::Output;

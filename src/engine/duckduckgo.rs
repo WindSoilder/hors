@@ -41,7 +41,10 @@ impl Engine for DuckDuckGo {
 
         debug!("Links extrace from duckduckgo: {:?}", links);
         if links.is_empty() {
-            warn!("Can't get search result from duckduckgo, source page\n{}", page);
+            warn!(
+                "Can't get search result from duckduckgo, source page\n{}",
+                page
+            );
             return None;
         }
         Some(links)

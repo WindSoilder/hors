@@ -72,6 +72,24 @@ impl FromStr for SearchEngine {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum PagingOption {
+    Auto,
+    Never,
+}
+
+impl FromStr for PagingOption {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        match s {
+            "auto" => Ok(PagingOption::Auto),
+            "never" => Ok(PagingOption::Never),
+            _ => Err(Error::from_parse("Not supported paging option")),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

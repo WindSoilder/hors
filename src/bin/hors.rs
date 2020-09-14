@@ -2,7 +2,8 @@
 extern crate log;
 
 use clap::{self, Clap};
-use hors::{self, Config, Error, OutputOption, Result, SearchEngine};
+use hors::{self, Config, Error, Output, OutputOption, PagingOption, Result, SearchEngine};
+
 use reqwest::{Client, ClientBuilder};
 
 use std::process;
@@ -17,6 +18,13 @@ struct Opts {
     link: bool,
     #[clap(short, long, about("make raw output (not colorized)."))]
     raw: bool,
+    #[clap(
+        short,
+        long,
+        default_value = "auto",
+        about("specify how to page output, can be `auto`, `never`")
+    )]
+    paging: String,
     #[clap(
         short,
         long,
@@ -81,8 +89,12 @@ async fn main() -> Result<()> {
             eprintln!("Hors is running to error: {}", err);
             process::exit(1);
         });
-    println!("{}", answers);
 
+    // create an output object and get an output handler, use the handler to handle our result.
+    let paging_option = PagingOption::from_str(&opts.paging).unwrap_or(PagingOption::Auto);
+    let mut output = Output::new(&paging_option);
+    let handler = output.get_handler();
+    handler.write_all(answers.as_bytes()).expect("success");
     Ok(())
 }
 
