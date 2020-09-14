@@ -15,7 +15,7 @@ impl Output {
         match option {
             PagingOption::Auto => {
                 // create a less process.
-                let less_cmd = Command::new("less")
+                Command::new("less")
                     .args(&[
                         "--raw-control-chars",
                         "--quit-if-one-screen",
@@ -24,8 +24,7 @@ impl Output {
                     ])
                     .stdin(Stdio::piped())
                     .spawn()
-                    .unwrap();
-                Output::Paging(less_cmd)
+                    .map_or_else(|_| Output::Normal(io::stdout()), |cmd| Output::Paging(cmd))
             }
             PagingOption::Never => Output::Normal(io::stdout()),
         }
