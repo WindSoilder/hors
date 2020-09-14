@@ -16,7 +16,12 @@ impl Output {
             PagingOption::Auto => {
                 // create a less process.
                 let less_cmd = Command::new("less")
-                    .args(&["--raw-control-chars"])
+                    .args(&[
+                        "--raw-control-chars",
+                        "--quit-if-one-screen",
+                        "--no-init",
+                        "-N",
+                    ])
                     .stdin(Stdio::piped())
                     .spawn()
                     .unwrap();
