@@ -72,6 +72,24 @@ impl FromStr for SearchEngine {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum PagingOption {
+    Auto,
+    Never,
+}
+
+impl FromStr for PagingOption {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        match s {
+            "auto" => Ok(PagingOption::Auto),
+            "never" => Ok(PagingOption::Never),
+            _ => Err(Error::from_parse("Not supported paging option")),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -88,5 +106,19 @@ mod tests {
     fn test_search_engine_from_invalid_str() {
         let search_engine = SearchEngine::from_str("what's this?");
         assert_eq!(search_engine.is_err(), true);
+    }
+
+    #[test]
+    fn test_paging_option_from_str() {
+        let paging_option = PagingOption::from_str("auto");
+        assert_eq!(paging_option.is_ok(), true);
+        let paging_option = PagingOption::from_str("never");
+        assert_eq!(paging_option.is_ok(), true);
+    }
+
+    #[test]
+    fn test_invalid_paging_option() {
+        let paging_option = PagingOption::from_str("invalid");
+        assert_eq!(paging_option.is_err(), true);
     }
 }
