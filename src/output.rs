@@ -1,9 +1,42 @@
+//! Handlers to process output.
+//!
+//! It can be used to make a paging output, or just output normally(dump to stdout).
+//!
+//! # Examples
+//!
+//! Make paging output
+//!
+//! ```rust
+//! use hors::Output;
+//! use hors::config::PagingOption;
+//!
+//! fn run() {
+//! let mut outputer = Output::new(&PagingOption::Auto);
+//! let handler = outputer.get_handler();
+//! handler.write_all("test data".as_bytes()).expect("success");
+//! }
+//! ```
+//!
+//! Or just want to dump to stdout.
+//!
+//! ```rust
+//! use hors::Output;
+//! use hors::config::PagingOption;
+//!
+//! fn run() {
+//! let mut outputer = Output::new(&PagingOption::Never);
+//! let handler = outputer.get_handler();
+//! handler.write_all("test data".as_bytes()).expect("success");
+//! }
+//! ```
 use crate::config::PagingOption;
 use std::io::{self, Stdout, Write};
 use std::process::{Child, Command, Stdio};
 
 pub enum Output {
+    /// Paging output, along with a relative output handler process.
     Paging(Child),
+    /// Normal output, along with stdout.
     Normal(Stdout),
 }
 
@@ -30,6 +63,7 @@ impl Output {
         }
     }
 
+    /// Get output handler so user can write data.
     pub fn get_handler(&mut self) -> &mut dyn Write {
         match self {
             Output::Paging(child_proc) => child_proc

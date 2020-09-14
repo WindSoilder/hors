@@ -107,4 +107,18 @@ mod tests {
         let search_engine = SearchEngine::from_str("what's this?");
         assert_eq!(search_engine.is_err(), true);
     }
+
+    #[test]
+    fn test_paging_option_from_str() {
+        let paging_option = PagingOption::from_str("auto");
+        assert_eq!(paging_option.is_ok(), true);
+        let paging_option = PagingOption::from_str("never");
+        assert_eq!(paging_option.is_ok(), true);
+    }
+
+    #[test]
+    fn test_invalid_paging_option() {
+        let paging_option = PagingOption::from_str("invalid");
+        assert_eq!(paging_option.is_err(), true);
+    }
 }
