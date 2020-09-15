@@ -89,6 +89,7 @@ async fn main() -> Result<()> {
             eprintln!("Hors is running to error: {}", err);
             process::exit(1);
         });
+    let answers: String = format!("\n\n{}", answers);
 
     // create an output object and get an output handler, use the handler to handle our result.
     let paging_option = PagingOption::from_str(&opts.paging).unwrap_or(PagingOption::Auto);

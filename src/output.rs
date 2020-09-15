@@ -53,7 +53,6 @@ impl Output {
                         "--raw-control-chars",
                         "--quit-if-one-screen",
                         "--no-init",
-                        "-N",
                     ])
                     .stdin(Stdio::piped())
                     .spawn()
