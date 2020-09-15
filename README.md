@@ -30,7 +30,7 @@ brew tap WindSoilder/hors && brew install hors
 Hors can be installed from [scoop](https://scoop.sh/)
 
 ```shell
-scoop bucket add w-bucket https://github.com/WindSoilder/w-bucket && scoop install hors
+scoop bucket add w-bucket https://github.com/WindSoilder/w-bucket; scoop install hors
 ```
 
 # Tested platforms
