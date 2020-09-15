@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.7.1] - 2020-09-15
 ## Added
 - Paging feature is supported, when the answer is long, hors will visually separate the answers from the rest of the terminal output.  You can customize this feature through `-p` or `--paging` argument.
 - Can download through more convenient tools, like `brew` on `macOS`, `scoop` on `Windows`.
