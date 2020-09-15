@@ -17,6 +17,22 @@ hors is written in `Rust`.  The recommended way to install `hors` is through `ca
 cargo install hors
 ```
 
+On Windows/Linux/macOS platform, you can download the pre-build-binary from github [release page](https://github.com/WindSoilder/hors/releases/latest)
+
+## On macOS
+Hors can be installed from [homebrew](https://brew.sh/).
+
+```shell
+brew tap WindSoilder/hors && brew install hors
+```
+
+## On Windows
+Hors can be installed from [scoop](https://scoop.sh/)
+
+```shell
+scoop bucket add w-bucket https://github.com/WindSoilder/w-bucket && scoop install hors
+```
+
 # Tested platforms
 For now, `hors` has been tested with the following platforms:
 
@@ -45,6 +61,7 @@ OPTIONS:
                                              `duckduckgo`, `stackoverflow`. [env: HORS_ENGINE=bing]  [default:
                                              duckduckgo]
     -n, --number-answers <number-answers>    number of answers to return. [default: 1]
+    -p, --paging <paging>                    specify how to page output, can be `auto`, `never` [default: auto]
 ```
 
 # Usage example
@@ -141,6 +158,20 @@ export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087
 ```
 
 Of course, it should be a valid proxy in your machine.
+
+# Paging feature on windows
+Hors is using `less` command to make paging feature work, and it's not installed on Windows by default.  You can use scoop to install `less`
+
+```shell
+scoop install less
+```
+
+Or use `choco`:
+
+```shell
+choco install less
+```
+
 
 # Use hors as lib
 Hors can be used as a lib, here is an example:

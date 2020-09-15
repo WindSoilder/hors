@@ -1,6 +1,7 @@
 # [Unreleased]
 ## Added
 - Paging feature is supported, when the answer is long, hors will visually separate the answers from the rest of the terminal output.  You can customize this feature through `-p` or `--paging` argument.
+- Can download through more convenient tools, like `brew` on `macOS`, `scoop` on `Windows`.
 
 ## Fixed
 - Fix `-a` option sometimes leads to `Can't get answer from <xxx>` error message.
