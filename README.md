@@ -8,7 +8,12 @@ Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in 
 For binary usage, please go through the rest of this file.  For lib documentation, please check [here](https://docs.rs/hors/latest/hors/).
 
 # Screenshot
-![Screenshots of hors](screenshots/hors_demo.gif)
+## Simple usage example
+![Screenshots of hors gif](screenshots/hors_demo.gif)
+
+## More examples
+
+![Screenshots of hors png](screenshots/screenshot.png)
 
 # Installation
 hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
