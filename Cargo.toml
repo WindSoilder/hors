@@ -12,7 +12,7 @@ keywords = ["http", "client", "cli-tools"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = "3.0.0-beta.1"
+clap = "3.0.0-beta.2"
 syntect = "4.4.0"
 base64 = "0.12.3"
 reqwest = { version="0.10.8", features=["json", "socks", "cookies", "rustls-tls", "gzip"], default-features=false }
