@@ -79,6 +79,8 @@
 
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate lazy_static;
 
 pub mod answer;
 pub mod config;
@@ -86,6 +88,7 @@ pub mod engine;
 
 mod error;
 mod output;
+mod search_config;
 mod utils;
 
 pub use answer::{get_answers, get_answers_with_client, SPLITTER};

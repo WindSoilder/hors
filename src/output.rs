@@ -49,11 +49,7 @@ impl Output {
             PagingOption::Auto => {
                 // create a less process.
                 Command::new("less")
-                    .args(&[
-                        "--raw-control-chars",
-                        "--quit-if-one-screen",
-                        "--no-init",
-                    ])
+                    .args(&["--raw-control-chars", "--quit-if-one-screen", "--no-init"])
                     .stdin(Stdio::piped())
                     .spawn()
                     .map_or_else(|_| Output::Normal(io::stdout()), |cmd| Output::Paging(cmd))

@@ -1,4 +1,5 @@
 use super::Engine;
+use crate::search_config::SEARCH_CONFIG;
 use select::document::Document;
 use select::predicate::Class;
 use url::form_urlencoded;
@@ -11,12 +12,14 @@ impl Engine for DuckDuckGo {
         // https://stackoverflow.com/questions/37012469/duckduckgo-api-getting-search-results
         if use_https {
             format!(
-                "https://duckduckgo.com/html?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+                "https://{}/html?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+                SEARCH_CONFIG.get_ddg_domain(),
                 query
             )
         } else {
             format!(
-                "http://duckduckgo.com/html?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+                "http://{}/html?q=site:stackoverflow.com%20{}&t=hj&ia=web",
+                SEARCH_CONFIG.get_ddg_domain(),
                 query
             )
         }
