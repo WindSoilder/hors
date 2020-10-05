@@ -23,11 +23,17 @@ impl Engine for Google {
         let doc: Document = Document::from(page);
         // use child rather than decendent, because in google search engine
         // a node's structure is like this:
-        // <r>
+        // <div class="r">
         //   <a href="test_link"></a>
         //   <span><a href="not we need"></a></span>
-        // </r>
-        let target_elements = doc.find(Class("r").child(Name("a")));
+        // </div>
+
+        // make decision on class which contains target element.
+        let class_of_element = match doc.find(Class("r")).next() {
+            Some(_) => "r",
+            None => "rc",
+        };
+        let target_elements = doc.find(Class(class_of_element).child(Name("a")));
         let links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .map(String::from)
@@ -104,5 +110,38 @@ mod tests {
             "http://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
             result
         );
+    }
+
+    #[test]
+    fn test_extract_links_new_style() {
+        let engine = Google;
+        let page: String = String::from(
+            r#"
+<html>
+    <body>
+        <div class="g">
+            <div class="rc">
+                <a href="https://test_link1">
+                </a>
+            </div>
+        </div>
+        <div class="g">
+            <div class="rc">
+                <a href="https://test_link2">
+                </a>
+            </div>
+        </div>
+    </body>
+</html>"#,
+        );
+        let possible_links: Option<Vec<String>> = engine.extract_links(&page);
+        assert_eq!(possible_links.is_some(), true);
+        assert_eq!(
+            possible_links.unwrap(),
+            vec![
+                String::from("https://test_link1"),
+                String::from("https://test_link2")
+            ]
+        )
     }
 }
