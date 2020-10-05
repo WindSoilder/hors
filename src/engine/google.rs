@@ -29,15 +29,18 @@ impl Engine for Google {
         // </div>
 
         // make decision on class which contains target element.
-        let class_of_element = match doc.find(Class("r")).next() {
-            Some(_) => "r",
-            None => "rc",
-        };
-        let target_elements = doc.find(Class(class_of_element).descendant(Name("a")));
-        let links: Vec<String> = target_elements
+        let target_elements = doc.find(Class("rc").descendant(Name("a")));
+        let mut links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .map(String::from)
             .collect();
+        if links.is_empty() {
+            links = doc
+                .find(Class("r").descendant(Name("a")))
+                .filter_map(|node| node.attr("href"))
+                .map(String::from)
+                .collect()
+        }
 
         debug!("Links extract from google: {:?}", links);
         if links.is_empty() {
