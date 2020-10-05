@@ -124,7 +124,7 @@ mod tests {
         let engine = Google;
         let result: String = engine.get_query_url(&String::from("how to write unit test"), false);
         assert_eq!(
-            "http://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
+            "http://www.google.com/search?q=site:stackoverflow.com%20how to write unit test",
             result
         );
     }
