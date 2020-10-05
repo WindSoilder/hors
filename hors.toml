@@ -1,4 +1,5 @@
+# example configuration file for hors, but normally you don't need to use it.
 [engine_domain]
 duckduckgo = "duckduckgo.com"
-bing = "www.bing234.com"
+bing = "www.bing.com"
 google = "www.google.com"
