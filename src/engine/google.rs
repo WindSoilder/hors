@@ -33,7 +33,7 @@ impl Engine for Google {
             Some(_) => "r",
             None => "rc",
         };
-        let target_elements = doc.find(Class(class_of_element).child(Name("a")));
+        let target_elements = doc.find(Class(class_of_element).descendant(Name("a")));
         let links: Vec<String> = target_elements
             .filter_map(|node| node.attr("href"))
             .map(String::from)
@@ -121,14 +121,18 @@ mod tests {
     <body>
         <div class="g">
             <div class="rc">
-                <a href="https://test_link1">
-                </a>
+                <div class="tmp">
+                    <a href="https://test_link1">
+                    </a>
+                </div>
             </div>
         </div>
         <div class="g">
             <div class="rc">
-                <a href="https://test_link2">
-                </a>
+                <div class="tmp">
+                    <a href="https://test_link2">
+                    </a>
+                </div>
             </div>
         </div>
     </body>
