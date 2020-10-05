@@ -32,3 +32,4 @@ toml = "0.5.6"
 
 [dev-dependencies]
 env_logger = "0.7"
+criterion = "0.3"
