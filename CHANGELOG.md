@@ -1,4 +1,6 @@
 # [Unreleased]
+## Added
+- New google front page style is supported.
 
 # [0.7.1] - 2020-09-15
 ## Added
