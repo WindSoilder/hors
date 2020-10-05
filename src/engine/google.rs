@@ -136,7 +136,7 @@ mod tests {
         <div class="g">
             <div class="rc">
                 <div class="tmp">
-                    <a href="https://test_link1">
+                    <a href="https://test_link1?site=stackoverflow.com">
                     </a>
                 </div>
             </div>
@@ -144,7 +144,7 @@ mod tests {
         <div class="g">
             <div class="rc">
                 <div class="tmp">
-                    <a href="https://test_link2">
+                    <a href="https://stackoverflow.com/aaa">
                     </a>
                 </div>
             </div>
@@ -156,10 +156,7 @@ mod tests {
         assert_eq!(possible_links.is_some(), true);
         assert_eq!(
             possible_links.unwrap(),
-            vec![
-                String::from("https://test_link1"),
-                String::from("https://test_link2")
-            ]
+            vec![String::from("https://stackoverflow.com/aaa")]
         )
     }
 }
