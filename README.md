@@ -28,14 +28,14 @@ On Windows/Linux/macOS platform, you can download the pre-build-binary from gith
 Hors can be installed from [homebrew](https://brew.sh/).
 
 ```shell
-brew tap WindSoilder/hors && brew install hors
+brew tap hors-org/hors && brew install hors
 ```
 
 ## On Windows
 Hors can be installed from [scoop](https://scoop.sh/)
 
 ```shell
-scoop bucket add w-bucket https://github.com/WindSoilder/w-bucket; scoop install hors
+scoop bucket add w-bucket https://github.com/hors-org/w-bucket; scoop install hors
 ```
 
 # Tested platforms
