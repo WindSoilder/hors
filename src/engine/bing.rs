@@ -1,4 +1,5 @@
 use super::Engine;
+use crate::search_config::SEARCH_CONFIG;
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
 
@@ -8,12 +9,14 @@ impl Engine for Bing {
     fn get_query_url(&self, query: &str, use_https: bool) -> String {
         if use_https {
             format!(
-                "https://www.bing.com/search?q=site:stackoverflow.com%20{}",
+                "https://{}/search?q=site:stackoverflow.com%20{}",
+                SEARCH_CONFIG.get_bing_domain(),
                 query
             )
         } else {
             format!(
-                "http://www.bing.com/search?q=site:stackoverflow.com%20{}",
+                "http://{}/search?q=site:stackoverflow.com%20{}",
+                SEARCH_CONFIG.get_bing_domain(),
                 query
             )
         }

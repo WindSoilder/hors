@@ -18,3 +18,6 @@
 #**/*.rs.bk
 
 .DS_Store
+
+# jetbrains config file
+.idea
