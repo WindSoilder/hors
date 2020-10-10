@@ -64,7 +64,7 @@ pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
 /// let links: Vec<String> = vec![
 ///     String::from("https://stackoverflow.com/questions/7771011/how-to-parse-data-in-json")
 /// ];
-/// let answers: String = hors::get_answers_with_client(&links, conf, &client).await.unwrap();
+/// let answers: String = hors::get_answers_with_client(&links, conf, client).await.unwrap();
 /// assert!(
 ///     answers.contains(
 ///         r#"data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')"#

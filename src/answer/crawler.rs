@@ -1,3 +1,5 @@
+//! Crawler for fetching so page.
+
 use super::records::AnswerRecordsCache;
 use crate::config::Config;
 use crate::utils::random_agent;

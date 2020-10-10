@@ -13,7 +13,7 @@ async fn test_get_answers_with_links_only() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers_with_client(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, client)
         .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
@@ -36,7 +36,7 @@ async fn test_get_answers_with_detailed_option() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers_with_client(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, client)
         .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
@@ -64,7 +64,7 @@ async fn test_get_answers_with_instruction() {
         .cookie_store(true)
         .build()
         .unwrap();
-    let answers: String = get_answers_with_client(&links, conf, &client)
+    let answers: String = get_answers_with_client(&links, conf, client)
         .await
         .expect("Get answer through stackoverflow should success")
         .split(SPLITTER)
