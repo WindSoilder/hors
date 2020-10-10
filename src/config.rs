@@ -1,7 +1,7 @@
 use crate::error::{Error, Result};
 use std::str::FromStr;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// The results output options.
 pub enum OutputOption {
     /// Only output links.
@@ -25,7 +25,7 @@ pub enum SearchEngine {
     StackOverflow,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// The user config information is integrated here.
 pub struct Config {
     /// Terminal output options.

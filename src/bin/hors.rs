@@ -83,7 +83,7 @@ async fn main() -> Result<()> {
 
     let conf: Config = init_config(&opts);
     debug!("User config: {:?}", conf);
-    let answers: String = hors::get_answers_with_client(&target_links, conf, &client)
+    let answers: String = hors::get_answers_with_client(&target_links, conf, client)
         .await
         .unwrap_or_else(|err| {
             eprintln!("Hors is running to error: {}", err);

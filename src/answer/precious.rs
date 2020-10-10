@@ -2,15 +2,16 @@
 //! Yeah, our precious lays in stackoverflow.com.
 
 use super::colorize::colorize_code;
+use super::crawler::{CrawlerMsg, PageCrawler};
 use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
-use crate::utils::random_agent;
-use reqwest::{Client, ClientBuilder, Response, Url};
+use reqwest::{Client, ClientBuilder, Url};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Class, Name};
 use std::collections::HashSet;
+use tokio::sync::mpsc::{self, Receiver, Sender};
 
 pub const SPLITTER: &str = "\n^_^ ==================================================== ^_^\n\n";
 
@@ -43,7 +44,7 @@ pub const SPLITTER: &str = "\n^_^ ==============================================
 /// print to terminal directly.  Else return an Error.
 pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
     let client: Client = ClientBuilder::new().cookie_store(true).build().unwrap();
-    get_answers_with_client(links, conf, &client).await
+    get_answers_with_client(links, conf, client).await
 }
 
 /// Get answers from given links.
@@ -79,12 +80,12 @@ pub async fn get_answers(links: &[String], conf: Config) -> Result<String> {
 pub async fn get_answers_with_client(
     links: &[String],
     conf: Config,
-    client: &Client,
+    client: Client,
 ) -> Result<String> {
     debug!("Try to load cache from local cache file.");
     // load hors internal cache.
     let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
-    let mut records_cache: AnswerRecordsCache = match load_result {
+    let records_cache: AnswerRecordsCache = match load_result {
         Ok(cache) => cache,
         Err(err) => {
             warn!("Can't load cache from local cache file, errmsg {:?}", err);
@@ -95,80 +96,39 @@ pub async fn get_answers_with_client(
 
     let results: Result<String> = match conf.option() {
         OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => get_detailed_answer(links, conf, &mut records_cache, &client).await,
+        _ => get_detailed_answer(links, conf, records_cache, client).await,
     };
 
-    // when hors gets what we wanted answer, save it for next time using.
-    if let Err(err) = records_cache.save() {
-        warn!(
-            "Can't save cache into local directory, error msg: {:?}",
-            err
-        );
-    }
     results
 }
 
 async fn get_detailed_answer(
     links: &[String],
     conf: Config,
-    records_cache: &mut AnswerRecordsCache,
-    client: &Client,
+    records_cache: AnswerRecordsCache,
+    client: Client,
 ) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
-    let mut links_iter = links.iter();
 
-    for _ in 0..conf.numbers() {
-        let next_link = links_iter.next();
-        match next_link {
-            Some(link) => {
-                // the given links may contains the url doesn't contains `question`
-                // tag, so it's not a question, just deal with nothing to it.
-                if !link.contains("question") {
-                    continue;
-                }
+    let (tx, mut rx): (Sender<CrawlerMsg>, Receiver<CrawlerMsg>) = mpsc::channel(10);
 
-                let page: String = get_page(&link, &client, records_cache).await?;
-                let title: String = format!("- Answer from {}", link);
-                let answer: Option<String> = parse_answer(page, &conf);
+    let page_crawler = PageCrawler::new(links.into(), conf, records_cache, client, tx);
+    page_crawler.fetch();
+
+    while let Some(page) = rx.recv().await {
+        match page {
+            CrawlerMsg::Done => break,
+            CrawlerMsg::Data(m) => {
+                let answer: Option<String> = parse_answer(m.get_page().into(), &conf);
                 match answer {
-                    Some(content) => results.push(format!("{}\n{}", title, content)),
-                    None => results.push(format!("Can't get answer from {}", link)),
+                    Some(content) => results.push(format!("{}\n{}", m.get_title(), content)),
+                    None => results.push(format!("Can't get answer from {}", m.get_link())),
                 }
             }
-            None => break,
         }
     }
+
     Ok(results.join(SPLITTER))
-}
-
-async fn get_page(
-    link: &str,
-    client: &Client,
-    records_cache: &mut AnswerRecordsCache,
-) -> Result<String> {
-    // Firstly try to get link from cache.
-    let page_from_cache: Option<&String> = records_cache.get(link);
-
-    debug!(
-        "Can we get answer from cache? {:}",
-        page_from_cache.is_some()
-    );
-    match page_from_cache {
-        // When we can get answer from cache, just return it.
-        Some(page) => Ok(page.to_string()),
-        // When we can't get answer from cache, we should get page from network.
-        None => {
-            let resp: Response = client
-                .get(link)
-                .header(reqwest::header::USER_AGENT, random_agent())
-                .send()
-                .await?;
-            debug!("Response status from stackoverflow: {:?}", resp);
-            let page: String = resp.text().await?;
-            records_cache.put(link.to_string(), page.to_string());
-            Ok(page)
-        }
-    }
 }
 
 fn parse_answer(page: String, config: &Config) -> Option<String> {
