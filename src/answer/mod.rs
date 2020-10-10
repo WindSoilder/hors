@@ -1,5 +1,5 @@
 mod colorize;
+mod crawler;
 mod precious;
 mod records;
-mod crawler;
 pub use precious::{get_answers, get_answers_with_client, SPLITTER};
