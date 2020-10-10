@@ -3,7 +3,6 @@
 
 use super::colorize::colorize_code;
 use super::crawler::{CrawlerMsg, PageCrawler};
-use super::records::AnswerRecordsCache;
 use crate::config::{Config, OutputOption};
 use crate::error::Result;
 use reqwest::{Client, ClientBuilder, Url};
@@ -82,37 +81,20 @@ pub async fn get_answers_with_client(
     conf: Config,
     client: Client,
 ) -> Result<String> {
-    debug!("Try to load cache from local cache file.");
-    // load hors internal cache.
-    let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
-    let records_cache: AnswerRecordsCache = match load_result {
-        Ok(cache) => cache,
-        Err(err) => {
-            warn!("Can't load cache from local cache file, errmsg {:?}", err);
-            AnswerRecordsCache::load_empty()
-        }
-    };
-    debug!("Load cache complete.");
-
     let results: Result<String> = match conf.option() {
         OutputOption::Links => Ok(answers_links_only(links, conf.numbers() as usize)),
-        _ => get_detailed_answer(links, conf, records_cache, client).await,
+        _ => get_detailed_answer(links, conf, client).await,
     };
 
     results
 }
 
-async fn get_detailed_answer(
-    links: &[String],
-    conf: Config,
-    records_cache: AnswerRecordsCache,
-    client: Client,
-) -> Result<String> {
+async fn get_detailed_answer(links: &[String], conf: Config, client: Client) -> Result<String> {
     let mut results: Vec<String> = Vec::new();
 
     let (tx, mut rx): (Sender<CrawlerMsg>, Receiver<CrawlerMsg>) = mpsc::channel(10);
 
-    let page_crawler = PageCrawler::new(links.into(), conf, records_cache, client, tx);
+    let page_crawler = PageCrawler::new(links.into(), conf, client, tx);
     page_crawler.fetch();
 
     while let Some(page) = rx.recv().await {

@@ -21,10 +21,20 @@ impl PageCrawler {
     pub fn new(
         links: Vec<String>,
         conf: Config,
-        records_cache: AnswerRecordsCache,
         client: Client,
         msg_sender: Sender<CrawlerMsg>,
     ) -> PageCrawler {
+        debug!("Try to load cache from local cache file.");
+        let load_result: Result<AnswerRecordsCache> = AnswerRecordsCache::load();
+        let records_cache: AnswerRecordsCache = match load_result {
+            Ok(cache) => cache,
+            Err(err) => {
+                warn!("Can't load cache from local cache file, errmsg {:?}", err);
+                AnswerRecordsCache::load_empty()
+            }
+        };
+        debug!("Load cache complete.");
+
         PageCrawler {
             links,
             conf,
