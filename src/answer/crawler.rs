@@ -1,4 +1,28 @@
-//! Crawler for fetching so page.
+//! Crawler to fetch stackoverflow page.
+//!
+//! Simple usage example:
+//!
+//! ```ignore
+//! use tokio::sync::mpsc;
+//! use crate::config::{Config, OutputOption};
+//! use reqwest::ClientBuilder;
+//!
+//! let conf = Config::new(OutputOption::All, 1, false);
+//! let client = ClientBuilder::new().cookie_store(true).build().unwrap();
+//!
+//! let (tx, mut rx): (Sender<CrawlerMsg>, Receiver<CrawlerMsg>) = mpsc::channel(10);
+//! let page_crawler = PageCrawler::new(links, conf, client, tx);
+//! page_crawler.fetch();
+//!
+//! while let Some(page) = rx.recv().await {
+//!     match page {
+//!         CrawlerMsg::Done => break,
+//!         CrawlerMsg::Data(m) => {
+//!             // handle for crawled data.
+//!         }
+//!     }
+//! };
+//!
 
 use super::records::AnswerRecordsCache;
 use crate::config::Config;
@@ -9,11 +33,17 @@ use std::process;
 use tokio::sync::mpsc::Sender;
 use tokio::task::JoinHandle;
 
+/// Crawler to fetch stackoverflow page
 pub struct PageCrawler {
+    /// so links to fetch relative page.
     links: Vec<String>,
+    /// current configuration.
     conf: Config,
+    /// relative page cache, we can use it to avoid too much network traffic.
     records_cache: AnswerRecordsCache,
+    /// reqwest http client.
     client: Client,
+    /// message sender, which is used to communicate with crawler user.
     msg_sender: Sender<CrawlerMsg>,
 }
 
@@ -44,6 +74,9 @@ impl PageCrawler {
         }
     }
 
+    /// Consume self to make a concurrent fetch.
+    ///
+    /// All the fetched pages will be send through `self.msg_sender`.
     pub fn fetch(mut self) {
         tokio::spawn(async move {
             let mut links_iter = self.links.into_iter();
@@ -64,6 +97,7 @@ impl PageCrawler {
                         match page_from_cache {
                             // When we can get answer from cache, just send the result back to upload task.
                             Some(page) => {
+                                // send crawled data to other side.
                                 if sender
                                     .send(CrawlerMsg::Data(CrawledData::new(
                                         format!("- Answer from {}", &link),
@@ -91,6 +125,8 @@ impl PageCrawler {
                                             link.clone(),
                                             page.clone(),
                                         );
+
+                                        // send crawled data to other side.
                                         if sender
                                             .send(CrawlerMsg::Data(crawled_data.clone()))
                                             .await
@@ -112,8 +148,9 @@ impl PageCrawler {
                 }
             }
 
+            // Wait for all sub-tasks complete, push result to our cache.
             for t in tasks {
-                // fetch result from sub tasks and save them to cache.
+                // Ignore any sub tasks error.
                 if let Ok(crawled_result) = t.await {
                     if let Ok(crawled_data) = crawled_result {
                         let (link, page) = crawled_data.into_cache_item();
@@ -122,7 +159,7 @@ impl PageCrawler {
                 }
             }
 
-            // when hors gets what we wanted answer, save it for next time using.
+            // when hors gets what we wanted answer, save cache for next time using.
             if let Err(err) = self.records_cache.save() {
                 warn!(
                     "Can't save cache into local directory, error msg: {:?}",
@@ -130,6 +167,7 @@ impl PageCrawler {
                 );
             }
 
+            // Notification done message.
             if self.msg_sender.send(CrawlerMsg::Done).await.is_err() {
                 error!(
                     "Receiver is dropped un-expectly, if you see this message, please fire an issue"
@@ -140,12 +178,14 @@ impl PageCrawler {
     }
 }
 
+/// The message which is used to communicate with other task.
 #[derive(Debug, Clone)]
 pub enum CrawlerMsg {
     Data(CrawledData),
     Done,
 }
 
+/// Data crawled by our crawler
 #[derive(Debug, Clone)]
 pub struct CrawledData {
     link: String,
