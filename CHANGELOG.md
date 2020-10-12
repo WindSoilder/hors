@@ -1,4 +1,6 @@
 # [Unreleased]
+
+# [0.7.2] - 2020-10-12
 ## Added
 - Improve performance
 

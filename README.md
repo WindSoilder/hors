@@ -71,7 +71,9 @@ Executed in    2.55 secs   fish           external
 Run the same command with howdoi:
 ```shell
 time howdoi mysql create table with column comment -a -n 4 -e bing -c
+rm ~/Library/Caches/howdoi/*
 ```
+Note: run `rm` command is aimed to clear howdoi local cache.
 
 And it gives me the following output:
 
