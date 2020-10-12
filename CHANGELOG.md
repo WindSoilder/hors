@@ -1,5 +1,8 @@
 # [Unreleased]
 ## Added
+- Improve performance
+
+## Fixed
 - New google front page style is supported.
 
 # [0.7.1] - 2020-09-15

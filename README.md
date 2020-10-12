@@ -5,7 +5,60 @@
 # [hors](https://crates.io/crates/hors)
 Awesome program [howdoi](https://github.com/gleitz/howdoi) which implemented in rust, along with easily usage lib.
 
+It's faster than the original howdoi program.
+
 For binary usage, please go through the rest of this file.  For lib documentation, please check [here](https://docs.rs/hors/latest/hors/).
+
+## What make it fast
+1. Implemented in rust, which causes less runtime overhead.
+2. Make use of tokio concurrent feature, so hors will make concurrent search when it need to fetch more than 1 answer.
+3. Output will be cache, and when you want to search for the same question, hors will likely make less network traffic to get the answer.
+
+Here is a simple benchmark report, run the following command 3 times in my personal computer:
+```shell
+time hors mysql create table with column comment -a -n 10 --paging never -e bing
+rm ~/Library/Caches/hors/answers
+```
+Note: run `rm` command is aimed to clear local cache.
+
+And it gives me the following output:
+
+```
+Executed in    2.55 secs   fish           external
+   usr time  232.71 millis  150.00 micros  232.56 millis
+   sys time   16.68 millis  562.00 micros   16.12 millis
+
+Executed in    3.68 secs   fish           external
+   usr time  252.02 millis  125.00 micros  251.90 millis
+   sys time   19.18 millis  550.00 micros   18.63 millis
+
+Executed in    2.55 secs   fish           external
+   usr time  237.19 millis  117.00 micros  237.07 millis
+   sys time   17.63 millis  565.00 micros   17.06 millis
+```
+
+Run the same command with howdoi:
+```shell
+time howdoi mysql create table with column comment -a -n 4 -e bing -c
+```
+
+And it gives me the following output:
+
+```
+Executed in    3.48 secs   fish           external
+   usr time  303.67 millis  127.00 micros  303.54 millis
+   sys time   52.53 millis  601.00 micros   51.93 millis
+
+Executed in    3.65 secs   fish           external
+   usr time  305.37 millis  111.00 micros  305.26 millis
+   sys time   53.16 millis  549.00 micros   52.61 millis
+
+Executed in    3.34 secs   fish           external
+   usr time  319.07 millis   14.24 millis  304.83 millis
+   sys time   55.63 millis    3.37 millis   52.26 millis
+```
+
+But please note that this simple benchmark is not precise, it highly depends on network information.
 
 # Screenshot
 ## Simple usage example
