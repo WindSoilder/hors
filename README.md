@@ -9,7 +9,38 @@ It's faster than the original howdoi program.
 
 For binary usage, please go through the rest of this file.  For lib documentation, please check [here](https://docs.rs/hors/latest/hors/).
 
-## What make it fast
+# Screenshot
+## Simple usage example
+![Screenshots of hors gif](screenshots/hors_demo.gif)
+
+## More examples
+
+![Screenshots of hors png](screenshots/screenshot.png)
+
+# Installation
+hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
+
+```shell
+cargo install hors
+```
+
+On Windows/Linux/macOS platform, you can download the pre-build-binary from github [release page](https://github.com/WindSoilder/hors/releases/latest)
+
+## On macOS
+Hors can be installed from [homebrew](https://brew.sh/).
+
+```shell
+brew tap hors-org/hors && brew install hors
+```
+
+## On Windows
+Hors can be installed from [scoop](https://scoop.sh/)
+
+```shell
+scoop bucket add w-bucket https://github.com/hors-org/w-bucket; scoop install hors
+```
+
+# What make it fast
 1. Implemented in rust, which causes less runtime overhead.
 2. Make use of tokio concurrent feature, so hors will make concurrent search when it need to fetch more than 1 answer.
 3. Output will be cache, and when you want to search for the same question, hors will likely make less network traffic to get the answer.
@@ -59,37 +90,6 @@ Executed in    3.34 secs   fish           external
 ```
 
 But please note that this simple benchmark is not precise, it highly depends on network information.
-
-# Screenshot
-## Simple usage example
-![Screenshots of hors gif](screenshots/hors_demo.gif)
-
-## More examples
-
-![Screenshots of hors png](screenshots/screenshot.png)
-
-# Installation
-hors is written in `Rust`.  The recommended way to install `hors` is through `cargo`.
-
-```shell
-cargo install hors
-```
-
-On Windows/Linux/macOS platform, you can download the pre-build-binary from github [release page](https://github.com/WindSoilder/hors/releases/latest)
-
-## On macOS
-Hors can be installed from [homebrew](https://brew.sh/).
-
-```shell
-brew tap hors-org/hors && brew install hors
-```
-
-## On Windows
-Hors can be installed from [scoop](https://scoop.sh/)
-
-```shell
-scoop bucket add w-bucket https://github.com/hors-org/w-bucket; scoop install hors
-```
 
 # Tested platforms
 For now, `hors` has been tested with the following platforms:
