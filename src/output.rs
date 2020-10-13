@@ -52,7 +52,7 @@ impl Output {
                     .args(&["--raw-control-chars", "--quit-if-one-screen", "--no-init"])
                     .stdin(Stdio::piped())
                     .spawn()
-                    .map_or_else(|_| Output::Normal(io::stdout()), |cmd| Output::Paging(cmd))
+                    .map_or_else(|_| Output::Normal(io::stdout()), Output::Paging)
             }
             PagingOption::Never => Output::Normal(io::stdout()),
         }

@@ -38,7 +38,7 @@ impl Engine for DuckDuckGo {
                     .find(|(k, _)| k == "uddg")
                     .map(|(_, v)| v.into_owned());
                 // If we can't find redirect link in uddg, just return link.
-                redirect_link.or(Some(String::from(link)))
+                redirect_link.or_else(|| Some(String::from(link)))
             })
             .collect();
 
