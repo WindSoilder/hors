@@ -1,4 +1,6 @@
 # [Unreleased]
+## Added
+- For now user can use `--clear-cache` option to clear local cache.
 
 # [0.7.2] - 2020-10-12
 ## Added
