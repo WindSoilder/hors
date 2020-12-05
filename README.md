@@ -110,6 +110,7 @@ ARGS:
 
 FLAGS:
     -a, --all              display the full text of answer.
+        --clear-cache      just clear local hors cache.
     -d, --disable-proxy    Disable system proxy.
     -h, --help             Prints help information
     -l, --link             display only the answer link.

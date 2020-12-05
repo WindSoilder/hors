@@ -1,9 +1,9 @@
-use crate::error::Result;
+use crate::error::{Error, Result};
 use bincode::{deserialize_from, serialize_into};
 use directories::BaseDirs;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs::{create_dir_all, File, OpenOptions};
+use std::fs::{self, File, OpenOptions};
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -68,6 +68,25 @@ impl AnswerRecordsCache {
             return Ok(answer_records);
         }
         Ok(AnswerRecordsCache(HashMap::new()))
+    }
+
+    fn get_cache_path() -> Result<PathBuf> {
+        match BaseDirs::new() {
+            Some(base_dirs) => {
+                let mut dir = base_dirs.cache_dir().to_path_buf();
+                dir.push("hors");
+                dir.push("answers");
+                Ok(dir)
+            }
+            None => Err(Error::from_parse("get cache dir failed.")),
+        }
+    }
+
+    /// Remove local cache if it's existed.
+    pub fn clear() -> Result<()> {
+        let cache_path = Self::get_cache_path()?;
+        fs::remove_file(cache_path)?;
+        Ok(())
     }
 
     /// Create cache with no records.
@@ -146,7 +165,7 @@ impl AnswerRecordsCache {
     fn create_file_if_not_existed(dir: &PathBuf) -> Result<PathBuf> {
         let cache_directory: PathBuf = dir.join("hors");
         if !cache_directory.exists() {
-            create_dir_all(&cache_directory).unwrap();
+            fs::create_dir_all(&cache_directory).unwrap();
         }
 
         let answers = cache_directory.join("answers");
@@ -242,4 +261,9 @@ mod tests {
             true
         );
     }
+}
+
+/// Remove local cache file if it's existed.
+pub fn clear_local_cache() -> Result<()> {
+    AnswerRecordsCache::clear()
 }

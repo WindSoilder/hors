@@ -91,7 +91,7 @@ mod output;
 mod search_config;
 mod utils;
 
-pub use answer::{get_answers, get_answers_with_client, SPLITTER};
+pub use answer::{clear_local_cache, get_answers, get_answers_with_client, SPLITTER};
 pub use config::{Config, OutputOption, PagingOption, SearchEngine};
 pub use engine::{search_links, search_links_with_client};
 pub use error::{Error, Result};
