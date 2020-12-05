@@ -59,10 +59,8 @@ impl AnswerRecordsCache {
     /// Return the instance of AnswerRecordsCache.  Error will be returned if
     /// loading local cache file failed.
     pub fn load() -> Result<AnswerRecordsCache> {
-        if let Some(base_dirs) = BaseDirs::new() {
-            // just create cache file if not existed, and deserialize it.
-            let dir = base_dirs.cache_dir().to_path_buf();
-            let cache_file: PathBuf = AnswerRecordsCache::create_file_if_not_existed(&dir)?;
+        if let Ok(cache_dir) = Self::get_cache_dir() {
+            let cache_file = AnswerRecordsCache::create_file_if_not_existed(&cache_dir)?;
             let f = File::open(cache_file)?;
             let answer_records: AnswerRecordsCache = deserialize_from(f)?;
             return Ok(answer_records);
@@ -71,15 +69,9 @@ impl AnswerRecordsCache {
     }
 
     fn get_cache_path() -> Result<PathBuf> {
-        match BaseDirs::new() {
-            Some(base_dirs) => {
-                let mut dir = base_dirs.cache_dir().to_path_buf();
-                dir.push("hors");
-                dir.push("answers");
-                Ok(dir)
-            }
-            None => Err(Error::from_parse("get cache dir failed.")),
-        }
+        let mut cache_dir = Self::get_cache_dir()?;
+        cache_dir.push("answers");
+        Ok(cache_dir)
     }
 
     /// Remove local cache if it's existed.
@@ -149,9 +141,7 @@ impl AnswerRecordsCache {
         if MAX_SIZE < self.0.len() {
             // TODO: truncate it to have size MAX_SIZE
         }
-        if let Some(base_dirs) = BaseDirs::new() {
-            let dir = base_dirs.cache_dir();
-            let cache_path: PathBuf = dir.join("hors").join("answers");
+        if let Ok(cache_path) = Self::get_cache_path() {
             let f = OpenOptions::new()
                 .write(true)
                 .truncate(true)
@@ -162,9 +152,19 @@ impl AnswerRecordsCache {
         Ok(())
     }
 
-    fn create_file_if_not_existed(dir: &PathBuf) -> Result<PathBuf> {
-        let cache_directory: PathBuf = dir.join("hors");
-        if !cache_directory.exists() {
+    fn get_cache_dir() -> Result<PathBuf> {
+        match BaseDirs::new() {
+            Some(base_dirs) => {
+                let mut dir = base_dirs.cache_dir().to_path_buf();
+                dir.push("hors");
+                Ok(dir)
+            }
+            None => Err(Error::from_parse("get cache dir failed.")),
+        }
+    }
+
+    fn create_file_if_not_existed(cache_directory: &PathBuf) -> Result<PathBuf> {
+        if cache_directory.exists() {
             fs::create_dir_all(&cache_directory).unwrap();
         }
 
@@ -174,6 +174,11 @@ impl AnswerRecordsCache {
         }
         Ok(answers)
     }
+}
+
+/// Remove local cache file if it's existed.
+pub fn clear_local_cache() -> Result<()> {
+    AnswerRecordsCache::clear()
 }
 
 #[cfg(test)]
@@ -261,9 +266,4 @@ mod tests {
             true
         );
     }
-}
-
-/// Remove local cache file if it's existed.
-pub fn clear_local_cache() -> Result<()> {
-    AnswerRecordsCache::clear()
 }
