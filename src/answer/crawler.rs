@@ -82,7 +82,7 @@ impl PageCrawler {
             let mut links_iter = self.links.into_iter();
             let mut tasks = vec![];
             for _ in 0..self.conf.numbers() {
-                let mut sender = self.msg_sender.clone();
+                let sender = self.msg_sender.clone();
                 let next_link = links_iter.next();
                 match next_link {
                     Some(link) => {
