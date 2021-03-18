@@ -10,6 +10,10 @@ documentation = "https://github.com/WindSoilder/hors/blob/master/README.md"
 readme = "./README.md"
 keywords = ["http", "client", "cli-tools"]
 categories = ["command-line-utilities"]
+exclude = [
+    "screenshots/*",
+    "tests/*"
+]
 
 [dependencies]
 clap = "3.0.0-beta.2"
