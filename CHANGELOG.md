@@ -1,4 +1,8 @@
 # [Unrelease]
+# [0.8.1] - 2021-03-18
+## Fixed
+- New google front page style is supported, for now it should return result more stable.
+
 # [0.7.3] - 2020-12-05
 ## Added
 - For now user can use `--clear-cache` option to clear local cache.
