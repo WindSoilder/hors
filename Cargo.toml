@@ -29,6 +29,7 @@ ansi_term = "0.12"
 ansi_colours = "^1.0"
 lazy_static = "1.4.0"
 toml = "0.5.6"
+regex = "1"
 
 [dev-dependencies]
 env_logger = "0.7"

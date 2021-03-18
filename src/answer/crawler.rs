@@ -123,7 +123,7 @@ impl PageCrawler {
                                         let crawled_data = CrawledData::new(
                                             format!("- Answer from {}", &link),
                                             link.clone(),
-                                            page.clone(),
+                                            page,
                                         );
 
                                         // send crawled data to other side.

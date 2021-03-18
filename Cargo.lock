@@ -606,6 +606,7 @@ dependencies = [
  "lazy_static",
  "log",
  "rand",
+ "regex",
  "reqwest",
  "select",
  "serde",
