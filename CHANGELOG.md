@@ -1,4 +1,10 @@
 # [Unrelease]
+## Added
+- Support log.
+
+## Fixed
+- Fix cache directory is not created when it's not exists
+
 # [0.8.1] - 2021-03-18
 ## Fixed
 - New google front page style is supported, for now it should return result more stable.

@@ -52,6 +52,7 @@ async fn main() -> Result<()> {
     #[cfg(windows)]
     let _ = ansi_term::enable_ansi_support();
     let opts: Opts = Opts::parse();
+    env_logger::init();
     if opts.clear_cache {
         if let Err(e) = hors::clear_local_cache() {
             eprintln!("clear local cache failed, reason: {:?}", e);

@@ -164,7 +164,7 @@ impl AnswerRecordsCache {
     }
 
     fn create_file_if_not_existed(cache_directory: &PathBuf) -> Result<PathBuf> {
-        if cache_directory.exists() {
+        if !cache_directory.exists() {
             fs::create_dir_all(&cache_directory).unwrap();
         }
 
