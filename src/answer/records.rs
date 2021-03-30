@@ -16,6 +16,8 @@ struct AnswerRecord {
     page: String,
     /// when it was created.
     created_time: u64,
+    /// the cache hit counter.
+    hit_count: u64,
 }
 
 impl AnswerRecord {
@@ -27,6 +29,7 @@ impl AnswerRecord {
                 .duration_since(UNIX_EPOCH)
                 .expect("Time went beckwards")
                 .as_secs(),
+            hit_count: 0,
         }
     }
 
@@ -70,7 +73,7 @@ impl AnswerRecordsCache {
 
     fn get_cache_path() -> Result<PathBuf> {
         let mut cache_dir = Self::get_cache_dir()?;
-        cache_dir.push("answers");
+        cache_dir.push("answers_v2");
         Ok(cache_dir)
     }
 
@@ -98,8 +101,8 @@ impl AnswerRecordsCache {
     ///
     /// # Returns
     /// Return cached page if we can find it and it's not too old, else returns None.
-    pub fn get(&self, link: &str) -> Option<&String> {
-        let possible_page: Option<&AnswerRecord> = self.0.get(link);
+    pub fn get(&mut self, link: &str) -> Option<&String> {
+        let possible_page: Option<&mut AnswerRecord> = self.0.get_mut(link);
         match possible_page {
             // if we can find relative record
             Some(record) => {
@@ -111,6 +114,8 @@ impl AnswerRecordsCache {
                 if record.is_too_old(current_time) {
                     return None;
                 }
+                // update hit count.
+                record.hit_count += 1;
                 Some(&record.page)
             }
             None => None,
@@ -135,11 +140,23 @@ impl AnswerRecordsCache {
     /// # Returns
     ///
     /// Returns Ok if save success, else return an error.
-    pub fn save(&self) -> Result<()> {
-        const MAX_SIZE: usize = 300;
+    pub fn save(&mut self) -> Result<()> {
+        const MAX_SIZE: usize = 100;
         // if the inner size of answer records is too large
-        if MAX_SIZE < self.0.len() {
-            // TODO: truncate it to have size MAX_SIZE
+        let length = self.0.len();
+        if MAX_SIZE < length {
+            // extract out records link and hit_count, make them order_by hit_count.
+            let mut link_hit_counter: Vec<(u64, String)> = self
+                .0
+                .iter()
+                .map(|(k, v)| (v.hit_count, k.clone()))
+                .collect();
+            link_hit_counter.sort();
+            // Just truncate data to MAX_SIZE / 2.
+            for i in 0..MAX_SIZE / 2 {
+                let (_, link) = &link_hit_counter[i];
+                self.0.remove(link);
+            }
         }
         if let Ok(cache_path) = Self::get_cache_path() {
             let f = OpenOptions::new()
@@ -168,7 +185,7 @@ impl AnswerRecordsCache {
             fs::create_dir_all(&cache_directory).unwrap();
         }
 
-        let answers = cache_directory.join("answers");
+        let answers = cache_directory.join("answers_v2");
         if !answers.exists() {
             File::create(&answers)?;
         }
@@ -258,7 +275,7 @@ mod tests {
 
     #[test]
     fn test_answer_record_get_when_key_is_not_existed() {
-        let record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
+        let mut record_cache: AnswerRecordsCache = AnswerRecordsCache::load_empty();
         assert_eq!(
             record_cache
                 .get(&String::from("http://test_link"))
