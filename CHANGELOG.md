@@ -1,8 +1,10 @@
 # [Unrelease]
+# [0.8.2] - 2021-03-30
 ## Added
 - Support log.
 
 ## Fixed
+- Clear cache when it's too large.
 - Fix cache directory is not created when it's not exists
 
 # [0.8.1] - 2021-03-18
