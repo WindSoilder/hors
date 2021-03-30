@@ -480,7 +480,7 @@ dependencies = [
 
 [[package]]
 name = "hors"
-version = "0.8.1"
+version = "0.8.2"
 dependencies = [
  "ansi_colours",
  "ansi_term",
