@@ -32,6 +32,7 @@ impl Default for StackOverflow {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Deserialize, Debug)]
 struct Questions {
     items: Vec<QuestionItem>,

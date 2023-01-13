@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate log;
 
-use clap::{self, Clap};
+use clap::{self, Parser};
 use hors::{self, Config, Error, Output, OutputOption, PagingOption, Result, SearchEngine};
 
 use reqwest::{Client, ClientBuilder};
@@ -9,40 +9,45 @@ use reqwest::{Client, ClientBuilder};
 use std::process;
 use std::str::FromStr;
 
-#[derive(Clap)]
-#[clap(version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"), about = env!("CARGO_PKG_DESCRIPTION"))]
+#[derive(Parser)]
+#[command(version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"), about = env!("CARGO_PKG_DESCRIPTION"))]
 struct Opts {
-    #[clap(long, about("just clear local hors cache."))]
+    /// just clear local hors cache.
+    #[arg(long)]
     clear_cache: bool,
-    #[clap(short, long, about("display the full text of answer."))]
+    /// display the full text of answer.
+    #[arg(short, long)]
     all: bool,
-    #[clap(short, long, about("display only the answer link."))]
+    /// display only the answer link.
+    #[arg(short, long)]
     link: bool,
-    #[clap(short, long, about("make raw output (not colorized)."))]
+    /// make raw output (not colorized)
+    #[arg(short, long)]
     raw: bool,
-    #[clap(
+    /// "specify how to page output, can be `auto`, `never`"
+    #[arg(
         short,
         long,
         default_value = "auto",
-        about("specify how to page output, can be `auto`, `never`")
     )]
     paging: String,
-    #[clap(
+    /// number of answers to return.
+    #[arg(
         short,
         long,
         default_value = "1",
-        about("number of answers to return.")
     )]
     number_answers: u8,
-    #[clap(
+    /// select middle search engine, currently support `bing`, `google`, `duckduckgo`, `stackoverflow`.
+    #[arg(
         short,
         long,
         default_value = "duckduckgo",
         env = "HORS_ENGINE",
-        about("select middle search engine, currently support `bing`, `google`, `duckduckgo`, `stackoverflow`.")
     )]
     engine: String,
-    #[clap(short, long, about("Disable system proxy."))]
+    /// Disable system proxy.
+    #[arg(short, long)]
     disable_proxy: bool,
     query: Vec<String>,
 }
