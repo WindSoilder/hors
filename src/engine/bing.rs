@@ -9,13 +9,13 @@ impl Engine for Bing {
     fn get_query_url(&self, query: &str, use_https: bool) -> String {
         if use_https {
             format!(
-                "https://{}/search?q=site:stackoverflow.com%20{}",
+                "https://{}/search?q=site:stackoverflow.com%20{}&hl=en",
                 SEARCH_CONFIG.get_bing_domain(),
                 query
             )
         } else {
             format!(
-                "http://{}/search?q=site:stackoverflow.com%20{}",
+                "http://{}/search?q=site:stackoverflow.com%20{}&hl=en",
                 SEARCH_CONFIG.get_bing_domain(),
                 query
             )
