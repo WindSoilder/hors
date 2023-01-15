@@ -87,7 +87,7 @@ mod tests {
         let engine = Bing;
         let result: String = engine.get_query_url(&String::from("how to write unit test"), true);
         assert_eq!(
-            "https://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
+            "https://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test&hl=en",
             result
         );
     }
@@ -97,7 +97,7 @@ mod tests {
         let engine = Bing;
         let result: String = engine.get_query_url(&String::from("how to write unit test"), false);
         assert_eq!(
-            "http://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test",
+            "http://www.bing.com/search?q=site:stackoverflow.com%20how to write unit test&hl=en",
             result
         );
     }
