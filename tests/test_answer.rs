@@ -50,7 +50,7 @@ Very simple:
 
 import json
 data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-print data['two']  # or `print data['two']` in Python 2"#
+print(data['two'])  # or `print data['two']` in Python 2"#
     )
 }
 
@@ -74,7 +74,7 @@ async fn test_get_answers_with_instruction() {
         r#"- Answer from https://stackoverflow.com/questions/7771011/parse-json-in-python
 import json
 data = json.loads('{"one" : "1", "two" : "2", "three" : "3"}')
-print data['two']  # or `print data['two']` in Python 2
+print(data['two'])  # or `print data['two']` in Python 2
 "#
     )
 }
