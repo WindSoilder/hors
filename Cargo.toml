@@ -20,7 +20,7 @@ clap = { version="4.1.0", features=["derive", "env"] }
 syntect = "4.5.0"
 base64 = "0.12.3"
 reqwest = { version="0.11.2", features=["json", "socks", "cookies", "rustls-tls", "gzip"], default-features=false }
-tokio = { version = "1.8.4", features = ["macros", "sync", "rt-multi-thread"] }
+tokio = { version = "1.24.2", features = ["macros", "sync", "rt-multi-thread"] }
 select = "0.5.0"
 rand = "0.8.3"
 log = "0.4.14"
